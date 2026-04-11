@@ -134,22 +134,42 @@ if btn_fed:
         st.error("No se pudo obtener el comunicado de la FED.")
 
 elif btn_bce:
-    with st.spinner("Conectando con el BCE..."):
-        comunicado = obtener_comunicado_bce()
-    if comunicado:
-        mostrar_analisis(comunicado)
-    else:
-        st.error("No se pudo obtener el comunicado del BCE.")
-
+    st.info("🔄 El módulo BCE está siendo mejorado con fuentes más robustas. Disponible próximamente.")
+    st.markdown("**Próxima actualización incluirá:**")
+    st.markdown("- Decisiones de tasas del BCE en tiempo real")
+    st.markdown("- Conferencias de prensa de Christine Lagarde")
+    st.markdown("- Comparación BCE vs FED en misma pantalla")
+    
 else:
-    st.markdown("### Como usar KAIROS")
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns([2, 1])
+
     with col1:
-        st.markdown("**Paso 1**")
-        st.write("Selecciona FED o BCE arriba")
+        st.markdown("### Como usar KAIROS")
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.markdown("**Paso 1**")
+            st.write("Selecciona FED o BCE arriba")
+        with c2:
+            st.markdown("**Paso 2**")
+            st.write("KAIROS descarga el comunicado oficial mas reciente")
+        with c3:
+            st.markdown("**Paso 3**")
+            st.write("La IA analiza y genera escenarios de impacto en mercados")
+
     with col2:
-        st.markdown("**Paso 2**")
-        st.write("KAIROS descarga el comunicado oficial mas reciente")
-    with col3:
-        st.markdown("**Paso 3**")
-        st.write("La IA analiza y genera escenarios de impacto en mercados")
+        st.markdown("### Análisis guardados")
+        import os
+        import glob
+
+        archivos = glob.glob("outputs/analisis_*.txt")
+        archivos.sort(reverse=True)
+
+        if archivos:
+            for archivo in archivos[:5]:
+                nombre = os.path.basename(archivo)
+                if st.button(nombre, key=nombre):
+                    with open(archivo, "r", encoding="utf-8") as f:
+                        contenido = f.read()
+                    st.text_area("Análisis", contenido, height=400)
+        else:
+            st.write("No hay análisis guardados aún.")
