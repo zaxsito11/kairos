@@ -170,6 +170,59 @@ def mostrar_analisis(comunicado):
             except:
                 pass
 
+                # Priced-in scoring
+    st.divider()
+    st.subheader("🎯 Scoring de Priced-In")
+    st.caption("⚠️ Actualizar manualmente cada semana en src/priced_in.py con datos de CME FedWatch")
+
+    from priced_in import obtener_probabilidades_cme, calcular_sorpresa
+
+    expectativas = obtener_probabilidades_cme()
+    sorpresa = calcular_sorpresa(tono_det, score_det, expectativas)
+
+    if expectativas:
+        st.markdown("**Próximas reuniones FOMC — Expectativas del mercado:**")
+        for exp in expectativas[:2]:
+            st.markdown(f"📅 **{exp['descripcion']}** ({exp['fecha_reunion']})")
+            cols_exp = st.columns(len(exp["probabilidades"]))
+            for i, (accion, prob) in enumerate(exp["probabilidades"].items()):
+                with cols_exp[i]:
+                    color = "🔴" if "SUBIDA" in accion else "🟢" if "RECORTE" in accion else "🟡"
+                    st.metric(color + " " + accion, f"{prob:.1f}%")
+            st.markdown("---")
+
+    if sorpresa:
+        st.markdown("**Análisis de sorpresa:**")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric(
+                "Sesgo previo mercado",
+                sorpresa["sesgo_mercado_previo"],
+                delta=f"{sorpresa['confianza_mercado']:.1f}% confianza"
+            )
+        with col2:
+            delta_val = sorpresa["delta_sorpresa"]
+            st.metric(
+                "Delta sorpresa",
+                f"{'+' if delta_val >= 0 else ''}{delta_val}",
+                delta=sorpresa["nivel_sorpresa"]
+            )
+        with col3:
+            st.metric(
+                "Días próxima reunión",
+                str(sorpresa.get("dias_proxima_reunion", "N/A")),
+                delta="FOMC Mayo 2026"
+            )
+
+        # Impacto esperado
+        nivel = sorpresa["nivel_sorpresa"]
+        if "SIN SORPRESA" in nivel:
+            st.info("ℹ️ " + sorpresa["impacto_esperado"])
+        elif "HAWKISH" in nivel:
+            st.warning("⚠️ " + sorpresa["impacto_esperado"])
+        else:
+            st.success("✅ " + sorpresa["impacto_esperado"])
+
     similares = encontrar_similares(tono_det, score_det)
 
     for ev in similares:

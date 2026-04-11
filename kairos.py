@@ -9,6 +9,7 @@ from analizador import analizar_comunicado
 from macro import obtener_datos_macro, evaluar_regimen_macro
 from alertas import evaluar_y_alertar
 from historico import encontrar_similares, generar_resumen_historico
+from priced_in import obtener_probabilidades_cme, calcular_sorpresa, mostrar_priced_in
 
 def ejecutar_kairos():
 
@@ -33,6 +34,13 @@ def ejecutar_kairos():
     print(f"   Regimen macro actual: {regimen['regimen']}")
     print()
 
+    # PASO 1B: Expectativas del mercado (priced-in)
+    print("▶ PASO 1B: Obteniendo expectativas del mercado...")
+    expectativas = obtener_probabilidades_cme()
+    print(f"   Próxima reunión FOMC: {expectativas[0]['fecha_reunion']}")
+    print(f"   Probabilidad sin cambio: {expectativas[0]['probabilidades'].get('SIN CAMBIO', 0):.1f}%")
+    print()
+
     # PASO 2: Comunicado FED
     print("▶ PASO 2: Obteniendo comunicado de la FED...")
     comunicado = obtener_comunicado_fed()
@@ -49,6 +57,42 @@ def ejecutar_kairos():
     }
     analisis = analizar_comunicado(comunicado, contexto_macro)
 
+# PASO 3B: Calcular sorpresa vs expectativas
+    tono_det = "NEUTRO"
+    score_det = 0
+    for linea in analisis.split('\n'):
+        if "Clasificacion:" in linea or "Clasificación:" in linea:
+            for t in ["HAWKISH FUERTE","HAWKISH LEVE","NEUTRO","DOVISH LEVE","DOVISH FUERTE"]:
+                if t in linea:
+                    tono_det = t
+                    break
+        if "Score:" in linea and "Confidence" not in linea:
+            try:
+                score_det = int(linea.split(":")[-1].strip().replace("+",""))
+            except:
+                pass
+
+    sorpresa = calcular_sorpresa(tono_det, score_det, expectativas)
+    mostrar_priced_in(sorpresa, expectativas)
+    
+    # PASO 3B: Calcular sorpresa vs expectativas
+    tono_det = "NEUTRO"
+    score_det = 0
+    for linea in analisis.split('\n'):
+        if "Clasificacion:" in linea or "Clasificación:" in linea:
+            for t in ["HAWKISH FUERTE","HAWKISH LEVE","NEUTRO","DOVISH LEVE","DOVISH FUERTE"]:
+                if t in linea:
+                    tono_det = t
+                    break
+        if "Score:" in linea and "Confidence" not in linea:
+            try:
+                score_det = int(linea.split(":")[-1].strip().replace("+",""))
+            except:
+                pass
+
+    sorpresa = calcular_sorpresa(tono_det, score_det, expectativas)
+    mostrar_priced_in(sorpresa, expectativas)
+    
     # PASO 4: Evaluar y enviar alerta si el evento es relevante
     print("▶ PASO 4: Evaluando si merece alerta...")
     evaluar_y_alertar(comunicado, analisis, regimen)
