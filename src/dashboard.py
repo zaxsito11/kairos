@@ -1,0 +1,155 @@
+import streamlit as st
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(__file__))
+
+from fed_scraper import obtener_comunicado_fed
+from bce_scraper import obtener_comunicado_bce
+from analizador import analizar_comunicado
+from precios import obtener_precios
+
+st.set_page_config(
+    page_title="KAIROS — Inteligencia de Mercados",
+    page_icon="📊",
+    layout="wide"
+)
+
+st.markdown("""
+<style>
+.titulo-kairos {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #00d4aa;
+    letter-spacing: 4px;
+}
+.subtitulo { color: #8892a4; font-size: 1rem; }
+.precio-card {
+    background-color: #1a1f2e;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    border: 1px solid #2a2f3e;
+}
+.precio-nombre { color: #8892a4; font-size: 0.75rem; font-weight: 600; }
+.precio-valor  { color: #ffffff; font-size: 1.1rem; font-weight: 700; }
+.sube { color: #00d4aa; font-size: 0.85rem; }
+.baja { color: #ff4b4b; font-size: 0.85rem; }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<p class="titulo-kairos">KAIROS</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitulo">Sistema de Inteligencia de Mercados Financieros</p>', unsafe_allow_html=True)
+st.divider()
+
+# Precios en tiempo real
+st.subheader("Mercados en tiempo real")
+with st.spinner("Cargando precios..."):
+    precios = obtener_precios()
+
+if precios:
+    cols = st.columns(len(precios))
+    for i, (nombre, datos) in enumerate(precios.items()):
+        with cols[i]:
+            if datos:
+                clase = "sube" if datos["variacion"] >= 0 else "baja"
+                signo = "+" if datos["variacion"] >= 0 else ""
+                html = (
+                    '<div class="precio-card">'
+                    '<div class="precio-nombre">' + nombre + '</div>'
+                    '<div class="precio-valor">' + str(datos["precio"]) + '</div>'
+                    '<div class="' + clase + '">' + signo + str(datos["variacion_pct"]) + '% ' + datos["direccion"] + '</div>'
+                    '</div>'
+                )
+                st.markdown(html, unsafe_allow_html=True)
+            else:
+                st.markdown(
+                    '<div class="precio-card"><div class="precio-nombre">' + nombre + '</div><div class="precio-valor">N/A</div></div>',
+                    unsafe_allow_html=True
+                )
+
+st.divider()
+
+# Selector de banco central
+st.subheader("Selecciona el banco central a analizar")
+col1, col2 = st.columns(2)
+
+with col1:
+    btn_fed = st.button(
+        "🇺🇸 Analizar FED",
+        use_container_width=True,
+        type="primary"
+    )
+
+with col2:
+    btn_bce = st.button(
+        "🇪🇺 Analizar BCE",
+        use_container_width=True,
+        type="secondary"
+    )
+
+def mostrar_analisis(comunicado):
+    st.success("Comunicado: " + comunicado["titulo"])
+    st.caption("Fecha: " + str(comunicado["fecha"]))
+    st.divider()
+
+    with st.spinner("Analizando con inteligencia artificial..."):
+        analisis = analizar_comunicado(comunicado)
+
+    st.subheader("Analisis KAIROS")
+
+    lineas = analisis.split('\n')
+    secciones = []
+    seccion_actual = []
+
+    for linea in lineas:
+        es_titulo = any(str(i) + "." in linea for i in range(1, 8))
+        if linea.strip().startswith('**') and es_titulo:
+            if seccion_actual:
+                secciones.append('\n'.join(seccion_actual))
+            seccion_actual = [linea]
+        else:
+            seccion_actual.append(linea)
+
+    if seccion_actual:
+        secciones.append('\n'.join(seccion_actual))
+
+    if len(secciones) > 1:
+        for seccion in secciones:
+            if seccion.strip():
+                st.markdown(seccion)
+                st.divider()
+    else:
+        st.markdown(analisis)
+
+    st.success("Analisis guardado en outputs/")
+
+
+if btn_fed:
+    with st.spinner("Conectando con la FED..."):
+        comunicado = obtener_comunicado_fed()
+    if comunicado:
+        mostrar_analisis(comunicado)
+    else:
+        st.error("No se pudo obtener el comunicado de la FED.")
+
+elif btn_bce:
+    with st.spinner("Conectando con el BCE..."):
+        comunicado = obtener_comunicado_bce()
+    if comunicado:
+        mostrar_analisis(comunicado)
+    else:
+        st.error("No se pudo obtener el comunicado del BCE.")
+
+else:
+    st.markdown("### Como usar KAIROS")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("**Paso 1**")
+        st.write("Selecciona FED o BCE arriba")
+    with col2:
+        st.markdown("**Paso 2**")
+        st.write("KAIROS descarga el comunicado oficial mas reciente")
+    with col3:
+        st.markdown("**Paso 3**")
+        st.write("La IA analiza y genera escenarios de impacto en mercados")

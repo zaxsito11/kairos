@@ -1,0 +1,48 @@
+KAIROS — ANALISIS DE COMUNICADO FED
+============================================================
+Documento: Governing Council decisions
+Fecha    : 09 April 2026
+============================================================
+
+**1. TONO GENERAL**
+- Clasificacion: NEUTRO
+- Score: 0
+- Senales hawkish encontradas: No se encuentran señales de inflación elevada o mercado laboral sólido.
+- Senales dovish encontradas: No se encuentran señales de enfriamiento económico o inflación acercándose al objetivo.
+- Justificacion: El texto no proporciona información sobre la situación económica actual, solo describe el funcionamiento del Consejo de Gobierno del BCE y la publicación de decisiones de política monetaria.
+
+**2. MENSAJES CLAVE**
+- Los 3 mensajes más importantes para los mercados son:
+ 1. El Consejo de Gobierno del BCE toma decisiones de política monetaria cada seis semanas.
+ 2. Las decisiones de política monetaria se publican en un comunicado de prensa.
+ 3. El BCE publica un informe de la discusión de política monetaria cuatro semanas después de cada reunión.
+
+**3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
+- No se puede determinar el lenguaje nuevo o eliminado, ya que no se proporciona el texto del comunicado anterior.
+
+**4. IMPACTO ESPERADO POR ACTIVO**
+- USD (Dolar): No se espera un impacto significativo.
+- Bonos del Tesoro UST 10Y: No se espera un impacto significativo.
+- S&P 500 (SPX): No se espera un impacto significativo.
+- Nasdaq (NDX): No se espera un impacto significativo.
+- Oro (Gold): No se espera un impacto significativo.
+- EUR/USD: No se espera un impacto significativo.
+- VIX (Volatilidad): No se espera un impacto significativo.
+
+**5. ESCENARIOS DE MERCADO**
+ESCENARIO A (probabilidad: 50%): Continuación de la tendencia actual
+[No se espera un cambio significativo en la política monetaria del BCE, lo que no debería tener un impacto importante en los mercados].
+
+ESCENARIO B (probabilidad: 30%): Cambio en la política monetaria del BCE
+[Un cambio en la política monetaria del BCE podría tener un impacto en los mercados, pero no se puede determinar sin más información].
+
+ESCENARIO C (probabilidad: 20%): Eventos externos que afectan la economía
+[Eventos externos, como cambios en la política económica global, podrían afectar la economía y los mercados, pero no se puede determinar sin más información].
+
+**6. VARIABLES CLAVE A MONITOREAR**
+- Datos próximos relevantes: Informes de inflación, empleo y crecimiento económico.
+- Declaraciones de miembros del FOMC a seguir: No se aplica, ya que el texto se refiere al BCE.
+
+**7. CONFIDENCE SCORE**
+- Score: 20/100
+- Factores que reducen la confianza: La falta de información sobre la situación económica actual y la política monetaria del BCE, así como la imposibilidad de comparar con el comunicado anterior.

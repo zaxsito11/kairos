@@ -1,0 +1,49 @@
+KAIROS — ANALISIS DE COMUNICADO FED
+============================================================
+Documento: Minutes of the Federal Open Market Committee, March 17–18, 2026
+Fecha    : Wed, 8 Apr 2026 18:00:00 GMT
+============================================================
+
+**1. TONO GENERAL**
+- Clasificación: HAWKISH LEVE
+- Score: +2
+- Señales hawkish encontradas: "inflación permanece elevada", "core PCE por encima de 2.5 por ciento", "el mercado laboral sigue siendo sólido".
+- Señales dovish encontradas: "el crecimiento del empleo fue bajo en enero y febrero", "la inflación de bienes y servicios no es tan alta como antes".
+- Justificación: El tono general es hawkish leve debido a que la inflación sigue siendo elevada y el mercado laboral es sólido, pero el crecimiento del empleo ha sido bajo y la inflación de bienes y servicios no es tan alta como antes.
+
+**2. MENSAJES CLAVE**
+- Los tres mensajes más importantes para los mercados son:
+ 1. La inflación sigue siendo elevada y por encima del objetivo del 2%.
+ 2. El mercado laboral sigue siendo sólido, aunque el crecimiento del empleo ha sido bajo.
+ 3. La Reserva Federal sigue monitoreando la situación económica y no hay señales de recortes de tasas de interés en el corto plazo.
+
+**3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
+- El lenguaje nuevo que aparece es "la inflación de bienes y servicios no es tan alta como antes".
+- Se elimina o suaviza el lenguaje sobre la posibilidad de recortes de tasas de interés en el corto plazo.
+
+**4. IMPACTO ESPERADO POR ACTIVO**
+- USD (Dólar): al alza debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- Bonos del Tesoro UST 10Y: a la baja debido a la expectativa de que la inflación siga siendo elevada.
+- S&P 500 (SPX): a la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- Nasdaq (NDX): a la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- Oro (Gold): a la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- EUR/USD: a la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- VIX (Volatilidad): al alza debido a la incertidumbre sobre la situación económica.
+
+**5. ESCENARIOS DE MERCADO**
+ESCENARIO A (probabilidad: 40%): "Continuación de la tendencia actual"
+La Reserva Federal mantiene las tasas de interés altas y la inflación sigue siendo elevada, lo que lleva a una disminución en el crecimiento económico.
+
+ESCENARIO B (probabilidad: 30%): "Recortes de tasas de interés"
+La Reserva Federal decide recortar las tasas de interés debido a una disminución en la inflación y un crecimiento económico lento, lo que lleva a un aumento en el crecimiento económico.
+
+ESCENARIO C (probabilidad: 30%): "Aumento de las tasas de interés"
+La Reserva Federal decide aumentar las tasas de interés debido a una inflación más alta de lo esperado y un crecimiento económico sólido, lo que lleva a una disminución en el crecimiento económico.
+
+**6. VARIABLES CLAVE A MONITOREAR**
+- Datos próximos relevantes: inflación, crecimiento del empleo, crecimiento económico.
+- Declaraciones de miembros del FOMC a seguir: declaraciones sobre la inflación, el crecimiento económico y las tasas de interés.
+
+**7. CONFIDENCE SCORE**
+- Score: 80/100
+- Factores que reducen la confianza: la incertidumbre sobre la situación económica, la posibilidad de cambios en la política monetaria y la volatilidad en los mercados financieros.
