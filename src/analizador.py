@@ -6,7 +6,7 @@ load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-def analizar_comunicado(comunicado):
+def analizar_comunicado(comunicado, contexto_macro=None):
 
     titulo = comunicado["titulo"]
     fecha  = comunicado["fecha"]
@@ -17,10 +17,48 @@ def analizar_comunicado(comunicado):
     print(f"   Documento: {titulo}")
     print(f"   Fecha    : {fecha}\n")
 
+    # Construir contexto macro si existe
+    contexto_str = ""
+    if contexto_macro:
+        datos   = contexto_macro.get("datos", {})
+        regimen = contexto_macro.get("regimen", {})
+
+        core_pce    = datos.get("CORE_PCE", {})
+        desempleo   = datos.get("DESEMPLEO", {})
+        nfp         = datos.get("NFP", {})
+        tasa_fed    = datos.get("TASA_FED", {})
+        bono_2y     = datos.get("RENDIMIENTO_2Y", {})
+        bono_10y    = datos.get("RENDIMIENTO_10Y", {})
+
+        try:
+            spread = round(
+                float(bono_10y.get("valor", 0) or 0) -
+                float(bono_2y.get("valor", 0) or 0), 2
+            )
+        except:
+            spread = "N/A"
+
+        señales = regimen.get("señales", [])
+        señales_str = " | ".join(señales) if señales else "Sin señales claras"
+
+        contexto_str = (
+            "CONTEXTO MACRO ACTUAL:\n"
+            "Usa estos datos reales para calibrar tu analisis:\n"
+            "- Regimen macro: " + regimen.get("regimen", "N/A") + "\n"
+            "- Core PCE: " + str(core_pce.get("variacion", "N/A")) + "% YoY (objetivo FED: 2%)\n"
+            "- Desempleo: " + str(desempleo.get("valor", "N/A")) + "%\n"
+            "- NFP ultimo mes: " + str(nfp.get("valor", "N/A")) + " miles\n"
+            "- Tasa FED actual: " + str(tasa_fed.get("valor", "N/A")) + "%\n"
+            "- Bono 10Y: " + str(bono_10y.get("valor", "N/A")) + "%\n"
+            "- Spread curva 10Y-2Y: " + str(spread) + "%\n"
+            "- Señales macro: " + señales_str + "\n"
+        )
+
     prompt = (
         "Eres un analista macro senior especializado en politica monetaria "
         "de la Reserva Federal. Llevas 20 anos interpretando comunicados "
         "del FOMC para un hedge fund macro global.\n\n"
+        + contexto_str + "\n"
         "GUIA DE CLASIFICACION DE TONO:\n"
         "- HAWKISH FUERTE (+3 a +5): inflacion persistente preocupante, "
         "mercado laboral solido, sin senales de recortes proximos.\n"
@@ -38,9 +76,9 @@ def analizar_comunicado(comunicado):
         "SENALES DOVISH a buscar:\n"
         "inflation has eased, labor market is cooling, "
         "appropriate to reduce, risks are becoming more balanced.\n\n"
-        f"TITULO: {titulo}\n"
-        f"FECHA: {fecha}\n\n"
-        f"TEXTO DEL COMUNICADO:\n{texto_recortado}\n\n"
+        "TITULO: " + titulo + "\n"
+        "FECHA: " + fecha + "\n\n"
+        "TEXTO DEL COMUNICADO:\n" + texto_recortado + "\n\n"
         "Produce un analisis institucional con estas secciones:\n\n"
         "**1. TONO GENERAL**\n"
         "- Clasificacion: [HAWKISH FUERTE / HAWKISH LEVE / NEUTRO / DOVISH LEVE / DOVISH FUERTE]\n"
@@ -75,7 +113,7 @@ def analizar_comunicado(comunicado):
         "- Score: X/100\n"
         "- Factores que reducen la confianza: [lista]\n\n"
         "Responde en espanol. Se directo y especifico. "
-        "Cada afirmacion debe tener base en el texto."
+        "Cada afirmacion debe tener base en el texto o en el contexto macro."
     )
 
     respuesta = client.chat.completions.create(
@@ -102,16 +140,19 @@ def analizar_comunicado(comunicado):
     print(analisis)
     print("=" * 60)
 
-    nombre_archivo = f"outputs/analisis_fed_{fecha[:3].lower()}.txt"
+    nombre_archivo = "outputs/analisis_fed_" + fecha[:3].lower() + ".txt"
     with open(nombre_archivo, "w", encoding="utf-8") as f:
         f.write("KAIROS — ANALISIS DE COMUNICADO FED\n")
         f.write("=" * 60 + "\n")
-        f.write(f"Documento: {titulo}\n")
-        f.write(f"Fecha    : {fecha}\n")
+        f.write("Documento: " + titulo + "\n")
+        f.write("Fecha    : " + fecha + "\n")
         f.write("=" * 60 + "\n\n")
+        if contexto_str:
+            f.write("CONTEXTO MACRO:\n")
+            f.write(contexto_str + "\n\n")
         f.write(analisis)
 
-    print(f"\n💾 Analisis guardado en: {nombre_archivo}")
+    print("\n💾 Analisis guardado en: " + nombre_archivo)
 
     return analisis
 

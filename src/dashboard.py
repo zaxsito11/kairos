@@ -68,6 +68,57 @@ if precios:
                     unsafe_allow_html=True
                 )
 
+# Panel de contexto macro
+st.subheader("Contexto Macro Actual")
+
+with st.spinner("Cargando datos macro..."):
+    from macro import obtener_datos_macro, evaluar_regimen_macro
+    datos_macro = obtener_datos_macro()
+    regimen     = evaluar_regimen_macro(datos_macro)
+
+# Color del regimen
+color_regimen = {
+    "HAWKISH": "🔴",
+    "NEUTRO":  "🟡",
+    "DOVISH":  "🟢"
+}
+emoji = color_regimen.get(regimen["regimen"], "⚪")
+
+st.markdown(f"**Régimen macro:** {emoji} {regimen['regimen']} — {regimen['descripcion']}")
+
+# Mostrar datos macro en columnas
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("**Inflación**")
+    if datos_macro.get("CORE_PCE") and datos_macro["CORE_PCE"].get("variacion"):
+        val = datos_macro["CORE_PCE"]["variacion"]
+        color = "🔴" if val > 2.5 else "🟢"
+        st.metric("Core PCE (YoY)", f"{val}%", delta="Objetivo: 2%")
+    if datos_macro.get("CORE_CPI") and datos_macro["CORE_CPI"].get("variacion"):
+        val = datos_macro["CORE_CPI"]["variacion"]
+        st.metric("Core CPI (YoY)", f"{val}%")
+
+with col2:
+    st.markdown("**Empleo**")
+    if datos_macro.get("DESEMPLEO") and datos_macro["DESEMPLEO"].get("valor"):
+        val = datos_macro["DESEMPLEO"]["valor"]
+        st.metric("Desempleo", f"{val}%")
+    if datos_macro.get("NFP") and datos_macro["NFP"].get("variacion"):
+        val = datos_macro["NFP"]["variacion"]
+        st.metric("NFP (MoM%)", f"{val}%")
+
+with col3:
+    st.markdown("**Tasas y Curva**")
+    if datos_macro.get("TASA_FED") and datos_macro["TASA_FED"].get("valor"):
+        val = datos_macro["TASA_FED"]["valor"]
+        st.metric("Tasa FED", f"{val}%")
+    if datos_macro.get("RENDIMIENTO_10Y") and datos_macro.get("RENDIMIENTO_2Y"):
+        r10 = datos_macro["RENDIMIENTO_10Y"].get("valor", 0) or 0
+        r2  = datos_macro["RENDIMIENTO_2Y"].get("valor", 0) or 0
+        spread = round(float(r10) - float(r2), 2)
+        st.metric("Spread 10Y-2Y", f"{spread}%")
+
 st.divider()
 
 # Selector de banco central

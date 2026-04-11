@@ -4,45 +4,59 @@ Documento: Minutes of the Federal Open Market Committee, March 17–18, 2026
 Fecha    : Wed, 8 Apr 2026 18:00:00 GMT
 ============================================================
 
+CONTEXTO MACRO:
+CONTEXTO MACRO ACTUAL:
+Usa estos datos reales para calibrar tu analisis:
+- Regimen macro: NEUTRO
+- Core PCE: 2.97% YoY (objetivo FED: 2%)
+- Desempleo: 4.3%
+- NFP ultimo mes: 158637 miles
+- Tasa FED actual: 3.64%
+- Bono 10Y: 4.25%
+- Spread curva 10Y-2Y: 0.54%
+- Señales macro: Core PCE sobre objetivo: 2.97% | Curva normal: spread 0.54%
+
+
 **1. TONO GENERAL**
-- Clasificación: HAWKISH LEVE
+- Clasificacion: HAWKISH LEVE
 - Score: +2
-- Señales hawkish encontradas: "inflación permanece elevada", "el desempleo sigue siendo bajo", "el crecimiento del PIB sigue siendo sólido".
-- Señales dovish encontradas: "el crecimiento del empleo es bajo", "la inflación de los servicios no residenciales es estable".
-- Justificación: El tono general es hawkish leve debido a que la inflación sigue siendo elevada y el crecimiento del PIB es sólido, lo que sugiere que la economía sigue siendo fuerte. Sin embargo, el crecimiento del empleo es bajo, lo que podría ser un indicio de una desaceleración en el futuro.
+- Senales hawkish encontradas: "Consumer price inflation remained elevated", "Core PCE price inflation, which excludes changes in consumer energy prices and many consumer food prices, was 3.1 percent in January", "The staff estimated that total PCE price inflation was 2.8 percent in February, while core PCE price inflation was 3.0 percent".
+- Senales dovish encontradas: "The average monthly change in total payroll employment was low over January and February", "The employment cost index increased 3.4 percent over the 12 months ending in December, and average hourly earnings rose 3.8 percent over the 12 months ending in February; both measures were slightly below their year-earlier levels".
+- Justificacion: El tono general es hawkish leve debido a que la inflación sigue siendo elevada, pero no hay señales de un aumento significativo en la tasa de interés.
 
 **2. MENSAJES CLAVE**
-- La inflación sigue siendo elevada y por encima del objetivo del 2%.
-- El crecimiento del PIB sigue siendo sólido, a pesar de la desaceleración en el empleo.
-- La política monetaria seguirá siendo restrictiva para controlar la inflación.
+- Los 3 mensajes más importantes para los mercados son:
+ 1. La inflación sigue siendo elevada y por encima del objetivo del 2%.
+ 2. El mercado laboral sigue siendo sólido, aunque con una tasa de creación de empleos baja.
+ 3. La economía sigue creciendo a un ritmo sólido, aunque con algunas señales de desaceleración.
 
 **3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
-- El lenguaje nuevo que aparece es "la inflación de los servicios no residenciales es estable", lo que sugiere que la inflación no solo se debe a la inflación de los bienes.
-- Se elimina la mención a una posible reducción de las tasas de interés en el corto plazo.
+- El lenguaje nuevo que aparece es "la inflación sigue siendo elevada" y "el mercado laboral sigue siendo sólido".
+- Se elimina o suaviza el lenguaje sobre la posibilidad de recortes en las tasas de interés.
 
 **4. IMPACTO ESPERADO POR ACTIVO**
-- USD (Dólar): al alza debido a la política monetaria restrictiva.
-- Bonos del Tesoro UST 10Y: a la baja debido a la inflación elevada y la política monetaria restrictiva.
-- S&P 500 (SPX): a la baja debido a la incertidumbre sobre la política monetaria y la inflación.
-- Nasdaq (NDX): a la baja debido a la exposición a la tecnología y la incertidumbre sobre la política monetaria.
-- Oro (Gold): a la baja debido a la política monetaria restrictiva y la fortaleza del dólar.
-- EUR/USD: a la baja debido a la fortaleza del dólar y la política monetaria restrictiva.
-- VIX (Volatilidad): al alza debido a la incertidumbre sobre la política monetaria y la inflación.
+- USD (Dolar): Al alza debido a la expectativa de que la tasa de interés se mantenga alta.
+- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de que la inflación siga siendo elevada.
+- S&P 500 (SPX): A la baja debido a la expectativa de que la economía siga creciendo a un ritmo sólido, pero con algunas señales de desaceleración.
+- Nasdaq (NDX): A la baja debido a la expectativa de que la economía siga creciendo a un ritmo sólido, pero con algunas señales de desaceleración.
+- Oro (Gold): A la baja debido a la expectativa de que la tasa de interés se mantenga alta.
+- EUR/USD: A la baja debido a la expectativa de que la economía estadounidense siga creciendo a un ritmo sólido.
+- VIX (Volatilidad): Al alza debido a la expectativa de que la economía siga creciendo a un ritmo sólido, pero con algunas señales de desaceleración.
 
 **5. ESCENARIOS DE MERCADO**
-ESCENARIO A (probabilidad: 40%): "Inflación persistente"
-La inflación sigue siendo elevada y la política monetaria se vuelve más restrictiva, lo que lleva a una desaceleración en el crecimiento del PIB y una caída en los mercados de acciones.
+ESCENARIO A (probabilidad: 40%): "Crecimiento sólido con inflación elevada"
+La economía sigue creciendo a un ritmo sólido, pero la inflación sigue siendo elevada, lo que lleva a una subida en las tasas de interés.
 
-ESCENARIO B (probabilidad: 30%): "Desaceleración económica"
-La economía se desacelera debido a la política monetaria restrictiva y la inflación, lo que lleva a una caída en los mercados de acciones y una disminución en la inflación.
+ESCENARIO B (probabilidad: 30%): "Desaceleración económica con inflación moderada"
+La economía comienza a desacelerarse, pero la inflación sigue siendo moderada, lo que lleva a una estabilidad en las tasas de interés.
 
-ESCENARIO C (probabilidad: 30%): "Estabilidad económica"
-La economía sigue creciendo a un ritmo moderado, la inflación se mantiene estable y la política monetaria se mantiene restrictiva, lo que lleva a una estabilidad en los mercados de acciones y una disminución en la volatilidad.
+ESCENARIO C (probabilidad: 30%): "Recesión con inflación baja"
+La economía entra en recesión, pero la inflación sigue siendo baja, lo que lleva a una bajada en las tasas de interés.
 
 **6. VARIABLES CLAVE A MONITOREAR**
-- Datos de inflación y crecimiento del PIB.
-- Declaraciones de miembros del FOMC sobre la política monetaria y la inflación.
+- Datos proximos relevantes: Informe de empleo, inflación, crecimiento del PIB.
+- Declaraciones de miembros del FOMC a seguir: Comentarios sobre la inflación, el mercado laboral y la economía en general.
 
 **7. CONFIDENCE SCORE**
 - Score: 80/100
-- Factores que reducen la confianza: la incertidumbre sobre la política monetaria y la inflación, la exposición a la tecnología y la volatilidad en los mercados de acciones.
+- Factores que reducen la confianza: La incertidumbre sobre la evolución de la inflación y el mercado laboral, así como la posibilidad de cambios en la política monetaria.
