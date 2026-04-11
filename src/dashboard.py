@@ -11,6 +11,7 @@ from analizador import analizar_comunicado
 from precios import obtener_precios
 from macro import obtener_datos_macro, evaluar_regimen_macro
 from historico import encontrar_similares
+from sorpresa_macro import analizar_sorpresas_recientes, generar_resumen_macro_sorpresas
 
 st.set_page_config(
     page_title="KAIROS — Inteligencia de Mercados",
@@ -104,7 +105,23 @@ with col3:
         r10 = float(datos_macro["RENDIMIENTO_10Y"].get("valor", 0) or 0)
         r2  = float(datos_macro["RENDIMIENTO_2Y"].get("valor", 0) or 0)
         st.metric("Spread 10Y-2Y", f"{round(r10 - r2, 2)}%")
+# Sorpresas macro recientes
+st.markdown("**Sorpresas vs Consenso (últimos datos publicados):**")
+with st.spinner("Calculando sorpresas..."):
+    sorpresas = analizar_sorpresas_recientes()
 
+if sorpresas:
+    cols_s = st.columns(len(sorpresas))
+    for i, s in enumerate(sorpresas):
+        with cols_s[i]:
+            color = "🔴" if s["direccion"] == "HAWKISH" else "🟢"
+            signo = "+" if s["diferencia"] > 0 else ""
+            st.metric(
+                s["nombre"],
+                str(s["real"]) + " " + s["unidad"],
+                delta=signo + str(s["diferencia"]) + " vs " + str(s["consenso"])
+            )
+            st.caption(s["emoji"] + " " + s["nivel"])
 st.divider()
 
 # Selector banco central
