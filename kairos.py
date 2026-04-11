@@ -8,6 +8,7 @@ from fed_scraper import obtener_comunicado_fed
 from analizador import analizar_comunicado
 from macro import obtener_datos_macro, evaluar_regimen_macro
 from alertas import evaluar_y_alertar
+from historico import encontrar_similares, generar_resumen_historico
 
 def ejecutar_kairos():
 
@@ -51,6 +52,38 @@ def ejecutar_kairos():
     # PASO 4: Evaluar y enviar alerta si el evento es relevante
     print("▶ PASO 4: Evaluando si merece alerta...")
     evaluar_y_alertar(comunicado, analisis, regimen)
+
+    # PASO 5: Comparacion historica
+    print("▶ PASO 5: Buscando precedentes historicos...")
+    
+    # Extraer tono y score del analisis
+    tono_detectado  = "HAWKISH LEVE"
+    score_detectado = 2
+    
+    for linea in analisis.split('\n'):
+        if "Clasificacion:" in linea or "Clasificación:" in linea:
+            for tono in ["HAWKISH FUERTE", "HAWKISH LEVE", "NEUTRO", "DOVISH LEVE", "DOVISH FUERTE"]:
+                if tono in linea:
+                    tono_detectado = tono
+                    break
+        if "Score:" in linea and "Confidence" not in linea:
+            try:
+                val = linea.split(":")[-1].strip().replace("+","")
+                score_detectado = int(val)
+            except:
+                pass
+
+    similares = encontrar_similares(tono_detectado, score_detectado)
+    resumen_hist = generar_resumen_historico(similares)
+    print(resumen_hist)
+
+    # Guardar historico junto al analisis
+    nombre_hist = "outputs/historico_" + comunicado["fecha"][:3].lower() + ".txt"
+    with open(nombre_hist, "w", encoding="utf-8") as f:
+        f.write("KAIROS — PRECEDENTES HISTORICOS\n")
+        f.write("=" * 60 + "\n\n")
+        f.write(resumen_hist)
+    print(f"💾 Historico guardado en: {nombre_hist}")
 
     print()
     print("=" * 60)

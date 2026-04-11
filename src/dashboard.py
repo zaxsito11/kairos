@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 import os
+import glob
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -8,6 +9,8 @@ from fed_scraper import obtener_comunicado_fed
 from bce_scraper import obtener_comunicado_bce
 from analizador import analizar_comunicado
 from precios import obtener_precios
+from macro import obtener_datos_macro, evaluar_regimen_macro
+from historico import encontrar_similares
 
 st.set_page_config(
     page_title="KAIROS — Inteligencia de Mercados",
@@ -68,91 +71,66 @@ if precios:
                     unsafe_allow_html=True
                 )
 
-# Panel de contexto macro
+st.divider()
+
+# Panel macro
 st.subheader("Contexto Macro Actual")
-
 with st.spinner("Cargando datos macro..."):
-    from macro import obtener_datos_macro, evaluar_regimen_macro
     datos_macro = obtener_datos_macro()
-    regimen     = evaluar_regimen_macro(datos_macro)
+    regimen = evaluar_regimen_macro(datos_macro)
 
-# Color del regimen
-color_regimen = {
-    "HAWKISH": "🔴",
-    "NEUTRO":  "🟡",
-    "DOVISH":  "🟢"
-}
+color_regimen = {"HAWKISH": "🔴", "NEUTRO": "🟡", "DOVISH": "🟢"}
 emoji = color_regimen.get(regimen["regimen"], "⚪")
-
 st.markdown(f"**Régimen macro:** {emoji} {regimen['regimen']} — {regimen['descripcion']}")
 
-# Mostrar datos macro en columnas
 col1, col2, col3 = st.columns(3)
-
 with col1:
     st.markdown("**Inflación**")
     if datos_macro.get("CORE_PCE") and datos_macro["CORE_PCE"].get("variacion"):
-        val = datos_macro["CORE_PCE"]["variacion"]
-        color = "🔴" if val > 2.5 else "🟢"
-        st.metric("Core PCE (YoY)", f"{val}%", delta="Objetivo: 2%")
+        st.metric("Core PCE (YoY)", f"{datos_macro['CORE_PCE']['variacion']}%", delta="Objetivo: 2%")
     if datos_macro.get("CORE_CPI") and datos_macro["CORE_CPI"].get("variacion"):
-        val = datos_macro["CORE_CPI"]["variacion"]
-        st.metric("Core CPI (YoY)", f"{val}%")
-
+        st.metric("Core CPI (YoY)", f"{datos_macro['CORE_CPI']['variacion']}%")
 with col2:
     st.markdown("**Empleo**")
     if datos_macro.get("DESEMPLEO") and datos_macro["DESEMPLEO"].get("valor"):
-        val = datos_macro["DESEMPLEO"]["valor"]
-        st.metric("Desempleo", f"{val}%")
+        st.metric("Desempleo", f"{datos_macro['DESEMPLEO']['valor']}%")
     if datos_macro.get("NFP") and datos_macro["NFP"].get("variacion"):
-        val = datos_macro["NFP"]["variacion"]
-        st.metric("NFP (MoM%)", f"{val}%")
-
+        st.metric("NFP (MoM%)", f"{datos_macro['NFP']['variacion']}%")
 with col3:
     st.markdown("**Tasas y Curva**")
     if datos_macro.get("TASA_FED") and datos_macro["TASA_FED"].get("valor"):
-        val = datos_macro["TASA_FED"]["valor"]
-        st.metric("Tasa FED", f"{val}%")
+        st.metric("Tasa FED", f"{datos_macro['TASA_FED']['valor']}%")
     if datos_macro.get("RENDIMIENTO_10Y") and datos_macro.get("RENDIMIENTO_2Y"):
-        r10 = datos_macro["RENDIMIENTO_10Y"].get("valor", 0) or 0
-        r2  = datos_macro["RENDIMIENTO_2Y"].get("valor", 0) or 0
-        spread = round(float(r10) - float(r2), 2)
-        st.metric("Spread 10Y-2Y", f"{spread}%")
+        r10 = float(datos_macro["RENDIMIENTO_10Y"].get("valor", 0) or 0)
+        r2  = float(datos_macro["RENDIMIENTO_2Y"].get("valor", 0) or 0)
+        st.metric("Spread 10Y-2Y", f"{round(r10 - r2, 2)}%")
 
 st.divider()
 
-# Selector de banco central
+# Selector banco central
 st.subheader("Selecciona el banco central a analizar")
 col1, col2 = st.columns(2)
-
 with col1:
-    btn_fed = st.button(
-        "🇺🇸 Analizar FED",
-        use_container_width=True,
-        type="primary"
-    )
-
+    btn_fed = st.button("🇺🇸 Analizar FED", use_container_width=True, type="primary")
 with col2:
-    btn_bce = st.button(
-        "🇪🇺 Analizar BCE",
-        use_container_width=True,
-        type="secondary"
-    )
+    btn_bce = st.button("🇪🇺 Analizar BCE", use_container_width=True, type="secondary")
+
 
 def mostrar_analisis(comunicado):
     st.success("Comunicado: " + comunicado["titulo"])
     st.caption("Fecha: " + str(comunicado["fecha"]))
     st.divider()
 
+    contexto_macro = {"datos": datos_macro, "regimen": regimen}
+
     with st.spinner("Analizando con inteligencia artificial..."):
-        analisis = analizar_comunicado(comunicado)
+        analisis = analizar_comunicado(comunicado, contexto_macro)
 
     st.subheader("Analisis KAIROS")
 
     lineas = analisis.split('\n')
     secciones = []
     seccion_actual = []
-
     for linea in lineas:
         es_titulo = any(str(i) + "." in linea for i in range(1, 8))
         if linea.strip().startswith('**') and es_titulo:
@@ -161,7 +139,6 @@ def mostrar_analisis(comunicado):
             seccion_actual = [linea]
         else:
             seccion_actual.append(linea)
-
     if seccion_actual:
         secciones.append('\n'.join(seccion_actual))
 
@@ -175,6 +152,53 @@ def mostrar_analisis(comunicado):
 
     st.success("Analisis guardado en outputs/")
 
+    # Precedentes historicos
+    st.divider()
+    st.subheader("📚 Precedentes Históricos")
+
+    tono_det = "NEUTRO"
+    score_det = 0
+    for linea in analisis.split('\n'):
+        if "Clasificacion:" in linea or "Clasificación:" in linea:
+            for t in ["HAWKISH FUERTE","HAWKISH LEVE","NEUTRO","DOVISH LEVE","DOVISH FUERTE"]:
+                if t in linea:
+                    tono_det = t
+                    break
+        if "Score:" in linea and "Confidence" not in linea:
+            try:
+                score_det = int(linea.split(":")[-1].strip().replace("+",""))
+            except:
+                pass
+
+    similares = encontrar_similares(tono_det, score_det)
+
+    for ev in similares:
+        with st.expander("📅 " + ev['fecha'] + " — " + ev['evento']):
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown("**Tono:** " + ev['tono'] + " (Score: " + str(ev['score']) + ")")
+                st.markdown("**Contexto:** " + ev['contexto'])
+                st.markdown("**Lección:** " + ev['leccion'])
+            with c2:
+                st.markdown("**Outcomes 24h:**")
+                for activo, cambio in ev["outcomes_24h"].items():
+                    color = "🟢" if cambio >= 0 else "🔴"
+                    signo = "+" if cambio >= 0 else ""
+                    st.markdown(color + " " + activo + ": " + signo + str(cambio) + "%")
+
+    if similares:
+        spx_avg  = sum(e["outcomes_24h"]["SPX"]  for e in similares) / len(similares)
+        gold_avg = sum(e["outcomes_24h"]["Gold"] for e in similares) / len(similares)
+        dxy_avg  = sum(e["outcomes_24h"]["DXY"]  for e in similares) / len(similares)
+        st.markdown("**Promedio histórico de eventos similares (24h):**")
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.metric("SPX", ("+" if spx_avg >= 0 else "") + str(round(spx_avg,1)) + "%")
+        with c2:
+            st.metric("Gold", ("+" if gold_avg >= 0 else "") + str(round(gold_avg,1)) + "%")
+        with c3:
+            st.metric("DXY", ("+" if dxy_avg >= 0 else "") + str(round(dxy_avg,1)) + "%")
+
 
 if btn_fed:
     with st.spinner("Conectando con la FED..."):
@@ -185,15 +209,13 @@ if btn_fed:
         st.error("No se pudo obtener el comunicado de la FED.")
 
 elif btn_bce:
-    st.info("🔄 El módulo BCE está siendo mejorado con fuentes más robustas. Disponible próximamente.")
-    st.markdown("**Próxima actualización incluirá:**")
+    st.info("🔄 El módulo BCE está siendo mejorado. Disponible próximamente.")
     st.markdown("- Decisiones de tasas del BCE en tiempo real")
     st.markdown("- Conferencias de prensa de Christine Lagarde")
     st.markdown("- Comparación BCE vs FED en misma pantalla")
-    
+
 else:
     col1, col2 = st.columns([2, 1])
-
     with col1:
         st.markdown("### Como usar KAIROS")
         c1, c2, c3 = st.columns(3)
@@ -206,15 +228,10 @@ else:
         with c3:
             st.markdown("**Paso 3**")
             st.write("La IA analiza y genera escenarios de impacto en mercados")
-
     with col2:
         st.markdown("### Análisis guardados")
-        import os
-        import glob
-
         archivos = glob.glob("outputs/analisis_*.txt")
         archivos.sort(reverse=True)
-
         if archivos:
             for archivo in archivos[:5]:
                 nombre = os.path.basename(archivo)

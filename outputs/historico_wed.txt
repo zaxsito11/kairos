@@ -1,0 +1,46 @@
+KAIROS — PRECEDENTES HISTORICOS
+============================================================
+
+PRECEDENTES HISTORICOS SIMILARES:
+==================================================
+
+1. 2022-11-02 — FOMC sube 75bps pero Powell senala posible pausa
+   Tono: HAWKISH LEVE (Score: 2)
+   Contexto: Cuarta subida consecutiva de 75bps. Mercado esperaba señal de pivot.
+   Outcomes 24h:
+     SPX: -2.5%
+     NDX: -3.1%
+     Gold: +0.8%
+     DXY: +0.6%
+     UST10Y: +10%
+     VIX: +12.3%
+   Leccion: Caida inicial por decepcion, rally posterior cuando mercado digiere señal de pausa.
+
+2. 2023-09-20 — FOMC mantiene tasas - hawkish pause
+   Tono: HAWKISH LEVE (Score: 2)
+   Contexto: Pausa pero dot plot revela posible subida adicional en 2023.
+   Outcomes 24h:
+     SPX: -0.9%
+     NDX: -1.5%
+     Gold: -1.1%
+     DXY: +0.7%
+     UST10Y: +12%
+     VIX: +8.2%
+   Leccion: Dot plot mas hawkish de lo esperado causo sell-off en bonos y acciones.
+
+3. 2024-01-31 — FOMC mantiene tasas - descarta recorte en marzo
+   Tono: HAWKISH LEVE (Score: 2)
+   Contexto: Mercado tenia 70% priced-in de recorte en marzo. Powell lo descarta.
+   Outcomes 24h:
+     SPX: -1.6%
+     NDX: -2.2%
+     Gold: -0.8%
+     DXY: +0.9%
+     UST10Y: +8%
+     VIX: +9.1%
+   Leccion: Sorpresa hawkish causo caida inmediata. Recuperacion posterior cuando datos confirmaron desinflacion.
+
+PROMEDIO HISTORICO (24h):
+  SPX:  -1.7%
+  Gold: -0.4%
+  DXY:  +0.7%

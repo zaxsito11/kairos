@@ -20,43 +20,43 @@ Usa estos datos reales para calibrar tu analisis:
 **1. TONO GENERAL**
 - Clasificacion: HAWKISH LEVE
 - Score: +2
-- Senales hawkish encontradas: "inflación permanece elevada", "el desempleo sigue siendo bajo", "el crecimiento del PIB sigue siendo sólido".
-- Senales dovish encontradas: "el crecimiento del empleo es bajo", "la inflación de los servicios no residenciales es estable".
-- Justificacion: El tono general es hawkish leve debido a que la inflación sigue siendo elevada y el crecimiento del PIB es sólido, lo que sugiere que la economía sigue siendo fuerte y que la inflación es un riesgo.
+- Senales hawkish encontradas: "inflación permanece elevada", "el mercado laboral sigue siendo sólido", "la inflación subyacente sigue siendo alta".
+- Senales dovish encontradas: "el crecimiento del empleo ha sido bajo", "la inflación de los servicios ha disminuido".
+- Justificacion: El tono general es hawkish leve debido a que la inflación sigue siendo elevada y el mercado laboral sigue siendo sólido, pero el crecimiento del empleo ha sido bajo y la inflación de los servicios ha disminuido.
 
 **2. MENSAJES CLAVE**
 - Los 3 mensajes más importantes para los mercados son:
- 1. La inflación sigue siendo elevada y es un riesgo para la economía.
- 2. El crecimiento del PIB sigue siendo sólido, lo que sugiere que la economía sigue siendo fuerte.
- 3. El mercado laboral sigue siendo fuerte, aunque el crecimiento del empleo es bajo.
+ 1. La inflación sigue siendo elevada y por encima del objetivo del 2%.
+ 2. El mercado laboral sigue siendo sólido, pero el crecimiento del empleo ha sido bajo.
+ 3. La Reserva Federal sigue monitoreando la situación económica y no hay señales de recortes de tasas de interés en el corto plazo.
 
 **3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
-- Lenguaje nuevo: "la inflación permanece elevada" y "el crecimiento del PIB sigue siendo sólido" sugieren un tono más hawkish que en el comunicado anterior.
-- Se elimino o suavizo: No se menciona explícitamente la posibilidad de recortes de tasas, lo que sugiere que el FOMC está menos dispuesto a relajar la política monetaria.
+- El lenguaje nuevo que aparece es "la inflación de los servicios ha disminuido" y "el crecimiento del empleo ha sido bajo".
+- Se elimina o suaviza el lenguaje sobre la posibilidad de recortes de tasas de interés en el corto plazo.
 
 **4. IMPACTO ESPERADO POR ACTIVO**
-- USD (Dolar): Al alza debido al tono hawkish del FOMC.
-- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de que las tasas de interés sigan siendo altas.
-- S&P 500 (SPX): A la baja debido a la expectativa de que la economía siga siendo fuerte, pero con un tono más hawkish del FOMC.
-- Nasdaq (NDX): A la baja debido a la expectativa de que la economía siga siendo fuerte, pero con un tono más hawkish del FOMC.
-- Oro (Gold): A la baja debido a la expectativa de que el dólar siga siendo fuerte.
-- EUR/USD: A la baja debido a la expectativa de que el dólar siga siendo fuerte.
-- VIX (Volatilidad): Al alza debido a la incertidumbre sobre la política monetaria del FOMC.
+- USD (Dolar): Al alza debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de que la inflación siga siendo elevada.
+- S&P 500 (SPX): A la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- Nasdaq (NDX): A la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- Oro (Gold): A la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- EUR/USD: A la baja debido a la expectativa de que la Reserva Federal mantenga las tasas de interés altas.
+- VIX (Volatilidad): Al alza debido a la incertidumbre sobre la situación económica.
 
 **5. ESCENARIOS DE MERCADO**
-ESCENARIO A (probabilidad: 40%): "Continuación del crecimiento económico"
-La economía sigue creciendo a un ritmo sólido, la inflación sigue siendo elevada y el FOMC mantiene un tono hawkish.
+ESCENARIO A (probabilidad: 40%): "Escenario de crecimiento lento"
+La economía sigue creciendo a un ritmo lento, la inflación sigue siendo elevada y la Reserva Federal mantiene las tasas de interés altas.
 
-ESCENARIO B (probabilidad: 30%): "Enfriamiento económico"
-La economía comienza a enfriarse, la inflación disminuye y el FOMC relaja la política monetaria.
+ESCENARIO B (probabilidad: 30%): "Escenario de recesión"
+La economía entra en recesión, la inflación disminuye y la Reserva Federal reduce las tasas de interés.
 
-ESCENARIO C (probabilidad: 30%): "Recesión"
-La economía entra en recesión, la inflación disminuye y el FOMC recorta las tasas de interés.
+ESCENARIO C (probabilidad: 30%): "Escenario de crecimiento fuerte"
+La economía crece a un ritmo fuerte, la inflación sigue siendo elevada y la Reserva Federal aumenta las tasas de interés.
 
 **6. VARIABLES CLAVE A MONITOREAR**
 - Datos proximos relevantes: Informe de empleo, inflación, crecimiento del PIB.
-- Declaraciones de miembros del FOMC a seguir: Declaraciones de Powell, Brainard, Williams.
+- Declaraciones de miembros del FOMC a seguir: Comentarios sobre la situación económica y la política monetaria.
 
 **7. CONFIDENCE SCORE**
 - Score: 80/100
-- Factores que reducen la confianza: La incertidumbre sobre la política monetaria del FOMC, la posibilidad de un enfriamiento económico y la volatilidad del mercado.
+- Factores que reducen la confianza: La incertidumbre sobre la situación económica, la posibilidad de cambios en la política monetaria y la volatilidad de los mercados.
