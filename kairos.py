@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 from fed_scraper import obtener_comunicado_fed
 from analizador import analizar_comunicado
 from macro import obtener_datos_macro, evaluar_regimen_macro
+from alertas import evaluar_y_alertar
 
 def ejecutar_kairos():
 
@@ -46,6 +47,10 @@ def ejecutar_kairos():
         "regimen": regimen
     }
     analisis = analizar_comunicado(comunicado, contexto_macro)
+
+    # PASO 4: Evaluar y enviar alerta si el evento es relevante
+    print("▶ PASO 4: Evaluando si merece alerta...")
+    evaluar_y_alertar(comunicado, analisis, regimen)
 
     print()
     print("=" * 60)

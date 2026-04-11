@@ -20,43 +20,43 @@ Usa estos datos reales para calibrar tu analisis:
 **1. TONO GENERAL**
 - Clasificacion: HAWKISH LEVE
 - Score: +2
-- Senales hawkish encontradas: "Consumer price inflation remained elevated", "Core PCE price inflation, which excludes changes in consumer energy prices and many consumer food prices, was 3.1 percent in January", "The staff estimated that total PCE price inflation was 2.8 percent in February, while core PCE price inflation was 3.0 percent".
-- Senales dovish encontradas: "The average monthly change in total payroll employment was low over January and February", "The employment cost index increased 3.4 percent over the 12 months ending in December, and average hourly earnings rose 3.8 percent over the 12 months ending in February; both measures were slightly below their year-earlier levels".
-- Justificacion: El tono general es hawkish leve debido a que la inflación sigue siendo elevada, pero no hay señales de un aumento significativo en la tasa de interés.
+- Senales hawkish encontradas: "inflación permanece elevada", "el desempleo sigue siendo bajo", "el crecimiento del PIB sigue siendo sólido".
+- Senales dovish encontradas: "el crecimiento del empleo es bajo", "la inflación de los servicios no residenciales es estable".
+- Justificacion: El tono general es hawkish leve debido a que la inflación sigue siendo elevada y el crecimiento del PIB es sólido, lo que sugiere que la economía sigue siendo fuerte y que la inflación es un riesgo.
 
 **2. MENSAJES CLAVE**
 - Los 3 mensajes más importantes para los mercados son:
- 1. La inflación sigue siendo elevada y por encima del objetivo del 2%.
- 2. El mercado laboral sigue siendo sólido, aunque con una tasa de creación de empleos baja.
- 3. La economía sigue creciendo a un ritmo sólido, aunque con algunas señales de desaceleración.
+ 1. La inflación sigue siendo elevada y es un riesgo para la economía.
+ 2. El crecimiento del PIB sigue siendo sólido, lo que sugiere que la economía sigue siendo fuerte.
+ 3. El mercado laboral sigue siendo fuerte, aunque el crecimiento del empleo es bajo.
 
 **3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
-- El lenguaje nuevo que aparece es "la inflación sigue siendo elevada" y "el mercado laboral sigue siendo sólido".
-- Se elimina o suaviza el lenguaje sobre la posibilidad de recortes en las tasas de interés.
+- Lenguaje nuevo: "la inflación permanece elevada" y "el crecimiento del PIB sigue siendo sólido" sugieren un tono más hawkish que en el comunicado anterior.
+- Se elimino o suavizo: No se menciona explícitamente la posibilidad de recortes de tasas, lo que sugiere que el FOMC está menos dispuesto a relajar la política monetaria.
 
 **4. IMPACTO ESPERADO POR ACTIVO**
-- USD (Dolar): Al alza debido a la expectativa de que la tasa de interés se mantenga alta.
-- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de que la inflación siga siendo elevada.
-- S&P 500 (SPX): A la baja debido a la expectativa de que la economía siga creciendo a un ritmo sólido, pero con algunas señales de desaceleración.
-- Nasdaq (NDX): A la baja debido a la expectativa de que la economía siga creciendo a un ritmo sólido, pero con algunas señales de desaceleración.
-- Oro (Gold): A la baja debido a la expectativa de que la tasa de interés se mantenga alta.
-- EUR/USD: A la baja debido a la expectativa de que la economía estadounidense siga creciendo a un ritmo sólido.
-- VIX (Volatilidad): Al alza debido a la expectativa de que la economía siga creciendo a un ritmo sólido, pero con algunas señales de desaceleración.
+- USD (Dolar): Al alza debido al tono hawkish del FOMC.
+- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de que las tasas de interés sigan siendo altas.
+- S&P 500 (SPX): A la baja debido a la expectativa de que la economía siga siendo fuerte, pero con un tono más hawkish del FOMC.
+- Nasdaq (NDX): A la baja debido a la expectativa de que la economía siga siendo fuerte, pero con un tono más hawkish del FOMC.
+- Oro (Gold): A la baja debido a la expectativa de que el dólar siga siendo fuerte.
+- EUR/USD: A la baja debido a la expectativa de que el dólar siga siendo fuerte.
+- VIX (Volatilidad): Al alza debido a la incertidumbre sobre la política monetaria del FOMC.
 
 **5. ESCENARIOS DE MERCADO**
-ESCENARIO A (probabilidad: 40%): "Crecimiento sólido con inflación elevada"
-La economía sigue creciendo a un ritmo sólido, pero la inflación sigue siendo elevada, lo que lleva a una subida en las tasas de interés.
+ESCENARIO A (probabilidad: 40%): "Continuación del crecimiento económico"
+La economía sigue creciendo a un ritmo sólido, la inflación sigue siendo elevada y el FOMC mantiene un tono hawkish.
 
-ESCENARIO B (probabilidad: 30%): "Desaceleración económica con inflación moderada"
-La economía comienza a desacelerarse, pero la inflación sigue siendo moderada, lo que lleva a una estabilidad en las tasas de interés.
+ESCENARIO B (probabilidad: 30%): "Enfriamiento económico"
+La economía comienza a enfriarse, la inflación disminuye y el FOMC relaja la política monetaria.
 
-ESCENARIO C (probabilidad: 30%): "Recesión con inflación baja"
-La economía entra en recesión, pero la inflación sigue siendo baja, lo que lleva a una bajada en las tasas de interés.
+ESCENARIO C (probabilidad: 30%): "Recesión"
+La economía entra en recesión, la inflación disminuye y el FOMC recorta las tasas de interés.
 
 **6. VARIABLES CLAVE A MONITOREAR**
 - Datos proximos relevantes: Informe de empleo, inflación, crecimiento del PIB.
-- Declaraciones de miembros del FOMC a seguir: Comentarios sobre la inflación, el mercado laboral y la economía en general.
+- Declaraciones de miembros del FOMC a seguir: Declaraciones de Powell, Brainard, Williams.
 
 **7. CONFIDENCE SCORE**
 - Score: 80/100
-- Factores que reducen la confianza: La incertidumbre sobre la evolución de la inflación y el mercado laboral, así como la posibilidad de cambios en la política monetaria.
+- Factores que reducen la confianza: La incertidumbre sobre la política monetaria del FOMC, la posibilidad de un enfriamiento económico y la volatilidad del mercado.
