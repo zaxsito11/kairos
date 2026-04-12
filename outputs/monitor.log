@@ -98,3 +98,30 @@
 2026-04-11 19:04:14,597 [INFO]   Gold: -0.63% ✓ normal
 2026-04-11 19:04:14,732 [INFO]   WTI: -1.33% ✓ normal
 2026-04-11 19:04:14,770 [INFO]   FED: NUEVO COMUNICADO DETECTADO
+2026-04-11 19:06:16,333 [INFO] ==================================================
+2026-04-11 19:06:16,333 [INFO] 🚀 KAIROS MONITOR ACTIVO
+2026-04-11 19:06:16,333 [INFO]    Intervalo: cada 5 minutos
+2026-04-11 19:06:16,333 [INFO]    Scanner: news_scanner con filtro de absorción
+2026-04-11 19:06:16,333 [INFO]    Concepto: solo eventos NO absorbidos por el mercado
+2026-04-11 19:06:16,333 [INFO] ==================================================
+2026-04-11 19:06:16,348 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:06:16,348 [INFO] CICLO #1 — 11/04/2026 19:06:16
+2026-04-11 19:06:16,348 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:06:22,871 [INFO] Macro: NEUTRO
+2026-04-11 19:06:22,871 [INFO] 
+[1] NOTICIAS — filtro de absorción activo
+2026-04-11 19:06:24,425 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:06:24,425 [INFO] 
+[2] MERCADOS
+2026-04-11 19:06:25,099 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:06:25,233 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:06:25,367 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:06:25,517 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:06:25,651 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:06:25,651 [INFO] 
+[3] FED
+2026-04-11 19:06:25,651 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:06:25,651 [INFO] 
+✅ Ciclo #1 — 3 alertas totales
+2026-04-11 19:06:25,651 [INFO] ⏳ Próxima revisión en 5 minutos...
