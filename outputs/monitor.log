@@ -1,0 +1,100 @@
+2026-04-11 18:28:21,146 [INFO] 🧪 MODO TEST — una sola pasada
+2026-04-11 18:28:21,147 [INFO] Escaneando: Reuters Business
+2026-04-11 18:28:21,232 [INFO] Escaneando: Reuters Markets
+2026-04-11 18:28:21,315 [INFO] Escaneando: CNBC Markets
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Consumer sentiment hits record low, inflation fears rise amid Iran war
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Inflation held sticky at 3% as U.S. headed into war with Iran, key Fed gauge sho
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Markets shift back toward potential Fed rate cut this year with Iran ceasefire i
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: A fragile U.S.-Iran ceasefire sparks market relief — but no clear path to lastin
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: U.S. payrolls rose by 178,000 in March, more than expected; unemployment at 4.3%
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: The March jobs report will be released on Friday. Here's what to expect
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Why $4 a gallon gas prices won’t trigger Fed interest rate hikes — and could lea
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: China suppliers warn of higher prices for Americans due to Strait of Hormuz clos
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Markets now see the Fed's next move as a potential rate hike as inflation fears 
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Global forecasting group sees U.S. inflation at 4.2% this year, much higher than
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Recession odds climb on Wall Street as economy shows cracks beneath the surface
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Don't be fooled by the UK's pre-war inflation print — a 'brutal' surge could be 
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Elizabeth Warren demands answers on costs, economic impact of 'illegal and reckl
+2026-04-11 18:28:21,898 [INFO]   ✅ EVENTO DETECTADO: Traders now see little chance of an interest rate cut this year following Fed de
+2026-04-11 18:28:21,898 [INFO] Escaneando: Investing.com ES
+2026-04-11 18:28:22,497 [INFO]   ✅ EVENTO DETECTADO: Las reservas hoteleras en Petra (Jordania) se desploman un 80% en abril por guer
+2026-04-11 18:28:22,497 [INFO] Escaneando: Bloomberg Markets
+2026-04-11 18:28:23,024 [INFO]   ✅ EVENTO DETECTADO: The IMF Meetings Were Supposed to Be About Trade. Then Came the Iran War.
+2026-04-11 18:28:23,024 [INFO]   ✅ EVENTO DETECTADO: War in Iran Likely to Impact Summer Travel Costs
+2026-04-11 18:28:23,024 [INFO]   ✅ EVENTO DETECTADO: How to Fight a War in Space
+2026-04-11 18:28:24,665 [INFO] 🔴 NUEVO COMUNICADO FED DETECTADO: Minutes of the Federal Open Market Committee, March 17–18, 2026
+2026-04-11 18:30:38,363 [INFO] ==================================================
+2026-04-11 18:30:38,363 [INFO] 🚀 KAIROS MONITOR INICIADO
+2026-04-11 18:30:38,363 [INFO]    Intervalo: 300s (5 min)
+2026-04-11 18:30:38,363 [INFO]    Fuentes RSS: 5
+2026-04-11 18:30:38,363 [INFO] ==================================================
+2026-04-11 18:30:38,418 [INFO] 
+── CICLO #1 — 18:30:38 ──
+2026-04-11 18:30:45,359 [INFO] Régimen macro actualizado: NEUTRO
+2026-04-11 18:30:45,360 [INFO] Escaneando: Reuters Business
+2026-04-11 18:30:45,441 [INFO] Escaneando: Reuters Markets
+2026-04-11 18:30:45,521 [INFO] Escaneando: CNBC Markets
+2026-04-11 18:30:45,868 [INFO] Escaneando: Investing.com ES
+2026-04-11 18:30:46,394 [INFO] Escaneando: Bloomberg Markets
+2026-04-11 18:30:46,885 [INFO] Noticias nuevas relevantes: 0
+2026-04-11 18:30:48,989 [INFO] Alertas de mercado: 0
+2026-04-11 18:30:49,583 [INFO] Total alertas enviadas esta sesión: 0
+2026-04-11 18:30:49,583 [INFO] Próxima revisión en 5 minutos...
+2026-04-11 18:35:49,651 [INFO] 
+── CICLO #2 — 18:35:49 ──
+2026-04-11 18:35:49,652 [INFO] Escaneando: Reuters Business
+2026-04-11 18:35:49,736 [INFO] Escaneando: Reuters Markets
+2026-04-11 18:35:49,815 [INFO] Escaneando: CNBC Markets
+2026-04-11 18:35:50,133 [INFO] Escaneando: Investing.com ES
+2026-04-11 18:35:50,364 [INFO] Escaneando: Bloomberg Markets
+2026-04-11 18:35:50,842 [INFO] Noticias nuevas relevantes: 0
+2026-04-11 18:35:51,601 [INFO] Alertas de mercado: 0
+2026-04-11 18:35:52,163 [INFO] Total alertas enviadas esta sesión: 0
+2026-04-11 18:35:52,163 [INFO] Próxima revisión en 5 minutos...
+2026-04-11 18:36:06,546 [INFO] ==================================================
+2026-04-11 18:36:06,546 [INFO] 🚀 KAIROS MONITOR ACTIVO
+2026-04-11 18:36:06,546 [INFO]    Intervalo: cada 5 minutos
+2026-04-11 18:36:06,546 [INFO]    Noticias: solo últimas 24h
+2026-04-11 18:36:06,546 [INFO]    Fuentes: 5 RSS + mercados + FED
+2026-04-11 18:36:06,546 [INFO] ==================================================
+2026-04-11 18:36:06,546 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 18:36:06,546 [INFO] CICLO #1 — 11/04/2026 18:36:06
+2026-04-11 18:36:06,546 [INFO] ──────────────────────────────────────────────────
+2026-04-11 18:36:10,244 [INFO] Macro actualizado — Régimen: NEUTRO
+2026-04-11 18:36:10,244 [INFO] 
+[1] NOTICIAS
+2026-04-11 18:36:10,244 [INFO]   Escaneando: Reuters Business
+2026-04-11 18:36:10,327 [INFO]     → 0 nuevos
+2026-04-11 18:36:10,327 [INFO]   Escaneando: Reuters Markets
+2026-04-11 18:36:10,398 [INFO]     → 0 nuevos
+2026-04-11 18:36:10,398 [INFO]   Escaneando: CNBC Markets
+2026-04-11 18:36:10,845 [INFO]     → 0 nuevos
+2026-04-11 18:36:10,845 [INFO]   Escaneando: Investing.com ES
+2026-04-11 18:36:11,048 [INFO]     → 0 nuevos
+2026-04-11 18:36:11,048 [INFO]   Escaneando: Bloomberg Markets
+2026-04-11 18:36:11,398 [INFO]     EVENTO: War Diversion Sparks 40% More Ships Refueling in Mauritius Port...
+2026-04-11 18:36:11,398 [INFO]     EVENTO: Assessing Asset Volatility and Iran War Threats: Masters in Business w...
+2026-04-11 18:36:11,399 [INFO]     → 2 nuevos
+2026-04-11 18:36:12,802 [INFO] 
+[2] MERCADOS
+2026-04-11 18:36:13,536 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 18:36:13,669 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 18:36:13,803 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 18:36:13,935 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 18:36:14,148 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 18:36:14,148 [INFO] 
+[3] FED
+2026-04-11 18:36:14,680 [INFO]   FED: NUEVO COMUNICADO DETECTADO
+2026-04-11 18:36:17,896 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-11 18:36:18,601 [INFO]   Alerta FED enviada — HAWKISH LEVE Score:2
+2026-04-11 18:36:18,601 [INFO] 
+✅ Ciclo #1 — 3 alertas totales
+2026-04-11 18:36:18,601 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:04:13,494 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:04:14,193 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:04:14,338 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:04:14,468 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:04:14,597 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:04:14,732 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:04:14,770 [INFO]   FED: NUEVO COMUNICADO DETECTADO
