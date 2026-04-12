@@ -1,6 +1,12 @@
 # monitor.py — KAIROS
 # Sistema de vigilancia automática de eventos con impacto en mercados.
 # CONCEPTO: detecta lo que va a mover los mercados ANTES de que ocurra.
+#
+# 4 FUENTES DE DETECCIÓN:
+#   [1] Noticias RSS — filtro de absorción de mercado
+#   [2] Calendario económico — anticipa eventos macro próximos
+#   [3] Mercados — movimientos anómalos en tiempo real
+#   [4] FED — nuevo comunicado genuino
 
 import os
 import sys
@@ -14,11 +20,12 @@ import yfinance as yf
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from news_scanner import escanear_noticias_kairos, formatear_alerta_noticia
-from alertas import enviar_alerta_telegram
+from news_scanner    import escanear_noticias_kairos, formatear_alerta_noticia
+from calendario_eco  import verificar_alertas_calendario, resumen_semana
+from alertas         import enviar_alerta_telegram
 
 # ── Configuración ─────────────────────────────────────────────────
-INTERVALO_SEGUNDOS     = 300
+INTERVALO_SEGUNDOS     = 300    # cada 5 minutos
 LOG_FILE               = "outputs/monitor.log"
 ESTADO_FILE            = "data/monitor_estado.json"
 
@@ -53,10 +60,11 @@ def cargar_estado() -> dict:
         except Exception as e:
             log.warning(f"Error cargando estado: {e}. Creando estado nuevo.")
     return {
-        "noticias_vistas":  [],
-        "ultimo_hash_fed":  None,
-        "alertas_enviadas": 0,
-        "inicio_sesion":    datetime.now().isoformat(),
+        "noticias_vistas":    [],
+        "ultimo_hash_fed":    None,
+        "alertas_enviadas":   0,
+        "calendario_alertas": {},
+        "inicio_sesion":      datetime.now().isoformat(),
     }
 
 
@@ -71,14 +79,11 @@ def hash_texto(texto: str) -> str:
     return hashlib.md5(texto.lower().strip().encode()).hexdigest()
 
 
-# ── Módulo 1: Noticias (usa news_scanner inteligente) ────────────
+# ── Módulo 1: Noticias ────────────────────────────────────────────
 def escanear_noticias(estado: dict) -> list:
     """
-    Usa news_scanner_kairos que aplica:
-    - Filtro de absorción de mercado
-    - Score de relevancia 0-100
-    - Predicciones basadas en precedentes históricos
-    - Solo eventos con ventana de oportunidad activa
+    Scanner inteligente con filtro de absorción de mercado.
+    Solo retorna eventos con ventana de oportunidad activa.
     """
     try:
         eventos = escanear_noticias_kairos(estado["noticias_vistas"])
@@ -89,8 +94,30 @@ def escanear_noticias(estado: dict) -> list:
         return []
 
 
-# ── Módulo 2: Monitor de mercados ─────────────────────────────────
+# ── Módulo 2: Calendario económico ───────────────────────────────
+def verificar_calendario(estado: dict) -> list:
+    """
+    Revisa eventos macro próximos y genera alertas pre-evento:
+    - 24h antes de evento CRÍTICO (FOMC)
+    - 6h antes de evento ALTO (CPI, NFP, PCE)
+    - 1h antes de cualquier evento importante
+    Incluye precedentes históricos y probabilidad de sorpresa.
+    """
+    try:
+        alertas = verificar_alertas_calendario(estado)
+        log.info(f"    Alertas de calendario: {len(alertas)}")
+        return alertas
+    except Exception as e:
+        log.error(f"    Error en calendario: {e}")
+        return []
+
+
+# ── Módulo 3: Monitor de mercados ─────────────────────────────────
 def monitorear_mercados() -> list:
+    """
+    Detecta movimientos anómalos en tiempo real.
+    Compara cierre de hoy vs ayer para cada activo clave.
+    """
     alertas = []
     tickers = {
         "VIX":  "^VIX",
@@ -127,7 +154,8 @@ def monitorear_mercados() -> list:
                 "WTI":  f"🛢️ WTI: {signo}{round(pct,1)}% (nivel {round(hoy,2)}) — Movimiento relevante",
             }
 
-            log.info(f"  {nombre}: {signo}{round(pct,2)}% {'⚠️ ALERTA' if disparado else '✓ normal'}")
+            log.info(f"  {nombre}: {signo}{round(pct,2)}% "
+                     f"{'⚠️ ALERTA' if disparado else '✓ normal'}")
 
             if disparado:
                 alertas.append({
@@ -145,8 +173,12 @@ def monitorear_mercados() -> list:
     return alertas
 
 
-# ── Módulo 3: Detector FED ────────────────────────────────────────
+# ── Módulo 4: Detector FED ────────────────────────────────────────
 def detectar_nuevo_fed(estado: dict):
+    """
+    Detecta si hay un comunicado FED genuinamente nuevo.
+    Usa cache para no re-descargar en cada ciclo.
+    """
     try:
         from fed_scraper import obtener_comunicado_fed
         comunicado = obtener_comunicado_fed()
@@ -177,14 +209,19 @@ def detectar_nuevo_fed(estado: dict):
 def procesar_evento(evento: dict, datos_macro=None, regimen=None):
     tipo = evento.get("tipo", "")
 
-    # ── Noticia con ventana activa (viene de news_scanner)
-    if tipo == "NOTICIA" or "titular" in evento:
+    # ── Noticia con ventana activa
+    if "titular" in evento:
         mensaje = formatear_alerta_noticia(evento)
         enviar_alerta_telegram(mensaje)
 
+    # ── Alerta de calendario (evento macro próximo)
+    elif tipo == "CALENDARIO":
+        enviar_alerta_telegram(evento["mensaje"])
+
     # ── Alerta de mercado
     elif tipo.startswith("MERCADO_"):
-        r_texto = f"\n📊 Régimen: {regimen.get('regimen','?')}" if regimen else ""
+        r_texto = (f"\n📊 Régimen macro: {regimen.get('regimen','?')}"
+                   if regimen else "")
         mensaje = (
             f"⚠️ KAIROS — ALERTA MERCADO\n{'='*38}\n"
             f"{evento['mensaje']}{r_texto}\n\n"
@@ -225,12 +262,12 @@ def procesar_evento(evento: dict, datos_macro=None, regimen=None):
             mensaje = (
                 f"🏛️ KAIROS — NUEVO COMUNICADO FED\n{'='*38}\n"
                 f"📄 {comunicado.get('titulo','')}\n\n"
-                f"🎯 Tono: {emojis.get(tono,'⚪')} {tono}\n"
+                f"🎯 Tono IA: {emojis.get(tono,'⚪')} {tono}\n"
                 f"📊 Score: {'+' if score >= 0 else ''}{score} / ±5\n\n"
                 f"kairos-markets.streamlit.app"
             )
             enviar_alerta_telegram(mensaje)
-            log.info(f"  Alerta FED enviada — {tono} Score:{score}")
+            log.info(f"  Alerta FED — {tono} Score:{score}")
 
         except Exception as e:
             log.error(f"  Error analizando FED: {e}")
@@ -239,11 +276,23 @@ def procesar_evento(evento: dict, datos_macro=None, regimen=None):
 # ── Loop principal ────────────────────────────────────────────────
 def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
     log.info("=" * 50)
-    log.info("🚀 KAIROS MONITOR ACTIVO")
+    log.info("🚀 KAIROS MONITOR ACTIVO — 4 fuentes")
+    log.info(f"   [1] Noticias RSS con filtro de absorción")
+    log.info(f"   [2] Calendario económico — anticipación")
+    log.info(f"   [3] Mercados — movimientos anómalos")
+    log.info(f"   [4] FED — nuevo comunicado")
     log.info(f"   Intervalo: cada {intervalo//60} minutos")
-    log.info(f"   Scanner: news_scanner con filtro de absorción")
-    log.info(f"   Concepto: solo eventos NO absorbidos por el mercado")
     log.info("=" * 50)
+
+    # Enviar resumen de la semana al arrancar
+    try:
+        resumen = resumen_semana()
+        enviar_alerta_telegram(
+            f"🚀 KAIROS MONITOR INICIADO\n{'='*38}\n\n{resumen}"
+        )
+        log.info("Resumen semanal enviado a Telegram")
+    except Exception as e:
+        log.warning(f"Error enviando resumen inicial: {e}")
 
     estado       = cargar_estado()
     datos_macro  = None
@@ -268,8 +317,8 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
             except Exception as e:
                 log.warning(f"Error macro: {e}")
 
-        # [1] Noticias con filtro de absorción
-        log.info("\n[1] NOTICIAS — filtro de absorción activo")
+        # [1] Noticias
+        log.info("\n[1] NOTICIAS — filtro de absorción")
         try:
             eventos = escanear_noticias(estado)
             for e in eventos:
@@ -278,18 +327,32 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
         except Exception as e:
             log.error(f"Error noticias: {e}")
 
-        # [2] Mercados
-        log.info("\n[2] MERCADOS")
+        # [2] Calendario
+        log.info("\n[2] CALENDARIO ECONÓMICO")
         try:
-            alertas = monitorear_mercados()
-            for a in alertas:
+            cal_alertas = verificar_calendario(estado)
+            for alerta in cal_alertas:
+                procesar_evento(
+                    {"tipo": "CALENDARIO", "mensaje": alerta["mensaje"]},
+                    datos_macro, regimen
+                )
+                estado["alertas_enviadas"] += 1
+                log.info(f"  Alerta calendario: {alerta['clave_alerta']}")
+        except Exception as e:
+            log.error(f"Error calendario: {e}")
+
+        # [3] Mercados
+        log.info("\n[3] MERCADOS")
+        try:
+            alertas_mkt = monitorear_mercados()
+            for a in alertas_mkt:
                 procesar_evento(a, datos_macro, regimen)
                 estado["alertas_enviadas"] += 1
         except Exception as e:
             log.error(f"Error mercados: {e}")
 
-        # [3] FED
-        log.info("\n[3] FED")
+        # [4] FED
+        log.info("\n[4] FED")
         try:
             fed = detectar_nuevo_fed(estado)
             if fed:
@@ -312,17 +375,22 @@ def run_test():
     print("\n[1] NOTICIAS con filtro de absorción")
     eventos = escanear_noticias(estado)
     print(f"→ {len(eventos)} eventos con ventana activa")
-    for e in eventos[:5]:
-        print(f"\n  📰 {e['titular'][:75]}")
-        print(f"     Score: {e['score']}/100 | Urgencia: {e['urgencia']}")
-        print(f"     {e['absorcion']['estado']}")
-        if e.get("precedente"):
-            datos = e["precedente"]["datos"]
-            print(f"     Precedente: {datos['condicion']}")
-            for activo, pred in list(datos["prediccion"].items())[:3]:
-                print(f"       → {activo}: {pred['promedio_24h']} ({pred['probabilidad']})")
+    for e in eventos[:3]:
+        print(f"  📰 {e['titular'][:70]}")
+        print(f"     Score: {e['score']}/100 | {e['absorcion']['estado']}")
 
-    print("\n[2] MERCADOS")
+    print("\n[2] CALENDARIO ECONÓMICO")
+    from calendario_eco import obtener_eventos_proximos
+    proximos = obtener_eventos_proximos(dias=30)
+    print(f"→ {len(proximos)} eventos en los próximos 30 días:")
+    for ev in proximos[:4]:
+        emoji = {"CRÍTICO":"🚨","ALTO":"⚠️","MEDIO":"📡"}.get(ev["impacto"],"📡")
+        print(f"  {emoji} {ev['evento']}")
+        print(f"     {ev['hora_local_et']} — faltan {ev['dias_restantes']} días")
+        if ev.get("consenso"):
+            print(f"     Consenso: {ev['consenso']}")
+
+    print("\n[3] MERCADOS")
     alertas = monitorear_mercados()
     if alertas:
         for a in alertas:
@@ -330,7 +398,7 @@ def run_test():
     else:
         print("  ✓ Sin movimientos anómalos")
 
-    print("\n[3] FED")
+    print("\n[4] FED")
     fed = detectar_nuevo_fed(estado)
     if fed:
         print(f"  🔴 NUEVO: {fed['comunicado'].get('titulo','')}")
@@ -345,8 +413,10 @@ def run_test():
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="KAIROS Monitor")
-    parser.add_argument("--test",      action="store_true")
-    parser.add_argument("--intervalo", type=int, default=INTERVALO_SEGUNDOS)
+    parser.add_argument("--test",      action="store_true",
+                        help="Una sola pasada sin loop")
+    parser.add_argument("--intervalo", type=int, default=INTERVALO_SEGUNDOS,
+                        help="Segundos entre ciclos")
     args = parser.parse_args()
 
     if args.test:
