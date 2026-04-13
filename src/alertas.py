@@ -1,3 +1,8 @@
+# alertas.py — KAIROS
+# Envía alertas a Telegram:
+#   1. Al canal público KAIROS Markets (todos los suscriptores)
+#   2. Al chat personal del admin (tú)
+
 import os
 import requests
 from dotenv import load_dotenv
@@ -5,115 +10,103 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")   # tu chat personal (admin)
+CANAL_ID         = "-1003935530360"                  # canal KAIROS Markets
 
-def enviar_alerta_telegram(mensaje):
-    """Envía un mensaje al chat de Telegram configurado."""
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print("⚠️  Telegram no configurado.")
+
+def enviar_mensaje(chat_id: str, mensaje: str) -> bool:
+    """Envía un mensaje a un chat o canal específico."""
+    if not TELEGRAM_TOKEN:
+        print("⚠️ TELEGRAM_TOKEN no configurado")
         return False
-
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text":    mensaje,
-        "parse_mode": "HTML"
-    }
 
     try:
-        r = requests.post(url, json=payload, timeout=10)
+        url  = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        data = {
+            "chat_id":    chat_id,
+            "text":       mensaje,
+            "parse_mode": "HTML",
+        }
+        r = requests.post(url, data=data, timeout=10)
+
         if r.status_code == 200:
-            print("✅ Alerta enviada a Telegram.")
             return True
         else:
-            print(f"❌ Error Telegram: {r.text}")
-            return False
+            # Intentar sin parse_mode si hay error de formato
+            data.pop("parse_mode")
+            r2 = requests.post(url, data=data, timeout=10)
+            return r2.status_code == 200
+
     except Exception as e:
-        print(f"❌ Error enviando alerta: {e}")
+        print(f"  Error enviando Telegram a {chat_id}: {e}")
         return False
 
 
-def construir_mensaje_alerta(comunicado, analisis, regimen):
+def enviar_alerta_telegram(mensaje: str, solo_admin: bool = False):
     """
-    Construye el mensaje de alerta para Telegram
-    a partir del análisis de KAIROS.
+    Función principal de alertas KAIROS.
+
+    Por defecto envía:
+    - Al canal público (todos los suscriptores)
+    - Al chat personal del admin
+
+    Args:
+        mensaje:     Texto de la alerta
+        solo_admin:  Si True, solo envía al admin (para mensajes internos)
     """
+    if not TELEGRAM_TOKEN:
+        print("⚠️ Sin token Telegram — alerta no enviada")
+        return
 
-    titulo = comunicado.get("titulo", "Comunicado")
-    fecha  = comunicado.get("fecha", "")
+    # ── Enviar al canal público ───────────────────────────────────
+    if not solo_admin:
+        ok_canal = enviar_mensaje(CANAL_ID, mensaje)
+        if ok_canal:
+            print("  ✅ Alerta enviada al canal KAIROS Markets")
+        else:
+            print("  ⚠️ Error enviando al canal")
 
-    # Extraer tono y score del análisis
-    tono  = "N/A"
-    score = "N/A"
+    # ── Enviar al admin (chat personal) ───────────────────────────
+    if TELEGRAM_CHAT_ID:
+        ok_admin = enviar_mensaje(TELEGRAM_CHAT_ID, mensaje)
+        if ok_admin:
+            print("  ✅ Alerta enviada al admin")
+        else:
+            print("  ⚠️ Error enviando al admin")
 
-    lineas = analisis.split('\n')
-    for linea in lineas:
-        if "Clasificacion:" in linea or "Clasificación:" in linea:
-            tono = linea.split(":")[-1].strip()
-        if "Score:" in linea and "Confidence" not in linea:
-            score = linea.split(":")[-1].strip()
 
-    # Emoji según tono
-    emoji_tono = {
-        "HAWKISH FUERTE": "🔴🔴",
-        "HAWKISH LEVE":   "🔴",
-        "NEUTRO":         "🟡",
-        "DOVISH LEVE":    "🟢",
-        "DOVISH FUERTE":  "🟢🟢"
-    }
-    emoji = emoji_tono.get(tono, "⚪")
+def enviar_alerta_admin(mensaje: str):
+    """
+    Envía solo al admin — para logs internos y errores del sistema.
+    Los suscriptores del canal NO lo ven.
+    """
+    enviar_alerta_telegram(mensaje, solo_admin=True)
 
-    regimen_actual = regimen.get("regimen", "N/A")
 
-    mensaje = (
-        f"<b>📊 KAIROS — ALERTA DE MERCADO</b>\n"
-        f"━━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"<b>Evento:</b> {titulo}\n"
-        f"<b>Fecha:</b> {fecha}\n\n"
-        f"<b>Tono FED:</b> {emoji} {tono}\n"
-        f"<b>Score:</b> {score}\n"
-        f"<b>Régimen macro:</b> {regimen_actual}\n\n"
-        f"━━━━━━━━━━━━━━━━━━━━━\n"
-        f"🔗 Ver análisis completo:\n"
-        f"https://kairos-markets.streamlit.app"
+def test_conexion():
+    """Verifica que el bot puede enviar al canal y al admin."""
+    print("\n🧪 Test de conexión Telegram\n" + "="*40)
+
+    msg_test = (
+        "🟢 KAIROS — Sistema activo\n"
+        "{'='*38}\n"
+        "✅ Bot conectado correctamente\n"
+        "✅ Canal: KAIROS Markets\n"
+        "📊 Monitor iniciado\n\n"
+        "kairos-markets.streamlit.app"
     )
 
-    return mensaje
+    print("Enviando al canal público...")
+    ok_canal = enviar_mensaje(CANAL_ID, msg_test)
+    print(f"  Canal: {'✅ OK' if ok_canal else '❌ Error'}")
 
+    if TELEGRAM_CHAT_ID:
+        print("Enviando al admin...")
+        ok_admin = enviar_mensaje(TELEGRAM_CHAT_ID, msg_test)
+        print(f"  Admin: {'✅ OK' if ok_admin else '❌ Error'}")
 
-def evaluar_y_alertar(comunicado, analisis, regimen):
-    """
-    Evalúa si el análisis merece una alerta
-    y la envía si es relevante.
-    """
-
-    # Extraer score numérico
-    score_num = 0
-    for linea in analisis.split('\n'):
-        if "Score:" in linea and "Confidence" not in linea:
-            try:
-                val = linea.split(":")[-1].strip()
-                val = val.replace("+", "").replace("-", "")
-                score_num = abs(int(val))
-            except:
-                pass
-
-    # Enviar alerta si el score es significativo (>= 2)
-    if score_num >= 2:
-        print(f"🚨 Evento significativo detectado (score: {score_num}). Enviando alerta...")
-        mensaje = construir_mensaje_alerta(comunicado, analisis, regimen)
-        enviar_alerta_telegram(mensaje)
-    else:
-        print(f"ℹ️  Score bajo ({score_num}). No se envía alerta.")
+    return ok_canal
 
 
 if __name__ == "__main__":
-    # Test de conexión con Telegram
-    print("Probando conexión con Telegram...")
-    enviar_alerta_telegram(
-        "<b>🔔 KAIROS conectado</b>\n\n"
-        "El sistema de alertas está funcionando correctamente.\n"
-        "Recibirás notificaciones cuando haya eventos relevantes.\n\n"
-        "🔗 https://kairos-markets.streamlit.app"
-    )
+    test_conexion()
