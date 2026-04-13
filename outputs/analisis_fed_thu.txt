@@ -1,0 +1,61 @@
+KAIROS — ANALISIS DE COMUNICADO FED
+============================================================
+Documento: Monetary policy decisions — ECB March 19, 2026
+Fecha    : Thu, 19 Mar 2026 13:45:00 GMT
+============================================================
+
+CONTEXTO MACRO:
+CONTEXTO MACRO ACTUAL:
+Usa estos datos reales para calibrar tu analisis:
+- Regimen macro: NEUTRO
+- Core PCE: 2.97% YoY (objetivo FED: 2%)
+- Desempleo: 4.3%
+- NFP ultimo mes: 158637 miles
+- Tasa FED actual: 3.64%
+- Bono 10Y: 4.25%
+- Spread curva 10Y-2Y: 0.54%
+- Señales macro: Core PCE sobre objetivo: 2.97% | Curva normal: spread 0.54%
+
+
+**1. TONO GENERAL**
+- Clasificación: HAWKISH LEVE
+- Score: +2
+- Señales hawkish encontradas: "inflación ha sido revisada al alza", "inflación excluyendo energía y alimentos se espera que sea del 2,3% en 2026", "el Consejo de Gobierno está decidido a asegurar que la inflación se estabilice en el 2% en el plazo medio".
+- Señales dovish encontradas: "el crecimiento económico se espera que sea del 0,9% en 2026, lo que implica una revisión a la baja", "el Consejo de Gobierno está listo para ajustar todos sus instrumentos para asegurar que la inflación se estabilice en el 2% en el plazo medio".
+- Justificación: El tono general es hawkish leve debido a que el Consejo de Gobierno está decidido a controlar la inflación, pero también está dispuesto a ajustar sus instrumentos para asegurar la estabilidad económica.
+
+**2. MENSAJES CLAVE**
+- El Consejo de Gobierno está decidido a asegurar que la inflación se estabilice en el 2% en el plazo medio.
+- La inflación ha sido revisada al alza debido a la guerra en el Medio Oriente.
+- El crecimiento económico se espera que sea del 0,9% en 2026, lo que implica una revisión a la baja.
+
+**3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
+- Lenguaje nuevo: "el Consejo de Gobierno está listo para ajustar todos sus instrumentos para asegurar que la inflación se estabilice en el 2% en el plazo medio".
+- Se eliminó o suavizó: No se menciona explícitamente una fecha para el próximo aumento de tasas.
+
+**4. IMPACTO ESPERADO POR ACTIVO**
+- USD (Dólar): Al alza debido a la expectativa de una política monetaria más restrictiva.
+- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de una política monetaria más restrictiva.
+- S&P 500 (SPX): A la baja debido a la expectativa de una política monetaria más restrictiva.
+- Nasdaq (NDX): A la baja debido a la expectativa de una política monetaria más restrictiva.
+- Oro (Gold): A la baja debido a la expectativa de una política monetaria más restrictiva.
+- EUR/USD: A la baja debido a la expectativa de una política monetaria más restrictiva en la zona euro.
+- VIX (Volatilidad): Al alza debido a la incertidumbre sobre la política monetaria.
+
+**5. ESCENARIOS DE MERCADO**
+ESCENARIO A (probabilidad: 40%): Escenario de crecimiento lento y estabilidad inflacionaria.
+El crecimiento económico se desacelera, pero la inflación se mantiene estable, lo que lleva a una política monetaria más restrictiva.
+
+ESCENARIO B (probabilidad: 30%): Escenario de recesión y deflación.
+La economía entra en recesión, lo que lleva a una política monetaria más expansiva y a una disminución de la inflación.
+
+ESCENARIO C (probabilidad: 30%): Escenario de crecimiento rápido y inflación alta.
+El crecimiento económico se acelera, lo que lleva a una política monetaria más restrictiva y a una subida de la inflación.
+
+**6. VARIABLES CLAVE A MONITOREAR**
+- Datos próximos relevantes: Informe de empleo, inflación, crecimiento económico.
+- Declaraciones de miembros del FOMC a seguir: Declaraciones de los miembros del Consejo de Gobierno sobre la política monetaria y la inflación.
+
+**7. CONFIDENCE SCORE**
+- Score: 80/100
+- Factores que reducen la confianza: La incertidumbre sobre la política monetaria, la guerra en el Medio Oriente y la posible recesión económica.

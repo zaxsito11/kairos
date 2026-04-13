@@ -10,7 +10,8 @@ def analizar_comunicado(comunicado, contexto_macro=None):
 
     titulo = comunicado["titulo"]
     fecha  = comunicado["fecha"]
-    texto  = comunicado["texto"]
+    # Compatible con fed_scraper antiguo ("texto") y nuevo ("contenido")
+    texto  = comunicado.get("contenido") or comunicado.get("texto", "")
     texto_recortado = texto[:6000]
 
     print("🧠 Analizando comunicado con IA...")
@@ -121,7 +122,11 @@ def analizar_comunicado(comunicado, contexto_macro=None):
         messages=[
             {
                 "role": "system",
-                "content": "Eres un analista macro senior especializado en politica monetaria y mercados financieros. Produces analisis institucionales rigurosos, directos y accionables."
+                "content": (
+                    "Eres un analista macro senior especializado en politica "
+                    "monetaria y mercados financieros. Produces analisis "
+                    "institucionales rigurosos, directos y accionables."
+                )
             },
             {
                 "role": "user",
@@ -140,6 +145,7 @@ def analizar_comunicado(comunicado, contexto_macro=None):
     print(analisis)
     print("=" * 60)
 
+    # Guardar análisis
     nombre_archivo = "outputs/analisis_fed_" + fecha[:3].lower() + ".txt"
     with open(nombre_archivo, "w", encoding="utf-8") as f:
         f.write("KAIROS — ANALISIS DE COMUNICADO FED\n")

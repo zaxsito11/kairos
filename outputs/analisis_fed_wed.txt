@@ -18,45 +18,45 @@ Usa estos datos reales para calibrar tu analisis:
 
 
 **1. TONO GENERAL**
-- Clasificacion: HAWKISH LEVE
+- Clasificación: HAWKISH LEVE
 - Score: +2
-- Senales hawkish encontradas: "Consumer price inflation remained elevated", "Core PCE price inflation, which excludes changes in consumer energy prices and many consumer food prices, was 3.1 percent in January", "The staff estimated that total PCE price inflation was 2.8 percent in February, while core PCE price inflation was 3.0 percent".
-- Senales dovish encontradas: "The average monthly change in total payroll employment was low over January and February", "The employment cost index increased 3.4 percent over the 12 months ending in December, and average hourly earnings rose 3.8 percent over the 12 months ending in February; both measures were slightly below their year-earlier levels".
-- Justificacion: El tono general es hawkish leve debido a que la inflación sigue siendo elevada, pero los datos laborales no son tan sólidos como para justificar un tono hawkish fuerte.
+- Señaleses hawkish encontradas: "inflación permanece elevada", "el mercado laboral sigue siendo sólido", "la inflación subyacente sigue siendo alta".
+- Señaleses dovish encontradas: "el crecimiento del empleo fue bajo", "la inflación de servicios no residenciales se mantuvo sin cambios".
+- Justificación: El tono general es hawkish leve debido a que la inflación sigue siendo elevada y el mercado laboral sigue siendo sólido, lo que sugiere que la política monetaria seguirá siendo restrictiva.
 
 **2. MENSAJES CLAVE**
-- Los 3 mensajes mas importantes para los mercados son:
+- Los tres mensajes más importantes para los mercados son:
  1. La inflación sigue siendo elevada y por encima del objetivo del 2%.
- 2. El mercado laboral sigue siendo sólido, pero con algunos signos de debilidad.
+ 2. El mercado laboral sigue siendo sólido, aunque el crecimiento del empleo fue bajo.
  3. La política monetaria seguirá siendo restrictiva para controlar la inflación.
 
 **3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
-- Lenguaje nuevo: "La inflación sigue siendo elevada" y "el mercado laboral sigue siendo sólido" son frases que se repiten en este comunicado.
-- Se elimino o suavizo: No hay cambios significativos en el lenguaje respecto al comunicado anterior.
+- Lenguaje nuevo: "la inflación subyacente sigue siendo alta" y "el crecimiento del empleo fue bajo".
+- Se eliminó o suavizó: No se menciona explícitamente la posibilidad de recortes en las tasas de interés.
 
 **4. IMPACTO ESPERADO POR ACTIVO**
-- USD (Dolar): Al alza debido a la política monetaria restrictiva.
+- USD (Dólar): Al alza debido a la política monetaria restrictiva.
 - Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de que la inflación siga siendo elevada.
 - S&P 500 (SPX): A la baja debido a la política monetaria restrictiva y la inflación elevada.
 - Nasdaq (NDX): A la baja debido a la política monetaria restrictiva y la inflación elevada.
 - Oro (Gold): A la baja debido a la política monetaria restrictiva y la expectativa de que la inflación siga siendo elevada.
-- EUR/USD: A la baja debido a la política monetaria restrictiva en EE.UU.
+- EUR/USD: A la baja debido a la política monetaria restrictiva en EE. UU.
 - VIX (Volatilidad): Al alza debido a la incertidumbre sobre la política monetaria y la inflación.
 
 **5. ESCENARIOS DE MERCADO**
 ESCENARIO A (probabilidad: 40%): "Inflación persistente"
-La inflación sigue siendo elevada y la política monetaria se vuelve más restrictiva, lo que lleva a una disminución en la actividad económica.
+La inflación sigue siendo elevada y la política monetaria se vuelve más restrictiva, lo que lleva a una disminución en el crecimiento económico y una subida en las tasas de interés.
 
-ESCENARIO B (probabilidad: 30%): "Crecimiento económico moderado"
-La inflación disminuye ligeramente y la política monetaria se relaja, lo que lleva a un crecimiento económico moderado.
+ESCENARIO B (probabilidad: 30%): "Crecimiento económico sólido"
+El crecimiento económico sigue siendo sólido y la inflación se mantiene bajo control, lo que lleva a una política monetaria más neutral y una subida en los mercados de acciones.
 
-ESCENARIO C (probabilidad: 30%): "Recesión"
-La inflación disminuye significativamente y la política monetaria se vuelve expansiva, lo que lleva a una recesión.
+ESCENARIO C (probabilidad: 30%): "Recesión económica"
+La política monetaria restrictiva lleva a una recesión económica y una disminución en la inflación, lo que lleva a una subida en los bonos del Tesoro y una disminución en los mercados de acciones.
 
 **6. VARIABLES CLAVE A MONITOREAR**
-- Datos proximos relevantes: Informe de empleo no agrícola, índice de precios al consumidor, informe de la producción industrial.
+- Datos próximos relevantes: Informe de empleo no agrícola, índice de precios al consumidor, informe de la producción industrial.
 - Declaraciones de miembros del FOMC a seguir: Declaraciones de los miembros del FOMC sobre la política monetaria y la inflación.
 
 **7. CONFIDENCE SCORE**
 - Score: 80/100
-- Factores que reducen la confianza: La incertidumbre sobre la política monetaria y la inflación, la posibilidad de que la economía entre en recesión.
+- Factores que reducen la confianza: La incertidumbre sobre la política monetaria y la inflación, la posibilidad de una recesión económica y la volatilidad en los mercados financieros.

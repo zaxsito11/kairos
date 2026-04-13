@@ -198,3 +198,187 @@
 2026-04-11 19:16:30,539 [INFO] 
 ✅ Ciclo #3 — 3 alertas totales
 2026-04-11 19:16:30,539 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:20:35,411 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:20:35,411 [INFO] CICLO #2 — 11/04/2026 19:20:35
+2026-04-11 19:20:35,411 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:20:35,411 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:20:44,030 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:20:44,031 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:20:44,032 [INFO]     Alertas de calendario: 0
+2026-04-11 19:20:44,032 [INFO] 
+[3] MERCADOS
+2026-04-11 19:20:44,314 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:20:44,448 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:20:44,583 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:20:44,730 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:20:44,861 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:20:44,868 [INFO] 
+[4] FED
+2026-04-11 19:20:44,870 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:20:44,874 [INFO] 
+✅ Ciclo #2 — 3 alertas totales
+2026-04-11 19:20:44,875 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:25:44,909 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:25:44,909 [INFO] CICLO #3 — 11/04/2026 19:25:44
+2026-04-11 19:25:44,910 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:25:44,911 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:25:46,399 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:25:46,399 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:25:46,400 [INFO]     Alertas de calendario: 0
+2026-04-11 19:25:46,400 [INFO] 
+[3] MERCADOS
+2026-04-11 19:25:46,677 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:25:46,853 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:25:46,982 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:25:47,110 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:25:47,239 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:25:47,239 [INFO] 
+[4] FED
+2026-04-11 19:25:47,241 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:25:47,242 [INFO] 
+✅ Ciclo #3 — 3 alertas totales
+2026-04-11 19:25:47,243 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:30:47,268 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:30:47,268 [INFO] CICLO #4 — 11/04/2026 19:30:47
+2026-04-11 19:30:47,268 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:30:47,269 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:30:48,502 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:30:48,503 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:30:48,503 [INFO]     Alertas de calendario: 0
+2026-04-11 19:30:48,504 [INFO] 
+[3] MERCADOS
+2026-04-11 19:30:48,768 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:30:48,883 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:30:49,022 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:30:49,147 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:30:49,276 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:30:49,276 [INFO] 
+[4] FED
+2026-04-11 19:30:49,280 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:30:49,281 [INFO] 
+✅ Ciclo #4 — 3 alertas totales
+2026-04-11 19:30:49,281 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:35:49,305 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:35:49,305 [INFO] CICLO #5 — 11/04/2026 19:35:49
+2026-04-11 19:35:49,306 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:35:49,306 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:35:50,926 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:35:50,927 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:35:50,927 [INFO]     Alertas de calendario: 0
+2026-04-11 19:35:50,928 [INFO] 
+[3] MERCADOS
+2026-04-11 19:35:51,189 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:35:51,326 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:35:51,453 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:35:51,583 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:35:51,711 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:35:51,712 [INFO] 
+[4] FED
+2026-04-11 19:35:51,714 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:35:51,716 [INFO] 
+✅ Ciclo #5 — 3 alertas totales
+2026-04-11 19:35:51,716 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:40:51,739 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:40:51,739 [INFO] CICLO #6 — 11/04/2026 19:40:51
+2026-04-11 19:40:51,739 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:40:51,739 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:40:53,169 [INFO]     Eventos con ventana activa: 1
+2026-04-11 19:40:53,870 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:40:53,870 [INFO]     Alertas de calendario: 0
+2026-04-11 19:40:53,871 [INFO] 
+[3] MERCADOS
+2026-04-11 19:40:54,131 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:40:54,262 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:40:54,393 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:40:54,509 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:40:54,641 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:40:54,641 [INFO] 
+[4] FED
+2026-04-11 19:40:54,641 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:40:54,641 [INFO] 
+✅ Ciclo #6 — 4 alertas totales
+2026-04-11 19:40:54,657 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:45:54,684 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:45:54,684 [INFO] CICLO #7 — 11/04/2026 19:45:54
+2026-04-11 19:45:54,684 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:45:54,684 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:45:55,897 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:45:55,897 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:45:55,897 [INFO]     Alertas de calendario: 0
+2026-04-11 19:45:55,897 [INFO] 
+[3] MERCADOS
+2026-04-11 19:45:56,186 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:45:56,317 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:45:56,449 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:45:56,581 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:45:56,712 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:45:56,712 [INFO] 
+[4] FED
+2026-04-11 19:45:56,712 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:45:56,712 [INFO] 
+✅ Ciclo #7 — 4 alertas totales
+2026-04-11 19:45:56,712 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:50:56,739 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:50:56,740 [INFO] CICLO #8 — 11/04/2026 19:50:56
+2026-04-11 19:50:56,740 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:50:56,740 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:50:58,304 [INFO]     Eventos con ventana activa: 3
+2026-04-11 19:51:00,353 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:51:00,354 [INFO]     Alertas de calendario: 0
+2026-04-11 19:51:00,354 [INFO] 
+[3] MERCADOS
+2026-04-11 19:51:00,626 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:51:00,752 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:51:00,883 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:51:01,020 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:51:01,152 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:51:01,152 [INFO] 
+[4] FED
+2026-04-11 19:51:01,154 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:51:01,156 [INFO] 
+✅ Ciclo #8 — 7 alertas totales
+2026-04-11 19:51:01,156 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-11 19:56:01,176 [INFO] 
+──────────────────────────────────────────────────
+2026-04-11 19:56:01,176 [INFO] CICLO #9 — 11/04/2026 19:56:01
+2026-04-11 19:56:01,177 [INFO] ──────────────────────────────────────────────────
+2026-04-11 19:56:01,177 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-11 19:56:06,998 [INFO]     Eventos con ventana activa: 0
+2026-04-11 19:56:06,998 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-11 19:56:06,998 [INFO]     Alertas de calendario: 0
+2026-04-11 19:56:06,998 [INFO] 
+[3] MERCADOS
+2026-04-11 19:56:07,263 [INFO]   VIX: -1.33% ✓ normal
+2026-04-11 19:56:07,397 [INFO]   SPX: -0.11% ✓ normal
+2026-04-11 19:56:07,614 [INFO]   DXY: -0.17% ✓ normal
+2026-04-11 19:56:07,751 [INFO]   Gold: -0.63% ✓ normal
+2026-04-11 19:56:07,881 [INFO]   WTI: -1.33% ✓ normal
+2026-04-11 19:56:07,891 [INFO] 
+[4] FED
+2026-04-11 19:56:07,925 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-11 19:56:07,960 [INFO] 
+✅ Ciclo #9 — 7 alertas totales
+2026-04-11 19:56:07,961 [INFO] ⏳ Próxima revisión en 5 minutos...
