@@ -2,11 +2,11 @@
 # Sistema de vigilancia automática de eventos con impacto en mercados.
 # CONCEPTO: detecta lo que va a mover los mercados ANTES de que ocurra.
 #
-# 4 FUENTES DE DETECCIÓN:
-#   [1] Noticias RSS — filtro de absorción de mercado
-#   [2] Calendario económico — anticipa eventos macro próximos
-#   [3] Mercados — movimientos anómalos en tiempo real
-#   [4] FED — nuevo comunicado genuino
+# 4 FUENTES:
+#   [1] Noticias RSS    — filtro de absorción de mercado
+#   [2] Calendario eco  — anticipa eventos macro próximos
+#   [3] Mercados        — movimientos anómalos con contexto causal
+#   [4] FED / BCE       — nuevo comunicado genuino
 
 import os
 import sys
@@ -20,21 +20,15 @@ import yfinance as yf
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from news_scanner    import escanear_noticias_kairos, formatear_alerta_noticia
-from calendario_eco  import verificar_alertas_calendario, resumen_semana
-from alertas         import enviar_alerta_telegram
+from news_scanner   import escanear_noticias_kairos, formatear_alerta_noticia
+from calendario_eco import verificar_alertas_calendario, resumen_semana
+from market_alert   import ejecutar_market_alert
+from alertas        import enviar_alerta_telegram
 
 # ── Configuración ─────────────────────────────────────────────────
-INTERVALO_SEGUNDOS     = 300    # cada 5 minutos
-LOG_FILE               = "outputs/monitor.log"
-ESTADO_FILE            = "data/monitor_estado.json"
-
-# Umbrales alertas de mercado
-UMBRAL_VIX_SPIKE       = 15.0
-UMBRAL_SPX_CAIDA       = -1.5
-UMBRAL_DXY_MOVIMIENTO  =  0.7
-UMBRAL_GOLD_MOVIMIENTO =  1.2
-UMBRAL_WTI_MOVIMIENTO  =  2.0
+INTERVALO_SEGUNDOS = 300
+LOG_FILE           = "outputs/monitor.log"
+ESTADO_FILE        = "data/monitor_estado.json"
 
 # ── Logging ───────────────────────────────────────────────────────
 os.makedirs("outputs", exist_ok=True)
@@ -79,11 +73,13 @@ def hash_texto(texto: str) -> str:
     return hashlib.md5(texto.lower().strip().encode()).hexdigest()
 
 
-# ── Módulo 1: Noticias ────────────────────────────────────────────
+# ── Módulo 1: Noticias con filtro de absorción ────────────────────
 def escanear_noticias(estado: dict) -> list:
     """
-    Scanner inteligente con filtro de absorción de mercado.
-    Solo retorna eventos con ventana de oportunidad activa.
+    Usa news_scanner inteligente:
+    - Solo eventos con ventana de oportunidad activa
+    - Score de relevancia 0-100
+    - Predicciones basadas en precedentes históricos
     """
     try:
         eventos = escanear_noticias_kairos(estado["noticias_vistas"])
@@ -97,11 +93,10 @@ def escanear_noticias(estado: dict) -> list:
 # ── Módulo 2: Calendario económico ───────────────────────────────
 def verificar_calendario(estado: dict) -> list:
     """
-    Revisa eventos macro próximos y genera alertas pre-evento:
-    - 24h antes de evento CRÍTICO (FOMC)
-    - 6h antes de evento ALTO (CPI, NFP, PCE)
-    - 1h antes de cualquier evento importante
-    Incluye precedentes históricos y probabilidad de sorpresa.
+    Alertas pre-evento:
+    - 24h antes de FOMC
+    - 6h antes de CPI, NFP, PCE
+    - 1h antes de cualquier evento CRÍTICO o ALTO
     """
     try:
         alertas = verificar_alertas_calendario(estado)
@@ -112,76 +107,30 @@ def verificar_calendario(estado: dict) -> list:
         return []
 
 
-# ── Módulo 3: Monitor de mercados ─────────────────────────────────
-def monitorear_mercados() -> list:
+# ── Módulo 3: Mercados con contexto causal ────────────────────────
+def monitorear_mercados(regimen: dict = None) -> list:
     """
-    Detecta movimientos anómalos en tiempo real.
-    Compara cierre de hoy vs ayer para cada activo clave.
+    Usa market_alert para detectar movimientos anómalos Y explicar
+    el patrón macro subyacente (risk-off, risk-on, inflacionario, etc.)
     """
-    alertas = []
-    tickers = {
-        "VIX":  "^VIX",
-        "SPX":  "^GSPC",
-        "DXY":  "DX-Y.NYB",
-        "Gold": "GC=F",
-        "WTI":  "CL=F",
-    }
-
-    for nombre, ticker in tickers.items():
-        try:
-            datos = yf.Ticker(ticker).history(period="2d", interval="1d")
-            if datos.empty or len(datos) < 2:
-                continue
-
-            hoy   = float(datos["Close"].iloc[-1])
-            ayer  = float(datos["Close"].iloc[-2])
-            pct   = ((hoy - ayer) / ayer) * 100
-            signo = "+" if pct > 0 else ""
-
-            disparado = (
-                (nombre == "VIX"  and pct >= UMBRAL_VIX_SPIKE)  or
-                (nombre == "SPX"  and pct <= UMBRAL_SPX_CAIDA)  or
-                (nombre == "DXY"  and abs(pct) >= UMBRAL_DXY_MOVIMIENTO)  or
-                (nombre == "Gold" and abs(pct) >= UMBRAL_GOLD_MOVIMIENTO) or
-                (nombre == "WTI"  and abs(pct) >= UMBRAL_WTI_MOVIMIENTO)
-            )
-
-            mensajes = {
-                "VIX":  f"⚡ VIX SPIKE: +{round(pct,1)}% (nivel {round(hoy,1)}) — Risk-off activado",
-                "SPX":  f"📉 SPX CAÍDA: {round(pct,1)}% (nivel {round(hoy,0)}) — Presión vendedora",
-                "DXY":  f"💵 DXY: {signo}{round(pct,1)}% (nivel {round(hoy,2)}) — Movimiento relevante",
-                "Gold": f"🥇 Gold: {signo}{round(pct,1)}% (nivel {round(hoy,0)}) — Demanda de refugio",
-                "WTI":  f"🛢️ WTI: {signo}{round(pct,1)}% (nivel {round(hoy,2)}) — Movimiento relevante",
-            }
-
-            log.info(f"  {nombre}: {signo}{round(pct,2)}% "
-                     f"{'⚠️ ALERTA' if disparado else '✓ normal'}")
-
-            if disparado:
-                alertas.append({
-                    "tipo":      f"MERCADO_{nombre}",
-                    "activo":    nombre,
-                    "valor":     round(hoy, 2),
-                    "cambio":    round(pct, 2),
-                    "mensaje":   mensajes[nombre],
-                    "timestamp": datetime.now().isoformat(),
-                })
-
-        except Exception as e:
-            log.warning(f"  Error en {nombre}: {e}")
-
-    return alertas
+    try:
+        mensajes = ejecutar_market_alert(regimen)
+        log.info(f"    Alertas de mercado: {len(mensajes)}")
+        return mensajes
+    except Exception as e:
+        log.error(f"    Error en market_alert: {e}")
+        return []
 
 
 # ── Módulo 4: Detector FED ────────────────────────────────────────
 def detectar_nuevo_fed(estado: dict):
     """
-    Detecta si hay un comunicado FED genuinamente nuevo.
+    Solo alerta si hay un comunicado FED genuinamente nuevo.
     Usa cache para no re-descargar en cada ciclo.
     """
     try:
         from fed_scraper import obtener_comunicado_fed
-        comunicado = obtener_comunicado_fed()
+        comunicado  = obtener_comunicado_fed()
         if not comunicado:
             return None
 
@@ -199,7 +148,6 @@ def detectar_nuevo_fed(estado: dict):
             "comunicado": comunicado,
             "timestamp":  datetime.now().isoformat(),
         }
-
     except Exception as e:
         log.warning(f"  Error FED: {e}")
         return None
@@ -209,25 +157,18 @@ def detectar_nuevo_fed(estado: dict):
 def procesar_evento(evento: dict, datos_macro=None, regimen=None):
     tipo = evento.get("tipo", "")
 
-    # ── Noticia con ventana activa
+    # ── Noticia con ventana activa (viene de news_scanner)
     if "titular" in evento:
         mensaje = formatear_alerta_noticia(evento)
         enviar_alerta_telegram(mensaje)
 
-    # ── Alerta de calendario (evento macro próximo)
+    # ── Alerta de calendario
     elif tipo == "CALENDARIO":
         enviar_alerta_telegram(evento["mensaje"])
 
-    # ── Alerta de mercado
-    elif tipo.startswith("MERCADO_"):
-        r_texto = (f"\n📊 Régimen macro: {regimen.get('regimen','?')}"
-                   if regimen else "")
-        mensaje = (
-            f"⚠️ KAIROS — ALERTA MERCADO\n{'='*38}\n"
-            f"{evento['mensaje']}{r_texto}\n\n"
-            f"kairos-markets.streamlit.app"
-        )
-        enviar_alerta_telegram(mensaje)
+    # ── Alerta de mercado (viene de market_alert — ya tiene mensaje)
+    elif tipo in ("ALERTA_MERCADO", "PATRON_MACRO"):
+        enviar_alerta_telegram(evento["mensaje"])
 
     # ── Nuevo comunicado FED
     elif tipo == "COMUNICADO_FED":
@@ -277,20 +218,19 @@ def procesar_evento(evento: dict, datos_macro=None, regimen=None):
 def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
     log.info("=" * 50)
     log.info("🚀 KAIROS MONITOR ACTIVO — 4 fuentes")
-    log.info(f"   [1] Noticias RSS con filtro de absorción")
+    log.info(f"   [1] Noticias RSS — filtro de absorción")
     log.info(f"   [2] Calendario económico — anticipación")
-    log.info(f"   [3] Mercados — movimientos anómalos")
-    log.info(f"   [4] FED — nuevo comunicado")
+    log.info(f"   [3] Mercados — patrones macro + contexto causal")
+    log.info(f"   [4] FED — nuevo comunicado genuino")
     log.info(f"   Intervalo: cada {intervalo//60} minutos")
     log.info("=" * 50)
 
-    # Enviar resumen de la semana al arrancar
+    # Enviar resumen semanal al arrancar
     try:
         resumen = resumen_semana()
         enviar_alerta_telegram(
             f"🚀 KAIROS MONITOR INICIADO\n{'='*38}\n\n{resumen}"
         )
-        log.info("Resumen semanal enviado a Telegram")
     except Exception as e:
         log.warning(f"Error enviando resumen inicial: {e}")
 
@@ -337,17 +277,18 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                     datos_macro, regimen
                 )
                 estado["alertas_enviadas"] += 1
-                log.info(f"  Alerta calendario: {alerta['clave_alerta']}")
+                log.info(f"  Alerta: {alerta['clave_alerta']}")
         except Exception as e:
             log.error(f"Error calendario: {e}")
 
-        # [3] Mercados
-        log.info("\n[3] MERCADOS")
+        # [3] Mercados con contexto causal
+        log.info("\n[3] MERCADOS — market_alert")
         try:
-            alertas_mkt = monitorear_mercados()
-            for a in alertas_mkt:
-                procesar_evento(a, datos_macro, regimen)
+            mensajes_mkt = monitorear_mercados(regimen)
+            for m in mensajes_mkt:
+                procesar_evento(m, datos_macro, regimen)
                 estado["alertas_enviadas"] += 1
+                log.info(f"  Alerta: {m.get('activo', m['tipo'])}")
         except Exception as e:
             log.error(f"Error mercados: {e}")
 
@@ -382,21 +323,22 @@ def run_test():
     print("\n[2] CALENDARIO ECONÓMICO")
     from calendario_eco import obtener_eventos_proximos
     proximos = obtener_eventos_proximos(dias=30)
-    print(f"→ {len(proximos)} eventos en los próximos 30 días:")
+    print(f"→ {len(proximos)} eventos próximos:")
     for ev in proximos[:4]:
         emoji = {"CRÍTICO":"🚨","ALTO":"⚠️","MEDIO":"📡"}.get(ev["impacto"],"📡")
-        print(f"  {emoji} {ev['evento']}")
-        print(f"     {ev['hora_local_et']} — faltan {ev['dias_restantes']} días")
-        if ev.get("consenso"):
-            print(f"     Consenso: {ev['consenso']}")
+        print(f"  {emoji} {ev['evento']} — {ev['dias_restantes']} días")
 
-    print("\n[3] MERCADOS")
-    alertas = monitorear_mercados()
-    if alertas:
-        for a in alertas:
-            print(f"  ⚠️  {a['mensaje']}")
-    else:
-        print("  ✓ Sin movimientos anómalos")
+    print("\n[3] MERCADOS con contexto causal")
+    from market_alert import obtener_snapshot
+    snap = obtener_snapshot()
+    print(f"→ Régimen: {snap['regimen_mercado']}")
+    print(f"→ Alertas: {snap['n_alertas']}")
+    for nombre, info in snap["datos"].items():
+        pct   = info["cambio_pct"]
+        signo = "+" if pct > 0 else ""
+        print(f"  {nombre:8} {info['precio']:>10}  {signo}{pct}%")
+    if snap["patron"]:
+        print(f"\n  {snap['patron']}")
 
     print("\n[4] FED")
     fed = detectar_nuevo_fed(estado)

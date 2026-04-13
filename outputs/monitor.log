@@ -382,3 +382,155 @@
 2026-04-11 19:56:07,960 [INFO] 
 ✅ Ciclo #9 — 7 alertas totales
 2026-04-11 19:56:07,961 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:14:21,604 [INFO] ==================================================
+2026-04-13 11:14:21,604 [INFO] 🚀 KAIROS MONITOR ACTIVO — 4 fuentes
+2026-04-13 11:14:21,605 [INFO]    [1] Noticias RSS con filtro de absorción
+2026-04-13 11:14:21,605 [INFO]    [2] Calendario económico — anticipación
+2026-04-13 11:14:21,605 [INFO]    [3] Mercados — movimientos anómalos
+2026-04-13 11:14:21,606 [INFO]    [4] FED — nuevo comunicado
+2026-04-13 11:14:21,606 [INFO]    Intervalo: cada 5 minutos
+2026-04-13 11:14:21,606 [INFO] ==================================================
+2026-04-13 11:14:22,367 [INFO] Resumen semanal enviado a Telegram
+2026-04-13 11:14:22,383 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:14:22,385 [INFO] CICLO #1 — 13/04/2026 11:14:22
+2026-04-13 11:14:22,386 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:14:31,483 [INFO] Macro: NEUTRO
+2026-04-13 11:14:31,483 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:14:33,229 [INFO]     Eventos con ventana activa: 21
+2026-04-13 11:14:47,949 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:14:47,950 [INFO]     Alertas de calendario: 0
+2026-04-13 11:14:47,951 [INFO] 
+[3] MERCADOS
+2026-04-13 11:14:48,403 [INFO]   VIX: +3.74% ✓ normal
+2026-04-13 11:14:48,556 [INFO]   SPX: +0.09% ✓ normal
+2026-04-13 11:14:49,095 [INFO] 
+[4] FED
+2026-04-13 11:14:49,283 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:14:49,284 [INFO] 
+✅ Ciclo #1 — 28 alertas totales
+2026-04-13 11:14:49,284 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:19:49,304 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:19:49,313 [INFO] CICLO #2 — 13/04/2026 11:19:49
+2026-04-13 11:19:49,313 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:19:49,318 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:19:50,997 [INFO]     Eventos con ventana activa: 0
+2026-04-13 11:19:50,997 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:19:51,001 [INFO]     Alertas de calendario: 0
+2026-04-13 11:19:51,001 [INFO] 
+[3] MERCADOS
+2026-04-13 11:19:51,177 [INFO]   VIX: +4.06% ✓ normal
+2026-04-13 11:19:51,325 [INFO]   SPX: +0.13% ✓ normal
+2026-04-13 11:19:51,697 [INFO] 
+[4] FED
+2026-04-13 11:19:51,704 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:19:51,706 [INFO] 
+✅ Ciclo #2 — 28 alertas totales
+2026-04-13 11:19:51,707 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:24:51,710 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:24:51,711 [INFO] CICLO #3 — 13/04/2026 11:24:51
+2026-04-13 11:24:51,711 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:24:51,711 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:24:53,331 [INFO]     Eventos con ventana activa: 2
+2026-04-13 11:24:54,744 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:24:54,745 [INFO]     Alertas de calendario: 0
+2026-04-13 11:24:54,745 [INFO] 
+[3] MERCADOS
+2026-04-13 11:24:54,928 [INFO]   VIX: +3.22% ✓ normal
+2026-04-13 11:24:55,215 [INFO]   SPX: +0.2% ✓ normal
+2026-04-13 11:24:55,596 [INFO] 
+[4] FED
+2026-04-13 11:24:55,598 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:24:55,600 [INFO] 
+✅ Ciclo #3 — 30 alertas totales
+2026-04-13 11:24:55,601 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:29:55,616 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:29:55,619 [INFO] CICLO #4 — 13/04/2026 11:29:55
+2026-04-13 11:29:55,619 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:29:55,619 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:29:57,260 [INFO]     Eventos con ventana activa: 1
+2026-04-13 11:29:57,987 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:29:57,988 [INFO]     Alertas de calendario: 0
+2026-04-13 11:29:57,988 [INFO] 
+[3] MERCADOS
+2026-04-13 11:29:58,168 [INFO]   VIX: +3.02% ✓ normal
+2026-04-13 11:29:58,298 [INFO]   SPX: +0.31% ✓ normal
+2026-04-13 11:29:58,857 [INFO] 
+[4] FED
+2026-04-13 11:29:58,860 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:29:58,861 [INFO] 
+✅ Ciclo #4 — 31 alertas totales
+2026-04-13 11:29:58,862 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:34:58,870 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:34:58,878 [INFO] CICLO #5 — 13/04/2026 11:34:58
+2026-04-13 11:34:58,878 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:34:58,878 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:35:00,101 [INFO]     Eventos con ventana activa: 0
+2026-04-13 11:35:00,102 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:35:00,103 [INFO]     Alertas de calendario: 0
+2026-04-13 11:35:00,104 [INFO] 
+[3] MERCADOS
+2026-04-13 11:35:00,290 [INFO]   VIX: +2.55% ✓ normal
+2026-04-13 11:35:00,424 [INFO]   SPX: +0.31% ✓ normal
+2026-04-13 11:35:00,995 [INFO] 
+[4] FED
+2026-04-13 11:35:00,998 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:35:00,999 [INFO] 
+✅ Ciclo #5 — 31 alertas totales
+2026-04-13 11:35:01,000 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:40:01,001 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:40:01,001 [INFO] CICLO #6 — 13/04/2026 11:40:01
+2026-04-13 11:40:01,002 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:40:01,002 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:40:02,520 [INFO]     Eventos con ventana activa: 0
+2026-04-13 11:40:02,520 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:40:02,521 [INFO]     Alertas de calendario: 0
+2026-04-13 11:40:02,521 [INFO] 
+[3] MERCADOS
+2026-04-13 11:40:02,695 [INFO]   VIX: +2.08% ✓ normal
+2026-04-13 11:40:02,835 [INFO]   SPX: +0.32% ✓ normal
+2026-04-13 11:40:03,225 [INFO] 
+[4] FED
+2026-04-13 11:40:03,227 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:40:03,229 [INFO] 
+✅ Ciclo #6 — 31 alertas totales
+2026-04-13 11:40:03,229 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:45:03,238 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 11:45:03,238 [INFO] CICLO #7 — 13/04/2026 11:45:03
+2026-04-13 11:45:03,239 [INFO] ──────────────────────────────────────────────────
+2026-04-13 11:45:03,239 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 11:45:04,710 [INFO]     Eventos con ventana activa: 2
+2026-04-13 11:45:06,091 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 11:45:06,092 [INFO]     Alertas de calendario: 0
+2026-04-13 11:45:06,092 [INFO] 
+[3] MERCADOS
+2026-04-13 11:45:06,279 [INFO]   VIX: +1.25% ✓ normal
+2026-04-13 11:45:06,416 [INFO]   SPX: +0.33% ✓ normal
+2026-04-13 11:45:06,809 [INFO] 
+[4] FED
+2026-04-13 11:45:06,812 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 11:45:06,814 [INFO] 
+✅ Ciclo #7 — 33 alertas totales
+2026-04-13 11:45:06,815 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 11:52:10,918 [INFO]     Eventos con ventana activa: 1
+2026-04-13 11:52:12,305 [INFO]   FED: mismo comunicado — sin cambios

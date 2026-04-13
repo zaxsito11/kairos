@@ -18,44 +18,44 @@ Usa estos datos reales para calibrar tu analisis:
 
 
 **1. TONO GENERAL**
-- Clasificación: HAWKISH LEVE
-- Score: +2
-- Señales hawkish encontradas: "inflación ha sido revisada al alza", "inflación excluyendo energía y alimentos se espera que sea del 2,3% en 2026", "el Consejo de Gobierno está decidido a asegurar que la inflación se estabilice en el 2% en el plazo medio".
-- Señales dovish encontradas: "el crecimiento económico se espera que sea del 0,9% en 2026, lo que implica una revisión a la baja", "el Consejo de Gobierno está listo para ajustar todos sus instrumentos para asegurar que la inflación se estabilice en el 2% en el plazo medio".
-- Justificación: El tono general es hawkish leve debido a que el Consejo de Gobierno está decidido a controlar la inflación, pero también está dispuesto a ajustar sus instrumentos para asegurar la estabilidad económica.
+- Clasificación: NEUTRO
+- Score: 0
+- Señales hawkish encontradas: "inflation has been at around the 2% target", "inflation excluding energy and food, staff project an average of 2.3% in 2026"
+- Señales dovish encontradas: "the war in the Middle East has made the outlook significantly more uncertain", "economic growth to average 0.9% in 2026, 1.3% in 2027 and 1.4% in 2028"
+- Justificación: El tono general es neutro porque el BCE mantiene las tasas de interés sin cambios y se enfoca en la incertidumbre generada por la guerra en el Medio Oriente, lo que implica un equilibrio entre riesgos.
 
 **2. MENSAJES CLAVE**
-- El Consejo de Gobierno está decidido a asegurar que la inflación se estabilice en el 2% en el plazo medio.
-- La inflación ha sido revisada al alza debido a la guerra en el Medio Oriente.
-- El crecimiento económico se espera que sea del 0,9% en 2026, lo que implica una revisión a la baja.
+- El BCE mantiene las tasas de interés sin cambios debido a la incertidumbre generada por la guerra en el Medio Oriente.
+- La inflación se espera que se mantenga alrededor del 2% en el mediano plazo.
+- El BCE está listo para ajustar sus instrumentos para asegurar que la inflación se estabilice en el 2% en el mediano plazo.
 
 **3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
-- Lenguaje nuevo: "el Consejo de Gobierno está listo para ajustar todos sus instrumentos para asegurar que la inflación se estabilice en el 2% en el plazo medio".
-- Se eliminó o suavizó: No se menciona explícitamente una fecha para el próximo aumento de tasas.
+- Lenguaje nuevo: "la guerra en el Medio Oriente ha hecho que el panorama sea significativamente más incierto"
+- Se elimino o suavizó: No se menciona explícitamente un cambio en la política monetaria, lo que sugiere que el BCE está manteniendo su enfoque actual.
 
 **4. IMPACTO ESPERADO POR ACTIVO**
-- USD (Dólar): Al alza debido a la expectativa de una política monetaria más restrictiva.
-- Bonos del Tesoro UST 10Y: A la baja debido a la expectativa de una política monetaria más restrictiva.
-- S&P 500 (SPX): A la baja debido a la expectativa de una política monetaria más restrictiva.
-- Nasdaq (NDX): A la baja debido a la expectativa de una política monetaria más restrictiva.
-- Oro (Gold): A la baja debido a la expectativa de una política monetaria más restrictiva.
-- EUR/USD: A la baja debido a la expectativa de una política monetaria más restrictiva en la zona euro.
-- VIX (Volatilidad): Al alza debido a la incertidumbre sobre la política monetaria.
+- USD (Dólar): Sin cambios significativos
+- Bonos del Tesoro UST 10Y: Sin cambios significativos
+- S&P 500 (SPX): Posible aumento leve debido a la estabilidad en la política monetaria
+- Nasdaq (NDX): Posible aumento leve debido a la estabilidad en la política monetaria
+- Oro (Gold): Sin cambios significativos
+- EUR/USD: Sin cambios significativos
+- VIX (Volatilidad): Disminución leve debido a la estabilidad en la política monetaria
 
 **5. ESCENARIOS DE MERCADO**
-ESCENARIO A (probabilidad: 40%): Escenario de crecimiento lento y estabilidad inflacionaria.
-El crecimiento económico se desacelera, pero la inflación se mantiene estable, lo que lleva a una política monetaria más restrictiva.
+ESCENARIO A (probabilidad: 40%): Estabilidad en la política monetaria
+El BCE mantiene su política monetaria actual, lo que lleva a una estabilidad en los mercados financieros.
 
-ESCENARIO B (probabilidad: 30%): Escenario de recesión y deflación.
-La economía entra en recesión, lo que lleva a una política monetaria más expansiva y a una disminución de la inflación.
+ESCENARIO B (probabilidad: 30%): Aumento de la incertidumbre
+La guerra en el Medio Oriente aumenta la incertidumbre en los mercados, lo que lleva a una disminución en la confianza de los inversores.
 
-ESCENARIO C (probabilidad: 30%): Escenario de crecimiento rápido y inflación alta.
-El crecimiento económico se acelera, lo que lleva a una política monetaria más restrictiva y a una subida de la inflación.
+ESCENARIO C (probabilidad: 30%): Cambio en la política monetaria
+El BCE cambia su política monetaria en respuesta a la guerra en el Medio Oriente, lo que lleva a un ajuste en los mercados financieros.
 
 **6. VARIABLES CLAVE A MONITOREAR**
-- Datos próximos relevantes: Informe de empleo, inflación, crecimiento económico.
-- Declaraciones de miembros del FOMC a seguir: Declaraciones de los miembros del Consejo de Gobierno sobre la política monetaria y la inflación.
+- Datos próximos relevantes: Inflación, crecimiento económico, tasas de interés
+- Declaraciones de miembros del FOMC a seguir: No aplicable, ya que el comunicado es del BCE
 
 **7. CONFIDENCE SCORE**
 - Score: 80/100
-- Factores que reducen la confianza: La incertidumbre sobre la política monetaria, la guerra en el Medio Oriente y la posible recesión económica.
+- Factores que reducen la confianza: La incertidumbre generada por la guerra en el Medio Oriente y la posibilidad de cambios en la política monetaria del BCE.
