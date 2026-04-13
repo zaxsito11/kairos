@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS — Inteligencia de Mercados</title>
+<meta name="description" content="KAIROS monitorea el mundo 24/7 y te alerta en Telegram antes de que el mercado descuente el evento. Gratis.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green:      #1D9E75;
+    --green-dark: #0F6E56;
+    --green-light:#E1F5EE;
+    --bg:         #0d1117;
+    --bg2:        #161b22;
+    --bg3:        #1a1f2e;
+    --border:     #2a2f3e;
+    --text:       #e6edf3;
+    --muted:      #8892a4;
+    --red:        #ff6b6b;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-size: 1.3rem; font-weight: 700;
+    letter-spacing: 4px; color: var(--green);
+  }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.88rem; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--green); color: #fff !important;
+    padding: 0.4rem 1rem; border-radius: 6px;
+    font-weight: 500;
+  }
+  .nav-cta:hover { background: var(--green-dark) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    border-bottom: 1px solid var(--border);
+    max-width: 800px; margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--green-light); color: var(--green-dark);
+    font-size: 0.75rem; font-weight: 600;
+    padding: 4px 14px; border-radius: 20px;
+    margin-bottom: 1.5rem; letter-spacing: 1px;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; line-height: 1.25;
+    color: var(--text); margin-bottom: 1rem;
+  }
+  .hero h1 span { color: var(--green); }
+  .hero p {
+    font-size: 1.05rem; color: var(--muted);
+    max-width: 540px; margin: 0 auto 2rem;
+  }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green); color: #fff;
+    padding: 0.75rem 2rem; border-radius: 8px;
+    font-size: 1rem; font-weight: 600;
+    text-decoration: none; transition: background .2s;
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    padding: 0.75rem 2rem; border-radius: 8px;
+    font-size: 1rem; border: 1px solid var(--border);
+    text-decoration: none; transition: border-color .2s;
+  }
+  .btn-secondary:hover { border-color: var(--muted); }
+  .hero-note {
+    font-size: 0.78rem; color: var(--muted);
+    margin-top: 1rem;
+  }
+
+  /* ── STATS ── */
+  .stats {
+    display: flex; justify-content: center;
+    gap: 0; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .stat {
+    text-align: center; padding: 1.5rem 2.5rem;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-size: 1.8rem; font-weight: 700; color: var(--green); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  /* ── SECTION ── */
+  section { padding: 4rem 2rem; }
+  .section-label {
+    text-align: center; font-size: 0.75rem;
+    font-weight: 600; letter-spacing: 2px;
+    color: var(--green); margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+  .section-title {
+    text-align: center; font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 700; color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+  .section-sub {
+    text-align: center; color: var(--muted);
+    font-size: 0.95rem; max-width: 500px;
+    margin: 0 auto 2.5rem;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; max-width: 900px; margin: 0 auto;
+  }
+  .step {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+  }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green); color: #fff;
+    display: flex; align-items: center;
+    justify-content: center; font-size: 0.85rem;
+    font-weight: 700; margin-bottom: 1rem;
+  }
+  .step h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .step p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── ALERT PREVIEW ── */
+  .preview-wrap {
+    display: flex; gap: 3rem; align-items: center;
+    max-width: 900px; margin: 0 auto; flex-wrap: wrap;
+  }
+  .preview-text { flex: 1; min-width: 260px; }
+  .preview-text h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; }
+  .preview-text ul { list-style: none; }
+  .preview-text li {
+    font-size: 0.9rem; color: var(--muted);
+    padding: 0.4rem 0; display: flex;
+    align-items: flex-start; gap: 8px;
+  }
+  .preview-text li::before {
+    content: ""; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--green);
+    flex-shrink: 0; margin-top: 8px;
+  }
+  .phone-mock {
+    flex: 0 0 280px;
+    background: var(--bg3);
+    border-radius: 16px; padding: 1.25rem;
+    border: 1px solid var(--border);
+    font-family: monospace;
+  }
+  .tg-header {
+    display: flex; align-items: center;
+    gap: 10px; margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .tg-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #229ED9; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; color: #fff;
+  }
+  .tg-name-wrap .tg-n { font-size: 0.85rem; font-weight: 600; }
+  .tg-name-wrap .tg-s { font-size: 0.72rem; color: var(--muted); }
+  .msg {
+    background: #1e2d3d; border-radius: 10px;
+    padding: 0.85rem; font-size: 0.75rem;
+    line-height: 1.7; color: #c9d1d9;
+    margin-bottom: 0.5rem;
+  }
+  .msg .g  { color: var(--green); font-weight: 600; }
+  .msg .r  { color: var(--red); }
+  .msg .mu { color: var(--muted); }
+  .msg-time { font-size: 0.65rem; color: var(--muted); text-align: right; }
+
+  /* ── FEATURES ── */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px; max-width: 900px; margin: 0 auto;
+  }
+  .feature {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+  }
+  .feature-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .feature h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .feature p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── JOIN ── */
+  .join-section {
+    text-align: center; padding: 5rem 2rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .join-section h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .join-section p { color: var(--muted); margin-bottom: 2rem; }
+  .join-form {
+    display: flex; gap: 8px;
+    max-width: 420px; margin: 0 auto;
+  }
+  .join-input {
+    flex: 1; padding: 0.75rem 1rem;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg3); color: var(--text);
+    font-size: 0.95rem; outline: none;
+  }
+  .join-input:focus { border-color: var(--green); }
+  .join-submit {
+    background: var(--green); color: #fff;
+    border: none; padding: 0.75rem 1.5rem;
+    border-radius: 8px; font-size: 0.95rem;
+    font-weight: 600; cursor: pointer;
+    white-space: nowrap; transition: background .2s;
+  }
+  .join-submit:hover { background: var(--green-dark); }
+  .join-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.75rem; }
+  .join-success {
+    display: none; color: var(--green);
+    font-weight: 600; margin-top: 1rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.8rem; color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+  footer span { color: var(--green); font-weight: 600; letter-spacing: 2px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .stat { padding: 1.25rem 1.5rem; }
+    .preview-wrap { flex-direction: column; }
+    .phone-mock { flex: none; width: 100%; }
+    .join-form { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">KAIROS</div>
+  <div class="nav-links">
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#alertas">Alertas</a>
+    <a href="#features">Funciones</a>
+    <a href="#join" class="nav-cta">Unirse gratis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:100%; overflow:hidden">
+<div class="hero">
+  <div class="hero-badge">ACCESO GRATUITO</div>
+  <h1>Sé el primero en saber<br><span>qué va a mover los mercados</span></h1>
+  <p>KAIROS monitorea el mundo 24/7 — FED, BCE, geopolítica, macro — y te alerta en Telegram antes de que el mercado descuente el evento.</p>
+  <div class="hero-btns">
+    <a href="#join" class="btn-primary">Unirse al canal gratis</a>
+    <a href="https://kairos-markets.streamlit.app" target="_blank" class="btn-secondary">Ver dashboard</a>
+  </div>
+  <p class="hero-note">Sin tarjeta de crédito &nbsp;·&nbsp; Canal Telegram gratuito &nbsp;·&nbsp; Sin spam</p>
+</div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Capas de análisis</div></div>
+  <div class="stat"><div class="stat-num">5</div><div class="stat-label">Fuentes en tiempo real</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Vigilancia automática</div></div>
+  <div class="stat"><div class="stat-num">&lt;5min</div><div class="stat-label">Tiempo de respuesta</div></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="como-funciona" style="border-bottom:1px solid var(--border)">
+  <p class="section-label">Cómo funciona</p>
+  <h2 class="section-title">KAIROS habla primero — tú decides</h2>
+  <p class="section-sub">No espera que le preguntes. Detecta, analiza y alerta automáticamente.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Detecta el evento</h3>
+      <p>Monitorea Reuters, Bloomberg, FED, BCE y mercados cada 5 minutos buscando eventos con capacidad de mover precios.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Filtra lo relevante</h3>
+      <p>Si el mercado ya absorbió la noticia, silencio. Solo alerta cuando hay una ventana de oportunidad activa.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Analiza con IA</h3>
+      <p>Calcula impacto por activo, probabilidades basadas en 50+ precedentes históricos y régimen macro actual.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Te alerta en Telegram</h3>
+      <p>Recibes la alerta antes de que el mercado lo procese — con contexto, probabilidades y tiempo estimado de reacción.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ALERT PREVIEW -->
+<section id="alertas" style="border-bottom:1px solid var(--border)">
+  <p class="section-label">Ejemplo real</p>
+  <h2 class="section-title">Así llega la alerta a tu Telegram</h2>
+  <p class="section-sub">No es un titular de noticias. Es inteligencia accionable.</p>
+  <div class="preview-wrap">
+    <div class="preview-text">
+      <h2>Cada alerta incluye:</h2>
+      <ul>
+        <li>Tiempo que le queda al mercado para absorber el evento</li>
+        <li>Score de relevancia 0–100 para priorizar</li>
+        <li>Tipo de evento (geopolítico, macro, FED, BCE)</li>
+        <li>Impacto esperado por activo (SPX, DXY, Gold, WTI...)</li>
+        <li>Probabilidades basadas en precedentes históricos reales</li>
+        <li>Tiempo típico de reacción del mercado</li>
+      </ul>
+    </div>
+    <div class="phone-mock">
+      <div class="tg-header">
+        <div class="tg-avatar">KM</div>
+        <div class="tg-name-wrap">
+          <div class="tg-n">KAIROS Markets</div>
+          <div class="tg-s">bot</div>
+        </div>
+      </div>
+      <div class="msg">
+        <span class="r">⚠️ KAIROS — VENTANA ACTIVA</span><br>
+        ══════════════════════<br>
+        📰 US tariffs on Chinese imports — retaliation fears<br>
+        📡 Bloomberg | hace 18 min<br><br>
+        <span class="g">⏱️ VENTANA ACTIVA — 5.8h restantes</span><br>
+        🎯 Score: 78/100<br>
+        🏷️ Tensión Comercial<br><br>
+        📊 PREDICCIÓN (7 precedentes):<br>
+        &nbsp;📉 SPX: <span class="r">-2.1%</span> (74% prob.)<br>
+        &nbsp;📉 NDX: <span class="r">-2.8%</span> (76% prob.)<br>
+        &nbsp;📈 Gold: <span class="g">+1.1%</span> (65% prob.)<br>
+        <span class="mu">⏱️ Reacción típica: 0–4h</span>
+      </div>
+      <div class="msg-time">11:14 AM ✓✓</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="border-bottom:1px solid var(--border)">
+  <p class="section-label">Funciones</p>
+  <h2 class="section-title">Todo incluido, gratis</h2>
+  <p class="section-sub">Sin límites artificiales. KAIROS es 100% gratuito mientras está en fase de construcción.</p>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🏛️</div>
+      <h3>Análisis FED y BCE</h3>
+      <p>IA analiza cada comunicado de bancos centrales y detecta si el tono es más hawkish o dovish que lo esperado.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌍</div>
+      <h3>Geopolítica</h3>
+      <p>Clasifica automáticamente conflictos, sanciones, aranceles y acuerdos — con impacto por activo y precedentes.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📅</div>
+      <h3>Calendario macro</h3>
+      <p>Anticipa NFP, CPI, PCE y FOMC con consenso de analistas y probabilidad de sorpresa calculada con IA.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Alertas de mercado</h3>
+      <p>Detecta VIX spikes, caídas del SPX y movimientos del DXY con contexto causal — no solo el número.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📚</div>
+      <h3>Precedentes históricos</h3>
+      <p>Cada predicción está respaldada por casos reales. KAIROS usa el pasado como retroalimentación del futuro.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <h3>Priced-in scoring</h3>
+      <p>Compara el tono real de la FED vs lo que el mercado tenía descontado — mide la sorpresa real.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<div class="join-section" id="join">
+  <h2>Únete al canal gratuito</h2>
+  <p>Recibe alertas en Telegram cuando KAIROS detecte un evento<br>que puede mover tus posiciones — antes de que el mercado lo descuente.</p>
+  <div class="join-form">
+    <input class="join-input" type="email" placeholder="tu@email.com" id="email-input">
+    <button class="join-submit" onclick="handleJoin()">Unirse →</button>
+  </div>
+  <p class="join-note">Sin spam · Puedes salir cuando quieras · 100% gratuito</p>
+  <p class="join-success" id="success-msg">✓ Perfecto — te enviamos el link al canal de Telegram</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p><span>KAIROS</span> &nbsp;·&nbsp; The intelligence between events and markets &nbsp;·&nbsp; 2026</p>
+  <p style="margin-top:0.5rem"><a href="https://kairos-markets.streamlit.app" style="color:var(--green);text-decoration:none">Dashboard →</a></p>
+</footer>
+
+<script>
+function handleJoin() {
+  const email = document.getElementById('email-input').value;
+  if (!email || !email.includes('@')) {
+    document.getElementById('email-input').style.borderColor = '#ff6b6b';
+    return;
+  }
+  document.getElementById('email-input').style.borderColor = '#1D9E75';
+  document.querySelector('.join-form').style.display = 'none';
+  document.getElementById('success-msg').style.display = 'block';
+  // Aquí conectar con Mailchimp, ConvertKit o tu backend
+  console.log('Email registrado:', email);
+}
+document.getElementById('email-input').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') handleJoin();
+});
+</script>
+</body>
+</html>
