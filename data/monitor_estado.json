@@ -269,10 +269,11 @@
     "6e546a55aff2bbd1919b835e4ad6d918",
     "411ecb810f4c376b57818e648e99d186",
     "dd3d3daa60668e434e3b2e45892c4807",
-    "1224c736fd578dc09fd1f685f3495351"
+    "1224c736fd578dc09fd1f685f3495351",
+    "70c4bbf3638cd05284565e4e72bd7f88"
   ],
   "ultimo_hash_fed": "5bf72219d00cfa277266269518f40888",
-  "ultima_revision": "2026-04-13T20:50:19.751104",
+  "ultima_revision": "2026-04-13T20:51:17.537564",
   "alertas_enviadas": 91,
   "calendario_alertas": {}
 }
