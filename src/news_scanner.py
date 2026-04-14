@@ -1,161 +1,119 @@
-# news_scanner.py — KAIROS v3
-# Scanner de noticias con filtro de absorción de mercado.
-# 10 fuentes RSS verificadas + detección de situaciones activas.
+# news_scanner.py — KAIROS v4
+# KAIROS es selectivo: solo alerta lo que puede mover mercados >1%
+# Score mínimo: 70/100 — sin noticias irrelevantes
 
 import feedparser
 import hashlib
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
-# ── 10 Fuentes RSS verificadas ────────────────────────────────────
-# Seleccionadas por velocidad, relevancia macro y acceso gratuito
 FUENTES_RSS = [
-    # ── Agencias globales (más rápidas en breaking news)
-    {
-        "nombre": "Reuters Business",
-        "url":    "https://feeds.reuters.com/reuters/businessNews",
-        "peso":   10,  # 10 = máxima confiabilidad
-    },
-    {
-        "nombre": "Reuters Markets",
-        "url":    "https://feeds.reuters.com/reuters/UKdomesticNews",
-        "peso":   10,
-    },
-    {
-        "nombre": "Reuters Top News",
-        "url":    "https://feeds.reuters.com/reuters/topNews",
-        "peso":   9,
-    },
-    # ── TV financiera (muy rápida en datos macro)
-    {
-        "nombre": "CNBC Markets",
-        "url":    "https://www.cnbc.com/id/20910258/device/rss/rss.html",
-        "peso":   9,
-    },
-    {
-        "nombre": "CNBC Economy",
-        "url":    "https://www.cnbc.com/id/20910258/device/rss/rss.html",
-        "peso":   8,
-    },
-    # ── Bloomberg (mercados en tiempo real)
-    {
-        "nombre": "Bloomberg Markets",
-        "url":    "https://feeds.bloomberg.com/markets/news.rss",
-        "peso":   10,
-    },
-    # ── Yahoo Finance (amplia cobertura, gratuito)
-    {
-        "nombre": "Yahoo Finance",
-        "url":    "https://finance.yahoo.com/rss/topstories",
-        "peso":   8,
-    },
-    # ── Investing.com (cobertura macro global)
-    {
-        "nombre": "Investing.com Global",
-        "url":    "https://www.investing.com/rss/news_301.rss",
-        "peso":   8,
-    },
-    {
-        "nombre": "Investing.com ES",
-        "url":    "https://es.investing.com/rss/news.rss",
-        "peso":   7,
-    },
-    # ── MarketWatch (datos EEUU + earnings)
-    {
-        "nombre": "MarketWatch",
-        "url":    "https://feeds.marketwatch.com/marketwatch/topstories/",
-        "peso":   8,
-    },
+    {"nombre": "Reuters Business",   "url": "https://feeds.reuters.com/reuters/businessNews",  "peso": 10},
+    {"nombre": "Reuters Markets",    "url": "https://feeds.reuters.com/reuters/UKdomesticNews", "peso": 10},
+    {"nombre": "Reuters Top News",   "url": "https://feeds.reuters.com/reuters/topNews",        "peso": 9},
+    {"nombre": "CNBC Markets",       "url": "https://www.cnbc.com/id/20910258/device/rss/rss.html", "peso": 9},
+    {"nombre": "Bloomberg Markets",  "url": "https://feeds.bloomberg.com/markets/news.rss",    "peso": 10},
+    {"nombre": "Yahoo Finance",      "url": "https://finance.yahoo.com/rss/topstories",        "peso": 8},
+    {"nombre": "Investing.com Global","url": "https://www.investing.com/rss/news_301.rss",     "peso": 8},
+    {"nombre": "Investing.com ES",   "url": "https://es.investing.com/rss/news.rss",           "peso": 7},
+    {"nombre": "MarketWatch",        "url": "https://feeds.marketwatch.com/marketwatch/topstories/", "peso": 8},
 ]
 
-# ── Situaciones activas en el mundo ──────────────────────────────
-# Eventos sin resolver que siguen moviendo mercados.
-# Score SIEMPRE ALTO hasta que se marquen como resueltos.
-# ⚠️ Actualizar cuando un evento se resuelva o aparezca uno nuevo.
+# ── Situaciones activas — score SIEMPRE alto hasta resolución ─────
 SITUACIONES_ACTIVAS = [
     {
-        "nombre":   "Conflicto EEUU-Israel-Irán",
-        "keywords": [
+        "nombre":    "Conflicto EEUU-Israel-Irán",
+        "keywords":  [
             "iran", "hormuz", "strait of hormuz", "middle east war",
             "israel attack", "tehran", "persian gulf", "irán",
-            "estrecho de ormuz", "oriente medio conflicto",
-            "operation", "military iran", "us iran",
+            "estrecho de ormuz", "operation", "military iran", "us iran",
         ],
-        "tipo":      "CONFLICTO_ARMADO",
-        "urgencia":  "MAXIMA",
-        "score_base": 88,
-        "activos":   ["WTI", "Gold", "VIX", "SPX", "DXY"],
-        "resuelto":  False,
-        "nota":      "Operación Furia Épica — semana 6. WTI $100.",
+        "tipo":       "CONFLICTO_ARMADO",
+        "urgencia":   "MAXIMA",
+        "score_base":  88,
+        "activos":    ["WTI", "Gold", "VIX", "SPX", "DXY"],
+        "resuelto":   False,
+        "nota":       "Operación Furia Épica — semana 6. WTI $100.",
     },
     {
-        "nombre":   "Guerra comercial EEUU-China",
-        "keywords": [
+        "nombre":    "Guerra comercial EEUU-China",
+        "keywords":  [
             "tariff china", "chinese tariffs", "trade war china",
             "us china trade", "arancel china", "guerra comercial",
             "trump tariff", "beijing retaliation",
         ],
-        "tipo":      "TENSION_COMERCIAL",
-        "urgencia":  "ALTA",
-        "score_base": 78,
-        "activos":   ["SPX", "NDX", "DXY", "Gold"],
-        "resuelto":  False,
-        "nota":      "Aranceles Trump activos — escalada en curso.",
+        "tipo":       "TENSION_COMERCIAL",
+        "urgencia":   "ALTA",
+        "score_base":  78,
+        "activos":    ["SPX", "NDX", "DXY", "Gold"],
+        "resuelto":   False,
+        "nota":       "Aranceles Trump activos — escalada en curso.",
     },
     {
-        "nombre":   "Crisis energética — WTI $100",
-        "keywords": [
+        "nombre":    "Crisis energética — WTI $100",
+        "keywords":  [
             "oil $100", "crude $100", "brent $100",
             "oil supply crisis", "energy crisis",
             "petróleo 100", "precio petróleo dispara",
         ],
-        "tipo":      "CRISIS_ENERGETICA",
-        "urgencia":  "ALTA",
-        "score_base": 75,
-        "activos":   ["WTI", "Gold", "SPX", "DXY"],
-        "resuelto":  False,
-        "nota":      "WTI en $100 por bloqueo Ormuz.",
+        "tipo":       "CRISIS_ENERGETICA",
+        "urgencia":   "ALTA",
+        "score_base":  75,
+        "activos":    ["WTI", "Gold", "SPX", "DXY"],
+        "resuelto":   False,
+        "nota":       "WTI en $100 por bloqueo Ormuz.",
     },
 ]
 
-# ── Keywords por urgencia (eventos puntuales) ─────────────────────
+# ── Solo MAXIMA y ALTA — sin categoría MEDIA ──────────────────────
+# La categoría MEDIA generaba ruido (deportes, entretenimiento, etc.)
+# KAIROS solo alerta lo que históricamente mueve mercados >1%
 KEYWORDS_URGENCIA = {
     "MAXIMA": {
         "palabras": [
+            # Bancos centrales — decisiones en vivo
             "rate decision", "fomc statement", "fed raises", "fed cuts",
             "ecb raises", "ecb cuts", "emergency rate", "surprise rate",
-            "military strike", "invasion", "war escalation",
-            "bank collapse", "bank run", "circuit breaker", "market halt",
-            "nuclear", "hormuz blockade", "oil supply cut",
+            "fed rate decision", "ecb rate decision",
+            # Conflictos y shocks sistémicos
+            "military strike", "war escalation", "nuclear threat",
+            "hormuz blockade", "oil supply cut", "pipeline attack",
+            # Crisis financiera
+            "bank collapse", "bank run", "circuit breaker",
+            "market halt", "financial contagion", "systemic crisis",
         ],
         "ventana_horas": 2,
         "activos": ["SPX", "VIX", "Gold", "DXY", "UST10Y", "WTI"],
     },
     "ALTA": {
         "palabras": [
-            "inflation", "inflación", "cpi", "pce", "core cpi",
-            "nfp", "jobs report", "unemployment", "gdp", "recession",
-            "rate hike", "rate cut", "powell", "lagarde",
-            "tariff", "arancel", "sanctions", "sanciones",
-            "opec", "oil cut", "production cut",
-            "invasion", "invasión", "ceasefire",
+            # Datos macro con potencial de sorpresa
+            "cpi report", "core cpi", "inflation report", "pce data",
+            "nonfarm payroll", "nfp report", "jobs report",
+            "unemployment rate", "gdp growth", "gdp contraction",
+            # Política monetaria explícita
+            "rate hike", "rate cut", "rate increase", "rate decrease",
+            "quantitative tightening", "quantitative easing",
+            "powell speech", "lagarde speech", "fed chair",
+            # Comercio y sanciones con impacto directo
+            "new tariffs", "tariff increase", "trade sanctions",
+            "oil embargo", "energy sanctions",
+            # OPEC decisiones
+            "opec cut", "opec production", "output cut", "opec+ decision",
+            # Geopolítica de alto impacto
+            "invasion begins", "ceasefire agreement", "peace deal signed",
+            "sanctions imposed", "nuclear agreement",
         ],
         "ventana_horas": 6,
         "activos": ["SPX", "NDX", "Gold", "DXY", "WTI", "VIX"],
     },
-    "MEDIA": {
-        "palabras": [
-            "federal reserve", "interest rate", "monetary policy",
-            "earnings miss", "earnings beat", "guidance cut",
-            "geopolitical", "default", "debt ceiling",
-            "election upset", "political crisis",
-        ],
-        "ventana_horas": 12,
-        "activos": ["SPX", "Gold", "DXY"],
-    },
 }
 
-# ── Precedentes históricos ────────────────────────────────────────
+# ── Score mínimo para enviar alerta ──────────────────────────────
+# 70 = solo eventos con alta probabilidad de mover mercados
+# Esto elimina noticias de deportes, entretenimiento, etc.
+SCORE_MINIMO_ALERTA = 70
+
 PRECEDENTES = {
     "CONFLICTO_ARMADO": {
         "condicion":   "Escalada o nueva acción militar",
@@ -212,11 +170,8 @@ PRECEDENTES = {
 }
 
 
-# ── Utilidades ────────────────────────────────────────────────────
 def hash_titular(titular: str) -> str:
-    return __import__("hashlib").md5(
-        titular.lower().strip().encode()
-    ).hexdigest()
+    return hashlib.md5(titular.lower().strip().encode()).hexdigest()
 
 
 def obtener_edad_horas(entry) -> float | None:
@@ -273,15 +228,12 @@ def calcular_ventana(titular: str, edad_horas: float,
                 "es_situacion_activa": False,
             }
 
-    activa = edad_horas <= 4
+    # Sin keyword de impacto → no es relevante para KAIROS
     return {
-        "ventana_activa":      activa,
-        "estado":              (
-            f"VENTANA ACTIVA — {round(max(0,4-edad_horas),1)}h restantes"
-            if activa else "ABSORBIDO"
-        ),
-        "urgencia":            "MEDIA",
-        "horas_restantes":     max(0, 4 - edad_horas),
+        "ventana_activa":      False,
+        "estado":              "SIN IMPACTO EN MERCADOS",
+        "urgencia":            "IRRELEVANTE",
+        "horas_restantes":     0,
         "es_situacion_activa": False,
     }
 
@@ -297,9 +249,9 @@ def identificar_precedente(titular: str, situacion: dict = None) -> dict | None:
             return {"clave": clave, "datos": PRECEDENTES[clave]}
 
     titular_lower = titular.lower()
-    if any(k in titular_lower for k in ["fomc","fed decision","rate decision","powell"]):
+    if any(k in titular_lower for k in ["fomc","fed decision","rate decision","powell speech"]):
         return {"clave": "FOMC_HAWKISH", "datos": PRECEDENTES["FOMC_HAWKISH"]}
-    if any(k in titular_lower for k in ["cpi","inflation data","consumer price"]):
+    if any(k in titular_lower for k in ["cpi report","inflation report","consumer price"]):
         return {"clave": "CPI_HAWKISH", "datos": PRECEDENTES["CPI_HAWKISH"]}
     return None
 
@@ -317,13 +269,13 @@ def calcular_score(edad_horas: float, absorcion: dict,
         elif edad_horas <= 6:   base = base
         elif edad_horas <= 24:  base = base - 8
         else:                   base = max(base - 15, 60)
-        # Bonus por fuente de alta confiabilidad
-        base += max(0, (peso_fuente - 7))
+        base += max(0, peso_fuente - 7)
         return min(base, 99)
 
-    urgencia_pts = {"MAXIMA": 55, "ALTA": 40, "MEDIA": 25}.get(
-        absorcion["urgencia"], 20
-    )
+    urgencia_pts = {"MAXIMA": 60, "ALTA": 45}.get(absorcion["urgencia"], 0)
+    if urgencia_pts == 0:
+        return 0  # sin urgencia reconocida → no alertar
+
     if edad_horas <= 0.25:   frescura = 35
     elif edad_horas <= 0.5:  frescura = 28
     elif edad_horas <= 1:    frescura = 20
@@ -331,14 +283,16 @@ def calcular_score(edad_horas: float, absorcion: dict,
     elif edad_horas <= 6:    frescura = 5
     else:                    frescura = 0
 
-    return min(urgencia_pts + frescura + (5 if precedente else 0), 100)
+    bonus_fuente    = max(0, peso_fuente - 7) * 2
+    bonus_precedente= 5 if precedente else 0
+
+    return min(urgencia_pts + frescura + bonus_fuente + bonus_precedente, 100)
 
 
-# ── Función principal ─────────────────────────────────────────────
 def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
     """
-    Escanea las 10 fuentes RSS y retorna eventos con
-    ventana de oportunidad activa, ordenados por score.
+    Escanea RSS y retorna SOLO noticias con alta probabilidad
+    de mover mercados. Score mínimo: 70/100.
     """
     if noticias_vistas is None:
         noticias_vistas = []
@@ -366,7 +320,6 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
 
                 situacion = detectar_situacion_activa(titular)
 
-                # Descartar si es muy vieja y no es situación activa
                 if edad_horas > 48 and not situacion:
                     continue
 
@@ -386,7 +339,8 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
                     precedente, fuente["peso"]
                 )
 
-                if score < 25:
+                # ── FILTRO CRÍTICO: solo alto impacto ─────────────
+                if score < SCORE_MINIMO_ALERTA:
                     continue
 
                 eventos.append({
@@ -423,13 +377,13 @@ def formatear_alerta_noticia(evento: dict) -> str:
     geo       = evento.get("geo")
     precedente= evento.get("precedente")
 
-    emojis = {"MAXIMA": "🚨", "ALTA": "⚠️", "MEDIA": "📡"}
-    emoji  = emojis.get(urgencia, "📡")
+    emojis = {"MAXIMA": "🚨", "ALTA": "⚠️"}
+    emoji  = emojis.get(urgencia, "⚠️")
     tiempo = (f"hace {int(edad*60)} min" if edad < 1
               else f"hace {round(edad,1)}h")
 
     lineas = [
-        f"{emoji} KAIROS — {'SITUACIÓN ACTIVA' if situacion else 'VENTANA ACTIVA'}",
+        f"{emoji} KAIROS — {'SITUACIÓN ACTIVA' if situacion else 'ALERTA'}",
         f"{'='*38}",
         f"📰 {titular}",
         f"📡 {fuente} | {tiempo}",
@@ -475,8 +429,10 @@ def formatear_alerta_noticia(evento: dict) -> str:
 
 
 if __name__ == "__main__":
-    print("\n🔍 KAIROS NEWS SCANNER v3")
-    print(f"   Fuentes RSS: {len(FUENTES_RSS)}")
+    print(f"\n🔍 KAIROS NEWS SCANNER v4")
+    print(f"   Fuentes RSS:         {len(FUENTES_RSS)}")
+    print(f"   Score mínimo alerta: {SCORE_MINIMO_ALERTA}/100")
+    print(f"   Categorías activas:  MAXIMA + ALTA (sin MEDIA)")
     print(f"   Situaciones activas: {sum(1 for s in SITUACIONES_ACTIVAS if not s['resuelto'])}")
     print()
 
@@ -486,9 +442,10 @@ if __name__ == "__main__":
     print()
 
     eventos = escanear_noticias_kairos()
-    print(f"\n✅ {len(eventos)} eventos con ventana activa\n")
+    print(f"\n✅ {len(eventos)} eventos de alto impacto (score ≥{SCORE_MINIMO_ALERTA})\n")
     for i, e in enumerate(eventos[:5], 1):
-        tipo = "🔴" if e.get("situacion_activa") else "⚠️"
-        print(f"{tipo} #{i} Score:{e['score']} | {e['titular'][:65]}")
-        print(f"   {e['fuente']} | {e['edad_horas']}h | {e['urgencia']}")
+        emoji = "🔴" if e.get("situacion_activa") else "⚠️"
+        print(f"{emoji} #{i} Score:{e['score']} | {e['urgencia']}")
+        print(f"   {e['titular'][:70]}")
+        print(f"   {e['fuente']} | {e['edad_horas']}h")
         print()
