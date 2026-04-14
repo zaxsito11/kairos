@@ -1,0 +1,126 @@
+{
+  "fecha": "2026-04-14",
+  "timestamp": "2026-04-14T12:03:39.699825",
+  "brief": "**📊 KAIROS MORNING BRIEF — TUESDAY 14 APRIL 2026**\n════════════════════════════════════\n\n**⚡ RESUMEN EJECUTIVO**\nLa sesión de hoy se presenta con un contexto macroequilibrado, pero con señales de inflación alta y una posible respuesta hawkish leve del FED. El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo factores de incertidumbre.\n\n**🌍 CONTEXTO MACRO Y GEOPOLÍTICO**\nEl conflicto EEUU-Israel-Irán en su sexta semana y la guerra comercial EEUU-China continúan siendo factores clave. El régimen macro se mantiene neutral, con una curva normal y una inflación core PCE sobre el objetivo del FED. La postura del FED se mantiene ligeramente hawkish.\n\n**📈 MERCADOS — SESIÓN ANTERIOR**\nLa sesión anterior mostró un aumento en el SPX (1.02%) y el NDX (1.47%), mientras que el VIX disminuyó (-3.71%). El oro subió (0.95%) y el DXY cayó (-0.22%). El WTI disminuyó (-4.37%) debido a la crisis energética.\n\n**🔮 SESIÓN DE HOY — QUÉ ESPERAR**\nSPX → Baja (55%) — Debido a la posible respuesta hawkish del FED y la alta inflación.\nGold → Alta (60%) — Por su naturaleza de refugio seguro en tiempos de incertidumbre.\nDXY → Alta (50%) — Si el FED confirma una postura más hawkish.\nVIX → Alta (65%) — Ante la incertidumbre geopolítica y la posible respuesta del FED.\n\n**🎯 NIVELES CLAVE A VIGILAR HOY**\n- SPX: 6900 (soporte clave)\n- Gold: 4850 (resistencia importante)\n- DXY: 98.50 (nivel de resistencia)\n- VIX: 20 (umbral de alerta)\n\n**📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**\nNo hay eventos programados para hoy, por lo que la sesión puede depender de noticias sorpresa.\n\n**⚠️ RIESGO DEL DÍA: MEDIO**\nEl riesgo principal del día se centra en la posible respuesta del FED a la inflación alta y su impacto en los mercados.\n\n**💡 IDEA DIRECCIONAL**\nLa dirección que sugieren los datos es de cautela, con una posible corrección en los mercados de acciones y un aumento en los activos refugio como el oro, ante la incertidumbre geopolítica y la postura del FED.\n\n---\nKAIROS Markets | kairos-markets.streamlit.app\n[Nota al pie: esto es análisis informativo, no recomendación de inversión]",
+  "contexto": {
+    "fecha": "Tuesday 14 April 2026",
+    "hora_generacion": "12:03",
+    "macro": {
+      "regimen": "NEUTRO",
+      "descripcion": "Contexto macro equilibrado, sin presion clara",
+      "señales": [
+        "Core PCE sobre objetivo: 2.97%",
+        "Curva normal: spread 0.54%"
+      ],
+      "core_pce": 2.97,
+      "cpi": 2.6,
+      "nfp": 158637,
+      "desempleo": 4.3,
+      "tasa_fed": 3.64,
+      "bono_10y": 4.25
+    },
+    "fed_bce": {
+      "banco": "FED",
+      "tono": "HAWKISH LEVE",
+      "score": 2,
+      "fuente": "analisis_fed_wed.txt"
+    },
+    "situaciones": [
+      {
+        "nombre": "Conflicto EEUU-Israel-Irán",
+        "nota": "Operación Furia Épica — semana 6. WTI $100.",
+        "urgencia": "MAXIMA",
+        "score": 88
+      },
+      {
+        "nombre": "Guerra comercial EEUU-China",
+        "nota": "Aranceles Trump activos — escalada en curso.",
+        "urgencia": "ALTA",
+        "score": 78
+      },
+      {
+        "nombre": "Crisis energética — WTI $100",
+        "nota": "WTI en $100 por bloqueo Ormuz.",
+        "urgencia": "ALTA",
+        "score": 75
+      }
+    ],
+    "calendario": [],
+    "priced_in": {
+      "proxima_reunion": "FOMC Mayo 2026",
+      "fecha_reunion": "2026-05-06",
+      "dias_para_reunion": 21,
+      "probabilidades": {
+        "RECORTE 25bps": 65.0,
+        "SIN CAMBIO": 30.0,
+        "RECORTE 50bps": 5.0
+      },
+      "sorpresa": {
+        "sesgo_mercado_previo": "DOVISH",
+        "confianza_mercado": 65.0,
+        "tono_detectado": "HAWKISH LEVE",
+        "delta_sorpresa": 2,
+        "nivel_sorpresa": "ALTA SORPRESA HAWKISH",
+        "impacto_esperado": "Movimiento fuerte: DXY sube, SPX baja, bonos caen",
+        "prob_sin_cambio_mayo": 30.0,
+        "prob_recorte_mayo": 65.0,
+        "dias_proxima_reunion": 21,
+        "fuente": "FRED estimado"
+      }
+    },
+    "alertas_ayer": 99,
+    "precedentes": {
+      "tono_analizado": "HAWKISH LEVE",
+      "n_precedentes": 3,
+      "eventos": [
+        {
+          "fecha": "2026-01-29",
+          "evento": "FOMC pausa — conflicto Irán semana 8",
+          "leccion": "FED en modo 'esperar y ver' con conflicto activo. Gold como refugio dominante."
+        },
+        {
+          "fecha": "2026-03-18",
+          "evento": "FOMC pausa — tasa 3.64%, inflación 3.29%",
+          "leccion": "FED atrapada por energía. Mercado descuenta que no habrá recortes en 2026. Gold al alza."
+        },
+        {
+          "fecha": "2025-03-19",
+          "evento": "FOMC pausa — inflación sticky por aranceles",
+          "leccion": "Aranceles = inflación importada. FED no puede recortar con inflación subiendo por aranceles."
+        }
+      ],
+      "promedio_24h": {
+        "SPX": -1.03,
+        "Gold": 0.97,
+        "DXY": 0.47,
+        "VIX": 8.23
+      }
+    },
+    "sorpresas_macro": [
+      {
+        "nombre": "Nominas No Agricolas",
+        "nivel": "SORPRESA MODERADA",
+        "diferencia": 18.6,
+        "emoji": "⚠️"
+      },
+      {
+        "nombre": "Tasa de Desempleo",
+        "nivel": "EN LINEA CON CONSENSO",
+        "diferencia": -0.1,
+        "emoji": "✅"
+      },
+      {
+        "nombre": "Inflacion CPI (YoY)",
+        "nivel": "SORPRESA ALTA",
+        "diferencia": 0.69,
+        "emoji": "🚨"
+      },
+      {
+        "nombre": "Core CPI (MoM)",
+        "nivel": "SORPRESA ALTA",
+        "diferencia": -0.1,
+        "emoji": "🚨"
+      }
+    ]
+  }
+}

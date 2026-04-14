@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-13T21:14:44.607180",
+  "timestamp": "2026-04-14T12:03:37.055782",
   "expectativas": [
     {
       "fecha_reunion": "2026-05-06",
@@ -12,7 +12,7 @@
       },
       "expectativa_dominante": "RECORTE 25bps",
       "prob_dominante": 65.0,
-      "dias_para_reunion": 22,
+      "dias_para_reunion": 21,
       "fuente": "FRED estimado"
     }
   ]

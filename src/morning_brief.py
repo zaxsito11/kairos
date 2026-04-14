@@ -375,37 +375,57 @@ Sé directo. Máximo 600 palabras total.
 ════════════════════════════════════
 
 **⚡ RESUMEN EJECUTIVO**
-[3 líneas máximo. Lo más importante del día en 10 segundos.]
+[3 líneas máximo. Lo más importante del día en 10 segundos.
+Prioriza el evento de mayor impacto probable hoy.]
 
 **🌍 CONTEXTO MACRO Y GEOPOLÍTICO**
 [Fusiona situaciones activas + régimen macro + FED/BCE.
-Pondera por urgencia. Si hay conflicto activo, domina este bloque.]
+Pondera por urgencia. Si hay conflicto activo, domina este bloque.
+Menciona cómo afecta a los mercados en este momento.]
 
 **📈 MERCADOS — SESIÓN ANTERIOR**
-[Qué pasó ayer. Qué activos se movieron y por qué.]
+[Analiza cada activo con su variación y explica el por qué:
+SPX | NDX | Gold | Silver | WTI | BTC | DXY | VIX
+Conecta los movimientos con el contexto macro y geopolítico.]
 
 **🔮 SESIÓN DE HOY — QUÉ ESPERAR**
-[Predicción por activo. Usa los precedentes históricos + priced-in.
-Incluye probabilidad y dirección. Sé honesto con la incertidumbre.
-Formato: Activo → Dirección esperada (probabilidad%) — Razón]
+[Predicción por activo usando precedentes históricos + priced-in.
+Cubre TODOS estos activos con dirección y probabilidad:
+
+SPX    → Dirección (prob%) — Razón
+NDX    → Dirección (prob%) — Razón  
+Gold   → Dirección (prob%) — Razón
+Silver → Dirección (prob%) — Razón (suele amplificar movimiento del Gold)
+WTI    → Dirección (prob%) — Razón (muy sensible al conflicto Irán)
+BTC    → Dirección (prob%) — Razón (correlación risk-on/risk-off)
+DXY    → Dirección (prob%) — Razón
+VIX    → Dirección (prob%) — Razón]
 
 **🎯 NIVELES CLAVE A VIGILAR HOY**
-[3-4 niveles técnicos macro relevantes con su significado]
+[4-5 niveles técnicos macro con su significado:
+- SPX: soporte/resistencia clave
+- Gold: nivel psicológico importante
+- WTI: nivel de crisis energética
+- BTC: nivel de correlación con risk assets
+- VIX: umbral de alerta]
 
 **📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**
-[Solo los eventos del día. Si no hay ninguno, indicar que la sesión
-depende de noticias sorpresa.]
+[Solo eventos del día con hora ET. Si no hay ninguno, 
+indicar que la sesión depende de noticias sorpresa y 
+mencionar el evento más próximo aunque sea mañana.]
 
 **⚠️ RIESGO DEL DÍA: [BAJO / MEDIO / ALTO / CRÍTICO]**
 [Una línea explicando el riesgo principal del día]
 
 **💡 IDEA DIRECCIONAL**
-[Una idea conceptual basada en el análisis. NO es recomendación de inversión.
-Es la dirección que los datos sugieren con más fuerza hoy.]
+[Una idea conceptual basada en el análisis completo.
+NO es recomendación de inversión.
+Es la dirección que los datos sugieren con más fuerza.
+Menciona el activo más claro y la razón.]
 
 ---
 KAIROS Markets | kairos-markets.streamlit.app
-[Nota al pie: esto es análisis informativo, no recomendación de inversión]
+⚠️ Análisis informativo — no es recomendación de inversión
 
 Responde SOLO con el morning brief. Sin introducciones ni comentarios extras."""
 
