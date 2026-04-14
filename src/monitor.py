@@ -1,6 +1,11 @@
 # monitor.py — KAIROS
 # Sistema de vigilancia automática de eventos con impacto en mercados.
-# KAIROS es selectivo: solo alerta lo que puede mover mercados >1%
+# 5 módulos integrados:
+#   [0] Morning Brief     — 8:00 AM diario, análisis ponderado con IA
+#   [1] Noticias          — score≥70, solo MAXIMA+ALTA
+#   [2] Calendario        — anticipa FOMC/CPI/NFP
+#   [3] Mercados          — patrones macro con contexto causal
+#   [4] FED               — nuevo comunicado genuino
 
 import os
 import sys
@@ -51,8 +56,8 @@ def cargar_estado() -> dict:
         "noticias_vistas":    [],
         "ultimo_hash_fed":    None,
         "alertas_enviadas":   0,
-        "alertas_descartadas": 0,
         "calendario_alertas": {},
+        "brief_enviado_hoy":  None,
         "inicio_sesion":      datetime.now().isoformat(),
     }
 
@@ -68,20 +73,49 @@ def hash_texto(texto: str) -> str:
     return hashlib.md5(texto.lower().strip().encode()).hexdigest()
 
 
+# ── Módulo 0: Morning Brief ───────────────────────────────────────
+def verificar_morning_brief(estado: dict):
+    """
+    Envía el Morning Brief a las 8:00 AM si no se envió hoy.
+    Solo actúa en la ventana 7:55-8:30 AM para mayor seguridad.
+    """
+    ahora = datetime.now()
+    hoy   = ahora.strftime("%Y-%m-%d")
+
+    # Verificar si ya se envió hoy
+    if estado.get("brief_enviado_hoy") == hoy:
+        return
+
+    # Ventana de envío: 7:55 AM a 8:30 AM
+    if not (7 <= ahora.hour <= 8 and ahora.minute >= 55 or ahora.hour == 8 and ahora.minute <= 30):
+        if ahora.hour != 8:
+            return
+
+    try:
+        from morning_brief import generar_y_enviar_brief
+        log.info("\n[0] MORNING BRIEF — generando análisis diario...")
+        exito = generar_y_enviar_brief(forzar=False)
+        if exito:
+            estado["brief_enviado_hoy"] = hoy
+            log.info("  ✅ Morning Brief enviado")
+    except Exception as e:
+        log.error(f"  Error Morning Brief: {e}")
+
+
 # ── Módulo 1: Noticias con filtro de alto impacto ────────────────
 def escanear_noticias(estado: dict) -> list:
     """
-    Usa news_scanner v4 que solo retorna eventos con:
-    - Score >= 70/100
-    - Urgencia MAXIMA o ALTA únicamente
+    Usa news_scanner v4:
+    - Score mínimo 70/100
+    - Solo urgencia MAXIMA y ALTA
     - Sin categoría MEDIA (que generaba ruido)
     """
     try:
         eventos = escanear_noticias_kairos(estado["noticias_vistas"])
-        log.info(f"    Eventos de alto impacto (score≥{SCORE_MINIMO_ALERTA}): {len(eventos)}")
+        log.info(f"    Eventos alto impacto (score≥{SCORE_MINIMO_ALERTA}): {len(eventos)}")
         return eventos
     except Exception as e:
-        log.error(f"    Error en news_scanner: {e}")
+        log.error(f"    Error news_scanner: {e}")
         return []
 
 
@@ -90,10 +124,10 @@ def verificar_calendario(estado: dict) -> list:
     """Alertas pre-evento: 24h antes de FOMC, 6h antes de CPI/NFP."""
     try:
         alertas = verificar_alertas_calendario(estado)
-        log.info(f"    Alertas de calendario: {len(alertas)}")
+        log.info(f"    Alertas calendario: {len(alertas)}")
         return alertas
     except Exception as e:
-        log.error(f"    Error en calendario: {e}")
+        log.error(f"    Error calendario: {e}")
         return []
 
 
@@ -102,10 +136,10 @@ def monitorear_mercados(regimen: dict = None) -> list:
     """Detecta movimientos anómalos con patrón macro (risk-off, etc.)"""
     try:
         mensajes = ejecutar_market_alert(regimen)
-        log.info(f"    Alertas de mercado: {len(mensajes)}")
+        log.info(f"    Alertas mercado: {len(mensajes)}")
         return mensajes
     except Exception as e:
-        log.error(f"    Error en market_alert: {e}")
+        log.error(f"    Error market_alert: {e}")
         return []
 
 
@@ -141,22 +175,21 @@ def detectar_nuevo_fed(estado: dict):
 def procesar_evento(evento: dict, datos_macro=None, regimen=None):
     tipo = evento.get("tipo", "")
 
-    # ── Noticia de alto impacto (news_scanner v4)
+    # ── Noticia de alto impacto
     if "titular" in evento:
         score = evento.get("score", 0)
-        # Doble verificación — nunca mandar score bajo a Telegram
         if score < SCORE_MINIMO_ALERTA:
-            log.info(f"  DESCARTADO (score {score}): {evento['titular'][:50]}")
+            log.info(f"  DESCARTADO score:{score} — {evento['titular'][:50]}")
             return
         mensaje = formatear_alerta_noticia(evento)
         enviar_alerta_telegram(mensaje)
-        log.info(f"  ✅ Alerta enviada score:{score} — {evento['titular'][:50]}")
+        log.info(f"  ✅ score:{score} — {evento['titular'][:50]}")
 
     # ── Alerta de calendario
     elif tipo == "CALENDARIO":
         enviar_alerta_telegram(evento["mensaje"])
 
-    # ── Alerta de mercado (market_alert)
+    # ── Alerta de mercado
     elif tipo in ("ALERTA_MERCADO", "PATRON_MACRO"):
         enviar_alerta_telegram(evento["mensaje"])
 
@@ -186,9 +219,9 @@ def procesar_evento(evento: dict, datos_macro=None, regimen=None):
                         pass
 
             emojis = {
-                "HAWKISH FUERTE":"🔴🔴", "HAWKISH LEVE":"🔴",
+                "HAWKISH FUERTE":"🔴🔴","HAWKISH LEVE":"🔴",
                 "NEUTRO":"🟡",
-                "DOVISH LEVE":"🟢",     "DOVISH FUERTE":"🟢🟢",
+                "DOVISH LEVE":"🟢","DOVISH FUERTE":"🟢🟢",
             }
             mensaje = (
                 f"🏛️ KAIROS — NUEVO COMUNICADO FED\n{'='*38}\n"
@@ -207,11 +240,12 @@ def procesar_evento(evento: dict, datos_macro=None, regimen=None):
 # ── Loop principal ────────────────────────────────────────────────
 def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
     log.info("=" * 50)
-    log.info("🚀 KAIROS MONITOR ACTIVO — 4 fuentes")
-    log.info(f"   [1] Noticias — score mínimo {SCORE_MINIMO_ALERTA}/100 (sin ruido)")
-    log.info(f"   [2] Calendario — anticipación de eventos macro")
-    log.info(f"   [3] Mercados — patrones macro con contexto causal")
-    log.info(f"   [4] FED — nuevo comunicado genuino")
+    log.info("🚀 KAIROS MONITOR ACTIVO — 5 módulos")
+    log.info(f"   [0] Morning Brief  — 8:00 AM diario")
+    log.info(f"   [1] Noticias       — score≥{SCORE_MINIMO_ALERTA}, MAXIMA+ALTA")
+    log.info(f"   [2] Calendario     — anticipa eventos macro")
+    log.info(f"   [3] Mercados       — patrones macro causales")
+    log.info(f"   [4] FED            — nuevo comunicado genuino")
     log.info(f"   Intervalo: cada {intervalo//60} minutos")
     log.info("=" * 50)
 
@@ -222,7 +256,7 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
             f"🚀 KAIROS MONITOR INICIADO\n{'='*38}\n\n{resumen}"
         )
     except Exception as e:
-        log.warning(f"Error enviando resumen: {e}")
+        log.warning(f"Error resumen inicial: {e}")
 
     estado       = cargar_estado()
     datos_macro  = None
@@ -247,8 +281,12 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
             except Exception as e:
                 log.warning(f"Error macro: {e}")
 
+        # [0] Morning Brief
+        log.info("\n[0] MORNING BRIEF")
+        verificar_morning_brief(estado)
+
         # [1] Noticias
-        log.info(f"\n[1] NOTICIAS — solo score≥{SCORE_MINIMO_ALERTA}")
+        log.info(f"\n[1] NOTICIAS — score≥{SCORE_MINIMO_ALERTA}")
         try:
             eventos = escanear_noticias(estado)
             for e in eventos:
@@ -267,7 +305,6 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                     datos_macro, regimen
                 )
                 estado["alertas_enviadas"] += 1
-                log.info(f"  Alerta: {alerta['clave_alerta']}")
         except Exception as e:
             log.error(f"Error calendario: {e}")
 
@@ -292,15 +329,18 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
             log.error(f"Error FED: {e}")
 
         guardar_estado(estado)
-        log.info(f"\n✅ Ciclo #{ciclo} — {estado['alertas_enviadas']} alertas enviadas")
+        log.info(f"\n✅ Ciclo #{ciclo} — {estado['alertas_enviadas']} alertas totales")
         log.info(f"⏳ Próxima revisión en {intervalo//60} minutos...")
         time.sleep(intervalo)
 
 
 # ── Test ──────────────────────────────────────────────────────────
 def run_test():
-    print(f"\n🧪 KAIROS MONITOR — TEST\n" + "="*50)
+    print(f"\n🧪 KAIROS MONITOR — TEST\n{'='*50}")
     estado = cargar_estado()
+
+    print("\n[0] MORNING BRIEF")
+    print("  → Ejecutar: python src/morning_brief.py --forzar")
 
     print(f"\n[1] NOTICIAS (score≥{SCORE_MINIMO_ALERTA})")
     eventos = escanear_noticias(estado)
@@ -308,7 +348,6 @@ def run_test():
     for e in eventos[:3]:
         print(f"\n  📰 {e['titular'][:70]}")
         print(f"     Score: {e['score']}/100 | {e['urgencia']}")
-        print(f"     {e['absorcion']['estado']}")
 
     print("\n[2] CALENDARIO")
     from calendario_eco import obtener_eventos_proximos
@@ -328,7 +367,7 @@ def run_test():
 
     print("\n[4] FED")
     fed = detectar_nuevo_fed(estado)
-    print(f"  {'🔴 NUEVO: ' + fed['comunicado'].get('titulo','') if fed else '✓ Sin cambios'}")
+    print(f"  {'🔴 NUEVO: '+fed['comunicado'].get('titulo','') if fed else '✓ Sin cambios'}")
 
     guardar_estado(estado)
     print("\n✅ Test completado")
