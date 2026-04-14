@@ -783,3 +783,74 @@
 2026-04-13 12:51:03,055 [INFO] 
 ✅ Ciclo #12 — 58 alertas totales
 2026-04-13 12:51:03,055 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 20:38:31,724 [INFO] ==================================================
+2026-04-13 20:38:31,724 [INFO] 🚀 KAIROS MONITOR ACTIVO — 4 fuentes
+2026-04-13 20:38:31,724 [INFO]    [1] Noticias RSS — filtro de absorción
+2026-04-13 20:38:31,724 [INFO]    [2] Calendario económico — anticipación
+2026-04-13 20:38:31,724 [INFO]    [3] Mercados — patrones macro + contexto causal
+2026-04-13 20:38:31,724 [INFO]    [4] FED — nuevo comunicado genuino
+2026-04-13 20:38:31,724 [INFO]    Intervalo: cada 5 minutos
+2026-04-13 20:38:31,724 [INFO] ==================================================
+2026-04-13 20:38:33,161 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 20:38:33,161 [INFO] CICLO #1 — 13/04/2026 20:38:33
+2026-04-13 20:38:33,161 [INFO] ──────────────────────────────────────────────────
+2026-04-13 20:38:37,093 [INFO] Macro: NEUTRO
+2026-04-13 20:38:37,094 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 20:38:40,888 [INFO]     Eventos con ventana activa: 29
+2026-04-13 20:39:35,240 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 20:39:35,241 [INFO]     Alertas de calendario: 0
+2026-04-13 20:39:35,241 [INFO] 
+[3] MERCADOS — market_alert
+2026-04-13 20:39:39,541 [INFO]     Alertas de mercado: 1
+2026-04-13 20:39:40,891 [INFO]   Alerta: UST10Y
+2026-04-13 20:39:40,892 [INFO] 
+[4] FED
+2026-04-13 20:39:41,087 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 20:39:41,090 [INFO] 
+✅ Ciclo #1 — 88 alertas totales
+2026-04-13 20:39:41,091 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 20:44:41,101 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 20:44:41,111 [INFO] CICLO #2 — 13/04/2026 20:44:41
+2026-04-13 20:44:41,111 [INFO] ──────────────────────────────────────────────────
+2026-04-13 20:44:41,111 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 20:44:46,439 [INFO]     Eventos con ventana activa: 0
+2026-04-13 20:44:46,445 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 20:44:46,452 [INFO]     Alertas de calendario: 0
+2026-04-13 20:44:46,452 [INFO] 
+[3] MERCADOS — market_alert
+2026-04-13 20:44:47,678 [INFO]     Alertas de mercado: 1
+2026-04-13 20:44:49,177 [INFO]   Alerta: UST10Y
+2026-04-13 20:44:49,178 [INFO] 
+[4] FED
+2026-04-13 20:44:49,332 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 20:44:49,442 [INFO] 
+✅ Ciclo #2 — 89 alertas totales
+2026-04-13 20:44:49,465 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 20:49:49,505 [INFO] 
+──────────────────────────────────────────────────
+2026-04-13 20:49:49,518 [INFO] CICLO #3 — 13/04/2026 20:49:49
+2026-04-13 20:49:49,534 [INFO] ──────────────────────────────────────────────────
+2026-04-13 20:49:49,555 [INFO] 
+[1] NOTICIAS — filtro de absorción
+2026-04-13 20:49:53,726 [INFO]     Eventos con ventana activa: 1
+2026-04-13 20:49:55,141 [INFO] 
+[2] CALENDARIO ECONÓMICO
+2026-04-13 20:49:55,142 [INFO]     Alertas de calendario: 0
+2026-04-13 20:49:55,143 [INFO] 
+[3] MERCADOS — market_alert
+2026-04-13 20:49:56,405 [INFO]     Alertas de mercado: 1
+2026-04-13 20:49:57,877 [INFO]   Alerta: UST10Y
+2026-04-13 20:49:57,880 [INFO] 
+[4] FED
+2026-04-13 20:49:57,943 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-13 20:49:57,968 [INFO] 
+✅ Ciclo #3 — 91 alertas totales
+2026-04-13 20:49:57,980 [INFO] ⏳ Próxima revisión en 5 minutos...
+2026-04-13 20:50:15,657 [INFO]     Eventos de alto impacto (score≥70): 0
+2026-04-13 20:50:19,751 [INFO]   FED: mismo comunicado — sin cambios
