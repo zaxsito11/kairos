@@ -1,95 +1,144 @@
-# news_scanner.py — KAIROS
-#
-# CONCEPTO CENTRAL:
-# KAIROS distingue entre dos tipos de eventos:
-#
-# TIPO A — Evento puntual (ya absorbido):
-#   "Fed sube tasas 25bps" → mercado reacciona en 2-4h → absorbido
-#   Si llega 6h después → DESCARTAR
-#
-# TIPO B — Evento en desarrollo (nunca absorbido hasta resolución):
-#   "Guerra EEUU-Irán" → dura semanas/meses → sigue moviendo mercados
-#   Cada nueva escalada = nueva ventana activa
-#   Score SIEMPRE ALTO mientras el evento no esté resuelto
-#
-# CORRECCIÓN v2: El filtro de absorción ahora distingue correctamente
-# entre noticias viejas y eventos activos sin resolver.
+# news_scanner.py — KAIROS v3
+# Scanner de noticias con filtro de absorción de mercado.
+# 10 fuentes RSS verificadas + detección de situaciones activas.
 
 import feedparser
 import hashlib
-import json
-import os
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
-# ── Fuentes RSS ───────────────────────────────────────────────────
+# ── 10 Fuentes RSS verificadas ────────────────────────────────────
+# Seleccionadas por velocidad, relevancia macro y acceso gratuito
 FUENTES_RSS = [
-    {"nombre": "Reuters Business",  "url": "https://feeds.reuters.com/reuters/businessNews"},
-    {"nombre": "Reuters Markets",   "url": "https://feeds.reuters.com/reuters/UKdomesticNews"},
-    {"nombre": "CNBC Markets",      "url": "https://www.cnbc.com/id/20910258/device/rss/rss.html"},
-    {"nombre": "Investing.com ES",  "url": "https://es.investing.com/rss/news.rss"},
-    {"nombre": "Bloomberg Markets", "url": "https://feeds.bloomberg.com/markets/news.rss"},
+    # ── Agencias globales (más rápidas en breaking news)
+    {
+        "nombre": "Reuters Business",
+        "url":    "https://feeds.reuters.com/reuters/businessNews",
+        "peso":   10,  # 10 = máxima confiabilidad
+    },
+    {
+        "nombre": "Reuters Markets",
+        "url":    "https://feeds.reuters.com/reuters/UKdomesticNews",
+        "peso":   10,
+    },
+    {
+        "nombre": "Reuters Top News",
+        "url":    "https://feeds.reuters.com/reuters/topNews",
+        "peso":   9,
+    },
+    # ── TV financiera (muy rápida en datos macro)
+    {
+        "nombre": "CNBC Markets",
+        "url":    "https://www.cnbc.com/id/20910258/device/rss/rss.html",
+        "peso":   9,
+    },
+    {
+        "nombre": "CNBC Economy",
+        "url":    "https://www.cnbc.com/id/20910258/device/rss/rss.html",
+        "peso":   8,
+    },
+    # ── Bloomberg (mercados en tiempo real)
+    {
+        "nombre": "Bloomberg Markets",
+        "url":    "https://feeds.bloomberg.com/markets/news.rss",
+        "peso":   10,
+    },
+    # ── Yahoo Finance (amplia cobertura, gratuito)
+    {
+        "nombre": "Yahoo Finance",
+        "url":    "https://finance.yahoo.com/rss/topstories",
+        "peso":   8,
+    },
+    # ── Investing.com (cobertura macro global)
+    {
+        "nombre": "Investing.com Global",
+        "url":    "https://www.investing.com/rss/news_301.rss",
+        "peso":   8,
+    },
+    {
+        "nombre": "Investing.com ES",
+        "url":    "https://es.investing.com/rss/news.rss",
+        "peso":   7,
+    },
+    # ── MarketWatch (datos EEUU + earnings)
+    {
+        "nombre": "MarketWatch",
+        "url":    "https://feeds.marketwatch.com/marketwatch/topstories/",
+        "peso":   8,
+    },
 ]
 
-# ── TIPO B: Situaciones activas en el mundo ───────────────────────
-# Eventos que están sin resolver y siguen moviendo mercados.
-# Cada titular relacionado con estos temas tiene VENTANA SIEMPRE ACTIVA.
-# ⚠️ ACTUALIZAR cuando un evento se resuelva o aparezca uno nuevo.
+# ── Situaciones activas en el mundo ──────────────────────────────
+# Eventos sin resolver que siguen moviendo mercados.
+# Score SIEMPRE ALTO hasta que se marquen como resueltos.
+# ⚠️ Actualizar cuando un evento se resuelva o aparezca uno nuevo.
 SITUACIONES_ACTIVAS = [
     {
-        "nombre":      "Conflicto EEUU-Israel-Irán",
-        "keywords":    ["iran", "hormuz", "strait of hormuz", "middle east",
-                        "israel", "tehran", "persian gulf", "irán",
-                        "estrecho de ormuz", "oriente medio"],
-        "tipo":        "CONFLICTO_ARMADO",
-        "urgencia":    "MAXIMA",
-        "score_base":  85,
-        "activos":     ["WTI", "Gold", "VIX", "SPX", "DXY"],
-        "resuelto":    False,
-        "nota":        "Operación Furia Épica — semana 6 activa. WTI $100."
+        "nombre":   "Conflicto EEUU-Israel-Irán",
+        "keywords": [
+            "iran", "hormuz", "strait of hormuz", "middle east war",
+            "israel attack", "tehran", "persian gulf", "irán",
+            "estrecho de ormuz", "oriente medio conflicto",
+            "operation", "military iran", "us iran",
+        ],
+        "tipo":      "CONFLICTO_ARMADO",
+        "urgencia":  "MAXIMA",
+        "score_base": 88,
+        "activos":   ["WTI", "Gold", "VIX", "SPX", "DXY"],
+        "resuelto":  False,
+        "nota":      "Operación Furia Épica — semana 6. WTI $100.",
     },
     {
-        "nombre":      "Guerra comercial EEUU-China",
-        "keywords":    ["tariff", "china trade", "chinese imports",
-                        "trade war", "arancel china", "guerra comercial"],
-        "tipo":        "TENSION_COMERCIAL",
-        "urgencia":    "ALTA",
-        "score_base":  75,
-        "activos":     ["SPX", "NDX", "DXY", "Gold"],
-        "resuelto":    False,
-        "nota":        "Aranceles Trump activos — escalada en curso."
+        "nombre":   "Guerra comercial EEUU-China",
+        "keywords": [
+            "tariff china", "chinese tariffs", "trade war china",
+            "us china trade", "arancel china", "guerra comercial",
+            "trump tariff", "beijing retaliation",
+        ],
+        "tipo":      "TENSION_COMERCIAL",
+        "urgencia":  "ALTA",
+        "score_base": 78,
+        "activos":   ["SPX", "NDX", "DXY", "Gold"],
+        "resuelto":  False,
+        "nota":      "Aranceles Trump activos — escalada en curso.",
     },
     {
-        "nombre":      "Crisis energética global",
-        "keywords":    ["oil price", "crude oil", "brent", "wti",
-                        "energy crisis", "opec", "petróleo", "crudo"],
-        "tipo":        "CRISIS_ENERGETICA",
-        "urgencia":    "ALTA",
-        "score_base":  70,
-        "activos":     ["WTI", "Gold", "SPX", "DXY"],
-        "resuelto":    False,
-        "nota":        "WTI en $100 por bloqueo Ormuz. Riesgo inflacionario activo."
+        "nombre":   "Crisis energética — WTI $100",
+        "keywords": [
+            "oil $100", "crude $100", "brent $100",
+            "oil supply crisis", "energy crisis",
+            "petróleo 100", "precio petróleo dispara",
+        ],
+        "tipo":      "CRISIS_ENERGETICA",
+        "urgencia":  "ALTA",
+        "score_base": 75,
+        "activos":   ["WTI", "Gold", "SPX", "DXY"],
+        "resuelto":  False,
+        "nota":      "WTI en $100 por bloqueo Ormuz.",
     },
 ]
 
-# ── Eventos puntuales con ventana temporal ────────────────────────
+# ── Keywords por urgencia (eventos puntuales) ─────────────────────
 KEYWORDS_URGENCIA = {
     "MAXIMA": {
         "palabras": [
-            "fomc statement", "fed decision", "rate decision",
-            "emergency meeting", "market halt", "circuit breaker",
-            "bank collapse", "nuclear", "attack on",
+            "rate decision", "fomc statement", "fed raises", "fed cuts",
+            "ecb raises", "ecb cuts", "emergency rate", "surprise rate",
+            "military strike", "invasion", "war escalation",
+            "bank collapse", "bank run", "circuit breaker", "market halt",
+            "nuclear", "hormuz blockade", "oil supply cut",
         ],
         "ventana_horas": 2,
-        "activos": ["SPX", "VIX", "Gold", "DXY", "UST10Y"],
+        "activos": ["SPX", "VIX", "Gold", "DXY", "UST10Y", "WTI"],
     },
     "ALTA": {
         "palabras": [
-            "inflation", "inflación", "cpi", "pce", "nfp",
-            "jobs report", "unemployment", "gdp", "recession",
+            "inflation", "inflación", "cpi", "pce", "core cpi",
+            "nfp", "jobs report", "unemployment", "gdp", "recession",
             "rate hike", "rate cut", "powell", "lagarde",
-            "sanctions", "sanciones", "invasion", "invasión",
-            "military strike", "ceasefire", "peace deal",
+            "tariff", "arancel", "sanctions", "sanciones",
+            "opec", "oil cut", "production cut",
+            "invasion", "invasión", "ceasefire",
         ],
         "ventana_horas": 6,
         "activos": ["SPX", "NDX", "Gold", "DXY", "WTI", "VIX"],
@@ -97,81 +146,80 @@ KEYWORDS_URGENCIA = {
     "MEDIA": {
         "palabras": [
             "federal reserve", "interest rate", "monetary policy",
-            "earnings", "guidance", "geopolitical", "default",
-            "election", "elecciones", "debt ceiling",
+            "earnings miss", "earnings beat", "guidance cut",
+            "geopolitical", "default", "debt ceiling",
+            "election upset", "political crisis",
         ],
-        "ventana_horas": 24,
+        "ventana_horas": 12,
         "activos": ["SPX", "Gold", "DXY"],
     },
 }
 
-# ── Precedentes históricos predictivos ───────────────────────────
-PRECEDENTES_PREDICTIVOS = {
-    "cpi_sorpresa_hawkish": {
-        "condicion":   "CPI supera consenso",
-        "n_eventos":   8,
-        "prediccion": {
-            "DXY":    {"direccion": "SUBE",  "promedio_24h": "+0.8%",  "probabilidad": "72%"},
-            "SPX":    {"direccion": "BAJA",  "promedio_24h": "-1.2%",  "probabilidad": "68%"},
-            "Gold":   {"direccion": "BAJA",  "promedio_24h": "-0.5%",  "probabilidad": "60%"},
-            "UST10Y": {"direccion": "SUBE",  "promedio_24h": "+5bps",  "probabilidad": "75%"},
-        },
-        "tiempo_reaccion": "0-4 horas post publicación",
-    },
-    "fomc_hawkish_sorpresa": {
-        "condicion":   "FED más hawkish que expectativa",
-        "n_eventos":   10,
-        "prediccion": {
-            "DXY":    {"direccion": "SUBE",  "promedio_24h": "+0.7%",  "probabilidad": "80%"},
-            "SPX":    {"direccion": "BAJA",  "promedio_24h": "-1.7%",  "probabilidad": "75%"},
-            "Gold":   {"direccion": "BAJA",  "promedio_24h": "-0.4%",  "probabilidad": "65%"},
-            "VIX":    {"direccion": "SUBE",  "promedio_24h": "+15%",   "probabilidad": "70%"},
-        },
-        "tiempo_reaccion": "0-2 horas post comunicado",
-    },
-    "conflicto_armado_escalada": {
-        "condicion":   "Nueva escalada o desarrollo en conflicto activo",
+# ── Precedentes históricos ────────────────────────────────────────
+PRECEDENTES = {
+    "CONFLICTO_ARMADO": {
+        "condicion":   "Escalada o nueva acción militar",
         "n_eventos":   6,
         "prediccion": {
-            "Gold":   {"direccion": "SUBE",  "promedio_24h": "+2.1%",  "probabilidad": "83%"},
-            "WTI":    {"direccion": "SUBE",  "promedio_24h": "+4.5%",  "probabilidad": "70%"},
-            "SPX":    {"direccion": "BAJA",  "promedio_24h": "-1.8%",  "probabilidad": "67%"},
-            "VIX":    {"direccion": "SUBE",  "promedio_24h": "+22%",   "probabilidad": "78%"},
+            "Gold": {"direccion":"SUBE","promedio_24h":"+2.1%","probabilidad":"83%"},
+            "WTI":  {"direccion":"SUBE","promedio_24h":"+4.5%","probabilidad":"70%"},
+            "SPX":  {"direccion":"BAJA","promedio_24h":"-1.8%","probabilidad":"67%"},
+            "VIX":  {"direccion":"SUBE","promedio_24h":"+22%", "probabilidad":"78%"},
         },
-        "tiempo_reaccion": "0-6 horas — prima de riesgo activa",
+        "tiempo_reaccion": "0-6h — prima de riesgo activa",
     },
-    "crisis_energia_opec": {
-        "condicion":   "Shock de oferta energética o decisión OPEC",
-        "n_eventos":   5,
-        "prediccion": {
-            "WTI":    {"direccion": "SUBE",  "promedio_24h": "+4.2%",  "probabilidad": "85%"},
-            "Gold":   {"direccion": "SUBE",  "promedio_24h": "+0.8%",  "probabilidad": "60%"},
-            "SPX":    {"direccion": "BAJA",  "promedio_24h": "-0.8%",  "probabilidad": "58%"},
-            "DXY":    {"direccion": "SUBE",  "promedio_24h": "+0.3%",  "probabilidad": "55%"},
-        },
-        "tiempo_reaccion": "0-3 horas post anuncio",
-    },
-    "tension_comercial": {
+    "TENSION_COMERCIAL": {
         "condicion":   "Nuevos aranceles o escalada comercial",
         "n_eventos":   7,
         "prediccion": {
-            "SPX":    {"direccion": "BAJA",  "promedio_24h": "-2.1%",  "probabilidad": "74%"},
-            "NDX":    {"direccion": "BAJA",  "promedio_24h": "-2.8%",  "probabilidad": "76%"},
-            "Gold":   {"direccion": "SUBE",  "promedio_24h": "+1.1%",  "probabilidad": "65%"},
-            "DXY":    {"direccion": "MIXTO", "promedio_24h": "±0.5%",  "probabilidad": "50%"},
+            "SPX":  {"direccion":"BAJA","promedio_24h":"-2.1%","probabilidad":"74%"},
+            "NDX":  {"direccion":"BAJA","promedio_24h":"-2.8%","probabilidad":"76%"},
+            "Gold": {"direccion":"SUBE","promedio_24h":"+1.1%","probabilidad":"65%"},
         },
-        "tiempo_reaccion": "0-4 horas post anuncio",
+        "tiempo_reaccion": "0-4h post anuncio",
+    },
+    "CRISIS_ENERGETICA": {
+        "condicion":   "Shock de oferta energética",
+        "n_eventos":   5,
+        "prediccion": {
+            "WTI":  {"direccion":"SUBE","promedio_24h":"+4.2%","probabilidad":"85%"},
+            "Gold": {"direccion":"SUBE","promedio_24h":"+0.8%","probabilidad":"60%"},
+            "SPX":  {"direccion":"BAJA","promedio_24h":"-0.8%","probabilidad":"58%"},
+        },
+        "tiempo_reaccion": "0-3h post anuncio",
+    },
+    "FOMC_HAWKISH": {
+        "condicion":   "FED más hawkish que expectativa",
+        "n_eventos":   10,
+        "prediccion": {
+            "DXY":  {"direccion":"SUBE","promedio_24h":"+0.7%","probabilidad":"80%"},
+            "SPX":  {"direccion":"BAJA","promedio_24h":"-1.7%","probabilidad":"75%"},
+            "Gold": {"direccion":"BAJA","promedio_24h":"-0.4%","probabilidad":"65%"},
+            "VIX":  {"direccion":"SUBE","promedio_24h":"+15%", "probabilidad":"70%"},
+        },
+        "tiempo_reaccion": "0-2h post comunicado",
+    },
+    "CPI_HAWKISH": {
+        "condicion":   "CPI supera consenso",
+        "n_eventos":   8,
+        "prediccion": {
+            "DXY":    {"direccion":"SUBE","promedio_24h":"+0.8%","probabilidad":"72%"},
+            "SPX":    {"direccion":"BAJA","promedio_24h":"-1.2%","probabilidad":"68%"},
+            "UST10Y": {"direccion":"SUBE","promedio_24h":"+5bps","probabilidad":"75%"},
+        },
+        "tiempo_reaccion": "0-4h post publicación",
     },
 }
 
 
 # ── Utilidades ────────────────────────────────────────────────────
 def hash_titular(titular: str) -> str:
-    return hashlib.md5(titular.lower().strip().encode()).hexdigest()
+    return __import__("hashlib").md5(
+        titular.lower().strip().encode()
+    ).hexdigest()
 
 
 def obtener_edad_horas(entry) -> float | None:
-    """Retorna edad de la noticia en horas. None si sin fecha."""
     for campo in ["published", "updated", "created"]:
         fecha_str = entry.get(campo, "")
         if fecha_str:
@@ -185,161 +233,112 @@ def obtener_edad_horas(entry) -> float | None:
     return None
 
 
-# ── Motor de clasificación ────────────────────────────────────────
 def detectar_situacion_activa(titular: str) -> dict | None:
-    """
-    NUEVO: Verifica si el titular está relacionado con una
-    situación activa en el mundo (evento sin resolver).
-    Si es así, el score es SIEMPRE ALTO independientemente
-    de la edad de la noticia.
-    """
     titular_lower = titular.lower()
-    for situacion in SITUACIONES_ACTIVAS:
-        if situacion["resuelto"]:
+    for s in SITUACIONES_ACTIVAS:
+        if s["resuelto"]:
             continue
-        coincidencias = [kw for kw in situacion["keywords"]
-                         if kw in titular_lower]
-        if coincidencias:
-            return {
-                "situacion":    situacion["nombre"],
-                "tipo":         situacion["tipo"],
-                "urgencia":     situacion["urgencia"],
-                "score_base":   situacion["score_base"],
-                "activos":      situacion["activos"],
-                "nota":         situacion["nota"],
-                "keywords_match": coincidencias,
-            }
+        if any(kw in titular_lower for kw in s["keywords"]):
+            return s
     return None
 
 
-def calcular_ventana_absorcion(titular: str, edad_horas: float,
-                                situacion_activa: dict = None) -> dict:
-    """
-    CORREGIDO v2:
-    - Si es situación activa → SIEMPRE ventana activa, score alto
-    - Si es evento puntual → ventana según urgencia y edad
-    """
-    titular_lower = titular.lower()
-
-    # ── TIPO B: Situación activa → siempre relevante ──────────────
-    if situacion_activa:
+def calcular_ventana(titular: str, edad_horas: float,
+                      situacion: dict = None) -> dict:
+    if situacion:
         return {
-            "ventana_activa":  True,
-            "estado":          f"SITUACIÓN ACTIVA — {situacion_activa['situacion']}",
-            "urgencia":        situacion_activa["urgencia"],
-            "horas_restantes": 999,  # sin límite hasta resolución
+            "ventana_activa":      True,
+            "estado":              f"SITUACIÓN ACTIVA — {situacion['nombre']}",
+            "urgencia":            situacion["urgencia"],
+            "horas_restantes":     999,
             "es_situacion_activa": True,
         }
 
-    # ── TIPO A: Evento puntual → ventana por urgencia ─────────────
-    for nivel, config in KEYWORDS_URGENCIA.items():
-        palabras_match = [p for p in config["palabras"] if p in titular_lower]
-        if palabras_match:
-            ventana  = config["ventana_horas"]
-            activa   = edad_horas <= ventana
-            restantes= max(0, ventana - edad_horas)
+    titular_lower = titular.lower()
+    for nivel, cfg in KEYWORDS_URGENCIA.items():
+        if any(p in titular_lower for p in cfg["palabras"]):
+            ventana   = cfg["ventana_horas"]
+            activa    = edad_horas <= ventana
+            restantes = max(0, ventana - edad_horas)
             return {
-                "ventana_activa":  activa,
+                "ventana_activa":      activa,
                 "estado": (
                     f"VENTANA ACTIVA — {round(restantes,1)}h restantes"
                     if activa else
-                    f"ABSORBIDO — hace {round(edad_horas,1)}h (ventana era {ventana}h)"
+                    f"ABSORBIDO — {round(edad_horas,1)}h (ventana {ventana}h)"
                 ),
-                "urgencia":        nivel,
-                "horas_restantes": restantes,
-                "palabras_match":  palabras_match,
-                "activos":         config.get("activos", []),
+                "urgencia":            nivel,
+                "horas_restantes":     restantes,
+                "activos":             cfg["activos"],
                 "es_situacion_activa": False,
             }
 
-    # Sin clasificación — ventana corta de 4h
     activa = edad_horas <= 4
     return {
-        "ventana_activa":  activa,
-        "estado": (
+        "ventana_activa":      activa,
+        "estado":              (
             f"VENTANA ACTIVA — {round(max(0,4-edad_horas),1)}h restantes"
             if activa else "ABSORBIDO"
         ),
-        "urgencia":        "MEDIA",
-        "horas_restantes": max(0, 4 - edad_horas),
+        "urgencia":            "MEDIA",
+        "horas_restantes":     max(0, 4 - edad_horas),
         "es_situacion_activa": False,
     }
 
 
-def identificar_precedente(titular: str,
-                            situacion_activa: dict = None) -> dict | None:
-    """Identifica el precedente histórico aplicable."""
-    titular_lower = titular.lower()
-
-    # Si es situación activa, usar el precedente del tipo
-    if situacion_activa:
-        mapa_tipo = {
-            "CONFLICTO_ARMADO":  "conflicto_armado_escalada",
-            "TENSION_COMERCIAL": "tension_comercial",
-            "CRISIS_ENERGETICA": "crisis_energia_opec",
-        }
-        clave = mapa_tipo.get(situacion_activa["tipo"])
+def identificar_precedente(titular: str, situacion: dict = None) -> dict | None:
+    if situacion:
+        clave = {
+            "CONFLICTO_ARMADO":  "CONFLICTO_ARMADO",
+            "TENSION_COMERCIAL": "TENSION_COMERCIAL",
+            "CRISIS_ENERGETICA": "CRISIS_ENERGETICA",
+        }.get(situacion["tipo"])
         if clave:
-            return {"clave": clave, "datos": PRECEDENTES_PREDICTIVOS[clave]}
+            return {"clave": clave, "datos": PRECEDENTES[clave]}
 
-    # Evento puntual
-    mapeo = {
-        "cpi_sorpresa_hawkish":  ["cpi", "inflation", "inflación", "core cpi"],
-        "fomc_hawkish_sorpresa": ["fomc", "fed decision", "rate decision", "powell"],
-        "conflicto_armado_escalada": ["war", "invasion", "military strike"],
-        "crisis_energia_opec":   ["opec", "oil cut", "production cut"],
-        "tension_comercial":     ["tariff", "arancel", "trade war"],
-    }
-    for clave, keywords in mapeo.items():
-        if any(kw in titular_lower for kw in keywords):
-            return {"clave": clave, "datos": PRECEDENTES_PREDICTIVOS[clave]}
-
+    titular_lower = titular.lower()
+    if any(k in titular_lower for k in ["fomc","fed decision","rate decision","powell"]):
+        return {"clave": "FOMC_HAWKISH", "datos": PRECEDENTES["FOMC_HAWKISH"]}
+    if any(k in titular_lower for k in ["cpi","inflation data","consumer price"]):
+        return {"clave": "CPI_HAWKISH", "datos": PRECEDENTES["CPI_HAWKISH"]}
     return None
 
 
-def calcular_score(titular: str, edad_horas: float,
-                   absorcion: dict, precedente: dict = None,
-                   situacion_activa: dict = None) -> int:
-    """
-    CORREGIDO v2: Score 0-100.
-    Situaciones activas → score siempre 75-95.
-    Eventos puntuales → score por urgencia y frescura.
-    """
+def calcular_score(edad_horas: float, absorcion: dict,
+                    situacion: dict = None, precedente: dict = None,
+                    peso_fuente: int = 8) -> int:
     if not absorcion["ventana_activa"]:
         return 0
 
-    # ── Situación activa: score alto fijo ─────────────────────────
-    if situacion_activa:
-        score_base = situacion_activa["score_base"]
-        # Bonus si la noticia es reciente (nueva escalada)
-        if edad_horas <= 1:    score_base = min(score_base + 10, 98)
-        elif edad_horas <= 6:  score_base = min(score_base + 5,  95)
-        elif edad_horas <= 24: score_base = score_base  # mantiene base
-        else:                  score_base = max(score_base - 10, 65)
-        return score_base
+    if situacion:
+        base = situacion["score_base"]
+        if edad_horas <= 0.5:   base = min(base + 8, 99)
+        elif edad_horas <= 2:   base = min(base + 4, 96)
+        elif edad_horas <= 6:   base = base
+        elif edad_horas <= 24:  base = base - 8
+        else:                   base = max(base - 15, 60)
+        # Bonus por fuente de alta confiabilidad
+        base += max(0, (peso_fuente - 7))
+        return min(base, 99)
 
-    # ── Evento puntual: score por urgencia + frescura ─────────────
-    urgencia_base = {"MAXIMA": 60, "ALTA": 45, "MEDIA": 30}.get(
+    urgencia_pts = {"MAXIMA": 55, "ALTA": 40, "MEDIA": 25}.get(
         absorcion["urgencia"], 20
     )
-    if edad_horas <= 0.5:   frescura = 35
-    elif edad_horas <= 1:   frescura = 28
-    elif edad_horas <= 2:   frescura = 20
-    elif edad_horas <= 6:   frescura = 10
-    elif edad_horas <= 24:  frescura = 4
-    else:                   frescura = 0
+    if edad_horas <= 0.25:   frescura = 35
+    elif edad_horas <= 0.5:  frescura = 28
+    elif edad_horas <= 1:    frescura = 20
+    elif edad_horas <= 3:    frescura = 12
+    elif edad_horas <= 6:    frescura = 5
+    else:                    frescura = 0
 
-    bonus_precedente = 8 if precedente else 0
-
-    return min(urgencia_base + frescura + bonus_precedente, 100)
+    return min(urgencia_pts + frescura + (5 if precedente else 0), 100)
 
 
 # ── Función principal ─────────────────────────────────────────────
 def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
     """
-    Escanea RSS y retorna eventos con ventana activa.
-    v2: distingue correctamente entre noticias absorbidas
-    y situaciones activas sin resolver.
+    Escanea las 10 fuentes RSS y retorna eventos con
+    ventana de oportunidad activa, ordenados por score.
     """
     if noticias_vistas is None:
         noticias_vistas = []
@@ -348,10 +347,10 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
 
     for fuente in FUENTES_RSS:
         try:
-            print(f"  Escaneando: {fuente['nombre']}")
+            print(f"  {fuente['nombre']}")
             feed = feedparser.parse(fuente["url"])
 
-            for entry in feed.entries[:25]:
+            for entry in feed.entries[:20]:
                 titular = entry.get("title", "").strip()
                 if not titular:
                     continue
@@ -365,14 +364,13 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
                 if edad_horas is None:
                     continue
 
-                # Descartar solo si es muy vieja Y no es situación activa
-                situacion_activa = detectar_situacion_activa(titular)
-                if edad_horas > 72 and not situacion_activa:
+                situacion = detectar_situacion_activa(titular)
+
+                # Descartar si es muy vieja y no es situación activa
+                if edad_horas > 48 and not situacion:
                     continue
 
-                absorcion = calcular_ventana_absorcion(
-                    titular, edad_horas, situacion_activa
-                )
+                absorcion = calcular_ventana(titular, edad_horas, situacion)
                 if not absorcion["ventana_activa"]:
                     continue
 
@@ -382,9 +380,10 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
                 except Exception:
                     geo = None
 
-                precedente = identificar_precedente(titular, situacion_activa)
+                precedente = identificar_precedente(titular, situacion)
                 score = calcular_score(
-                    titular, edad_horas, absorcion, precedente, situacion_activa
+                    edad_horas, absorcion, situacion,
+                    precedente, fuente["peso"]
                 )
 
                 if score < 25:
@@ -397,7 +396,7 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
                     "edad_horas":       round(edad_horas, 2),
                     "absorcion":        absorcion,
                     "urgencia":         absorcion["urgencia"],
-                    "situacion_activa": situacion_activa,
+                    "situacion_activa": situacion,
                     "geo":              geo,
                     "precedente":       precedente,
                     "score":            score,
@@ -413,38 +412,36 @@ def escanear_noticias_kairos(noticias_vistas: list = None) -> list:
 
 
 def formatear_alerta_noticia(evento: dict) -> str:
-    """Genera mensaje Telegram para una noticia detectada."""
-    titular          = evento["titular"]
-    fuente           = evento["fuente"]
-    link             = evento["link"]
-    absorcion        = evento["absorcion"]
-    urgencia         = evento["urgencia"]
-    score            = evento["score"]
-    edad             = evento["edad_horas"]
-    precedente       = evento.get("precedente")
-    geo              = evento.get("geo")
-    situacion_activa = evento.get("situacion_activa")
+    titular   = evento["titular"]
+    fuente    = evento["fuente"]
+    link      = evento["link"]
+    score     = evento["score"]
+    urgencia  = evento["urgencia"]
+    edad      = evento["edad_horas"]
+    absorcion = evento["absorcion"]
+    situacion = evento.get("situacion_activa")
+    geo       = evento.get("geo")
+    precedente= evento.get("precedente")
 
     emojis = {"MAXIMA": "🚨", "ALTA": "⚠️", "MEDIA": "📡"}
     emoji  = emojis.get(urgencia, "📡")
-
-    tiempo_txt = (f"hace {int(edad*60)} min" if edad < 1
-                  else f"hace {round(edad,1)}h")
+    tiempo = (f"hace {int(edad*60)} min" if edad < 1
+              else f"hace {round(edad,1)}h")
 
     lineas = [
-        f"{emoji} KAIROS — {'SITUACIÓN ACTIVA' if situacion_activa else 'VENTANA ACTIVA'}",
+        f"{emoji} KAIROS — {'SITUACIÓN ACTIVA' if situacion else 'VENTANA ACTIVA'}",
         f"{'='*38}",
         f"📰 {titular}",
-        f"📡 {fuente} | {tiempo_txt}",
+        f"📡 {fuente} | {tiempo}",
         f"🔗 {link}",
         f"",
     ]
 
-    if situacion_activa:
+    if situacion:
         lineas += [
-            f"🔴 {situacion_activa['situacion']}",
-            f"📌 {situacion_activa['nota']}",
-            f"🎯 Score: {score}/100 (evento en desarrollo)",
+            f"🔴 {situacion['nombre']}",
+            f"📌 {situacion['nota']}",
+            f"🎯 Score: {score}/100",
         ]
     else:
         lineas += [
@@ -454,8 +451,8 @@ def formatear_alerta_noticia(evento: dict) -> str:
 
     if geo and geo.get("tipo") not in (None, "NO_CLASIFICADO"):
         impacto = geo.get("impacto", {})
-        suben = [a for a, d in impacto.items() if d["direccion"] == "SUBE"]
-        bajan = [a for a, d in impacto.items() if d["direccion"] == "BAJA"]
+        suben = [a for a,d in impacto.items() if d["direccion"]=="SUBE"]
+        bajan = [a for a,d in impacto.items() if d["direccion"]=="BAJA"]
         lineas += [
             f"",
             f"🌍 {geo['tipo'].replace('_',' ')}",
@@ -464,53 +461,34 @@ def formatear_alerta_noticia(evento: dict) -> str:
         ]
 
     if precedente:
-        datos    = precedente["datos"]
-        condicion= datos["condicion"]
-        n        = datos["n_eventos"]
-        lineas  += [f"", f"📊 PREDICCIÓN ({n} precedentes — {condicion}):"]
-        for activo, pred in list(datos["prediccion"].items())[:4]:
-            flecha = "📈" if pred["direccion"] == "SUBE" else "📉"
+        d = precedente["datos"]
+        lineas += [f"", f"📊 PREDICCIÓN ({d['n_eventos']} precedentes):"]
+        for activo, pred in list(d["prediccion"].items())[:4]:
+            flecha = "📈" if pred["direccion"]=="SUBE" else "📉"
             lineas.append(
                 f"  {flecha} {activo}: {pred['promedio_24h']} ({pred['probabilidad']})"
             )
-        lineas.append(f"  ⏱️ Reacción típica: {datos['tiempo_reaccion']}")
+        lineas.append(f"  ⏱️ {d['tiempo_reaccion']}")
 
     lineas += ["", "kairos-markets.streamlit.app"]
     return "\n".join(lineas)
 
 
-# ── Test directo ──────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("\n🔍 KAIROS NEWS SCANNER v2 — TEST")
-    print("Buscando eventos relevantes...\n")
+    print("\n🔍 KAIROS NEWS SCANNER v3")
+    print(f"   Fuentes RSS: {len(FUENTES_RSS)}")
+    print(f"   Situaciones activas: {sum(1 for s in SITUACIONES_ACTIVAS if not s['resuelto'])}")
+    print()
 
-    # Mostrar situaciones activas configuradas
-    print("SITUACIONES ACTIVAS CONFIGURADAS:")
     for s in SITUACIONES_ACTIVAS:
-        estado = "ACTIVA" if not s["resuelto"] else "RESUELTA"
-        print(f"  [{estado}] {s['nombre']} — Score base: {s['score_base']}")
+        if not s["resuelto"]:
+            print(f"  🔴 {s['nombre']} — Score base: {s['score_base']}")
     print()
 
     eventos = escanear_noticias_kairos()
-
-    if not eventos:
-        print("Sin eventos relevantes en este momento.")
-    else:
-        print(f"✅ {len(eventos)} eventos detectados:\n")
-        for i, e in enumerate(eventos[:5], 1):
-            tipo = "🔴 SITUACIÓN ACTIVA" if e.get("situacion_activa") else "⚠️ EVENTO PUNTUAL"
-            print(f"{'─'*60}")
-            print(f"#{i} {tipo}")
-            print(f"    Score: {e['score']}/100 | Urgencia: {e['urgencia']}")
-            print(f"    {e['titular'][:75]}")
-            print(f"    Fuente: {e['fuente']} | Edad: {e['edad_horas']}h")
-            if e.get("situacion_activa"):
-                s = e["situacion_activa"]
-                print(f"    Situación: {s['situacion']}")
-                print(f"    Nota: {s['nota']}")
-            if e.get("precedente"):
-                datos = e["precedente"]["datos"]
-                print(f"    Predicción ({datos['n_eventos']} casos):")
-                for activo, pred in list(datos["prediccion"].items())[:3]:
-                    print(f"      → {activo}: {pred['promedio_24h']} ({pred['probabilidad']})")
-            print()
+    print(f"\n✅ {len(eventos)} eventos con ventana activa\n")
+    for i, e in enumerate(eventos[:5], 1):
+        tipo = "🔴" if e.get("situacion_activa") else "⚠️"
+        print(f"{tipo} #{i} Score:{e['score']} | {e['titular'][:65]}")
+        print(f"   {e['fuente']} | {e['edad_horas']}h | {e['urgencia']}")
+        print()
