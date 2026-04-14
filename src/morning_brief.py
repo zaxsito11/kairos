@@ -392,22 +392,33 @@ Conecta los movimientos con el contexto macro y geopolítico.]
 [Predicción por activo usando precedentes históricos + priced-in.
 Cubre TODOS estos activos con dirección y probabilidad:
 
+ÍNDICES:
 SPX    → Dirección (prob%) — Razón
-NDX    → Dirección (prob%) — Razón  
+NDX    → Dirección (prob%) — Razón (amplifica SPX, más sensible a tasas)
+VIX    → Dirección (prob%) — Razón (termómetro del miedo)
+
+METALES:
 Gold   → Dirección (prob%) — Razón
-Silver → Dirección (prob%) — Razón (suele amplificar movimiento del Gold)
-WTI    → Dirección (prob%) — Razón (muy sensible al conflicto Irán)
-BTC    → Dirección (prob%) — Razón (correlación risk-on/risk-off)
+Silver → Dirección (prob%) — Razón (amplifica Gold x1.5, componente industrial)
+
+ENERGÍA:
+WTI    → Dirección (prob%) — Razón (muy sensible al conflicto Irán/Ormuz)
+
+CRYPTO:
+BTC    → Dirección (prob%) — Razón (correlación risk-on/risk-off, beta alto)
+
+DIVISAS Y BONOS:
 DXY    → Dirección (prob%) — Razón
-VIX    → Dirección (prob%) — Razón]
+UST10Y → Dirección (prob%) — Razón (yield 10Y — termómetro de política monetaria)]
 
 **🎯 NIVELES CLAVE A VIGILAR HOY**
-[4-5 niveles técnicos macro con su significado:
-- SPX: soporte/resistencia clave
-- Gold: nivel psicológico importante
-- WTI: nivel de crisis energética
-- BTC: nivel de correlación con risk assets
-- VIX: umbral de alerta]
+[5-6 niveles técnicos macro con su significado:
+- SPX: soporte/resistencia más importante del día
+- NDX: nivel clave para tecnología
+- Gold: nivel psicológico (ej: $3000, $3200)
+- WTI: nivel de crisis energética (ej: $100, $95)
+- VIX: umbral de alerta (20 = precaución, 25 = riesgo, 30 = pánico)
+- BTC: nivel de correlación con risk assets]
 
 **📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**
 [Solo eventos del día con hora ET. Si no hay ninguno, 

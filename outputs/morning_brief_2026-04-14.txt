@@ -2,35 +2,40 @@
 ════════════════════════════════════
 
 **⚡ RESUMEN EJECUTIVO**
-La sesión de hoy se presenta con un contexto macroequilibrado, pero con señales de inflación alta y una posible respuesta hawkish leve del FED. El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo factores de incertidumbre.
+La sesión de hoy se desarrollará bajo la sombra de la inflación alta y el conflicto EEUU-Israel-Irán. La sorpresa en la inflación CPI y el tono hawkish leve del FED dominan el panorama.
 
 **🌍 CONTEXTO MACRO Y GEOPOLÍTICO**
-El conflicto EEUU-Israel-Irán en su sexta semana y la guerra comercial EEUU-China continúan siendo factores clave. El régimen macro se mantiene neutral, con una curva normal y una inflación core PCE sobre el objetivo del FED. La postura del FED se mantiene ligeramente hawkish.
+El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China mantienen un alto nivel de tensión. El régimen macro es neutro, pero la inflación alta y el tono del FED apuntan a una postura cautelosa. La crisis energética con el WTI en $100 también es un factor clave.
 
 **📈 MERCADOS — SESIÓN ANTERIOR**
-La sesión anterior mostró un aumento en el SPX (1.02%) y el NDX (1.47%), mientras que el VIX disminuyó (-3.71%). El oro subió (0.95%) y el DXY cayó (-0.22%). El WTI disminuyó (-4.37%) debido a la crisis energética.
+El SPX subió 1.09% y el NDX 1.57%, mientras que el VIX cayó 4.08%. El oro y la plata subieron 1.23% y 2.95%, respectivamente. El WTI cayó 4.5% y el BTC subió 0.48%. El DXY cayó 0.23% y el EURUSD subió 0.33%.
 
 **🔮 SESIÓN DE HOY — QUÉ ESPERAR**
-SPX → Baja (55%) — Debido a la posible respuesta hawkish del FED y la alta inflación.
-Gold → Alta (60%) — Por su naturaleza de refugio seguro en tiempos de incertidumbre.
-DXY → Alta (50%) — Si el FED confirma una postura más hawkish.
-VIX → Alta (65%) — Ante la incertidumbre geopolítica y la posible respuesta del FED.
+SPX    → Baja (60%) — Debido al tono hawkish leve del FED y la inflación alta.
+NDX    → Baja (55%) — Por la misma razón que el SPX, con un impacto ligeramente menor.
+Gold   → Alta (70%) — Como refugio seguro ante la incertidumbre y la inflación.
+Silver → Alta (75%) — Amplificando el movimiento del oro.
+WTI    → Alta (65%) — Debido a la crisis energética y el conflicto en Medio Oriente.
+BTC    → Baja (50%) — Correlación con activos de riesgo y posible debilidad en el mercado.
+DXY    → Alta (60%) — Ante la expectativa de una política monetaria más restrictiva.
+VIX    → Alta (80%) — Debido a la incertidumbre y el riesgo geopolítico.
 
 **🎯 NIVELES CLAVE A VIGILAR HOY**
-- SPX: 6900 (soporte clave)
-- Gold: 4850 (resistencia importante)
-- DXY: 98.50 (nivel de resistencia)
-- VIX: 20 (umbral de alerta)
+- SPX: Soporte en 6900 y resistencia en 7000.
+- Gold: Nivel psicológico en $4900.
+- WTI: Nivel de crisis en $100.
+- BTC: Nivel de correlación con activos de riesgo en $75000.
+- VIX: Umbral de alerta en 20.
 
 **📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**
-No hay eventos programados para hoy, por lo que la sesión puede depender de noticias sorpresa.
+No hay eventos programados para hoy, por lo que la sesión depende de noticias sorpresa.
 
-**⚠️ RIESGO DEL DÍA: MEDIO**
-El riesgo principal del día se centra en la posible respuesta del FED a la inflación alta y su impacto en los mercados.
+**⚠️ RIESGO DEL DÍA: ALTO**
+El riesgo principal del día es la incertidumbre geopolítica y la inflación alta.
 
 **💡 IDEA DIRECCIONAL**
-La dirección que sugieren los datos es de cautela, con una posible corrección en los mercados de acciones y un aumento en los activos refugio como el oro, ante la incertidumbre geopolítica y la postura del FED.
+La idea direccional es que el oro puede ser un refugio seguro ante la incertidumbre y la inflación alta, con un posible movimiento al alza.
 
 ---
 KAIROS Markets | kairos-markets.streamlit.app
-[Nota al pie: esto es análisis informativo, no recomendación de inversión]
+⚠️ Análisis informativo — no es recomendación de inversión
