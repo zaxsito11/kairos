@@ -1,0 +1,52 @@
+**📊 KAIROS MORNING BRIEF — WEDNESDAY 15 APRIL 2026**
+════════════════════════════════════
+
+**⚡ RESUMEN EJECUTIVO**
+La sesión anterior mostró un mercado cauteloso con el SPX cerrando en 6982.88, un aumento de 0.23%. El VIX disminuyó un 3.7% a 17.68. El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo factores de incertidumbre.
+
+**🌍 CONTEXTO MACRO Y GEOPOLÍTICO**
+El régimen macro se mantiene en neutro, con un contexto macro equilibrado pero con presiones geopolíticas. El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo factores clave. La crisis energética con el WTI en $91.17 también es un factor a considerar. El tono del FED se mantiene ligeramente hawkish.
+
+**📈 MERCADOS — SESIÓN ANTERIOR**
+El SPX aumentó 0.23% a 6982.88, mientras que el NDX subió 0.15% a 25880.88. El Gold disminuyó 0.2% a 4839.8, y el Silver cayó 0.49% a 79.53. El WTI aumentó 0.25% a 91.17, y el BTC subió 0.08% a 74270.34. El DXY disminuyó 0.02% a 98.15.
+
+**🔮 SESIÓN DE HOY — QUÉ ESPERAR**
+ÍNDICES:
+SPX    → Baja (55%) — Debido a la incertidumbre geopolítica y la posible subida de tasas.
+NDX    → Baja (60%) — Más sensible a las tasas y la situación geopolítica.
+VIX    → Alta (58%) — Termómetro del miedo que puede aumentar con la incertidumbre.
+
+METALES:
+Gold   → Alta (52%) — Refugio seguro en tiempos de incertidumbre.
+Silver → Alta (55%) — Amplifica el movimiento del Gold.
+
+ENERGÍA:
+WTI    → Alta (50%) — Sensible al conflicto Irán/Ormuz y la crisis energética.
+
+CRYPTO:
+BTC    → Baja (53%) — Correlación risk-on/risk-off y beta alto.
+
+DIVISAS Y BONOS:
+DXY    → Alta (51%) — Puede subir con la incertidumbre y la posible subida de tasas.
+UST10Y → Baja (49%) — Termómetro de política monetaria que puede caer con la subida de tasas.
+
+**🎯 NIVELES CLAVE A VIGILAR HOY**
+- SPX: Soporte en 6950, resistencia en 7050.
+- NDX: Nivel clave en 25700.
+- Gold: Nivel psicológico en $4850.
+- WTI: Nivel de crisis energética en $95.
+- VIX: Umbral de alerta en 20.
+- BTC: Nivel de correlación con risk assets en $73000.
+
+**📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**
+No hay eventos programados para hoy, por lo que la sesión depende de noticias sorpresa.
+
+**⚠️ RIESGO DEL DÍA: MEDIO**
+La incertidumbre geopolítica y la posible subida de tasas mantienen el riesgo en medio.
+
+**💡 IDEA DIRECCIONAL**
+La dirección que los datos sugieren con más fuerza es una posible baja en el SPX debido a la incertidumbre geopolítica y la posible subida de tasas, con el Gold como refugio seguro.
+
+---
+KAIROS Markets | kairos-markets.streamlit.app
+⚠️ Análisis informativo — no es recomendación de inversión

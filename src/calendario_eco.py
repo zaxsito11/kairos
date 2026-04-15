@@ -1,461 +1,331 @@
 # calendario_eco.py — KAIROS
+# Calendario de eventos macro con capacidad de mover mercados.
+# Genera alertas pre-evento y alimenta el Morning/Event Brief.
 #
-# CONCEPTO:
-# KAIROS no solo reacciona a eventos — los anticipa.
-# Este módulo sabe QUÉ eventos macro importantes vienen,
-# CUÁNDO exactamente, y qué probabilidad de sorpresa tienen
-# basándose en el contexto macro actual.
-#
-# FUENTE: API gratuita de Investing.com / FRED + calendario hardcoded
-# actualizable con datos reales de Bloomberg Economic Calendar.
+# ⚠️ ACTUALIZAR consensos antes de cada publicación importante.
 
 import os
-import sys
 import json
-import requests
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta, timezone
 
-sys.path.insert(0, os.path.dirname(__file__))
+# ══════════════════════════════════════════════════════════════════
+# EVENTOS MACRO 2026 — ordenados por fecha
+# ⚠️ Actualizar consenso 24h antes de cada publicación
+# ══════════════════════════════════════════════════════════════════
 
-# ── Zona horaria de referencia ────────────────────────────────────
-ET = ZoneInfo("America/New_York")   # hora de NY — donde mueven los mercados
+EVENTOS_MACRO = [
 
-# ── Calendario de eventos macro 2026 ─────────────────────────────
-# ⚠️ ACTUALIZAR MENSUALMENTE con fechas reales del calendario económico
-# Fuente: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
-#         https://www.bls.gov/schedule/news_release/cpi.htm
-
-CALENDARIO_2026 = [
-
-    # ── FOMC (Reuniones de la FED) ────────────────────────────────
+    # ── ABRIL 2026 ────────────────────────────────────────────────
     {
-        "evento":       "FOMC — Decisión de tasas",
-        "tipo":         "FOMC",
+        "evento":       "GDP EEUU Q1 2026 (preliminar)",
+        "fecha":        "2026-04-29",
+        "hora_et":      "08:30",
+        "impacto":      "CRÍTICO",
+        "consenso":     "+1.8% QoQ anualizado",
+        "anterior":     "+2.3% QoQ",
+        "activos":      ["SPX", "NDX", "DXY", "Gold", "UST10Y"],
+        "descripcion":  "Primera estimación del PIB Q1. Alta sensibilidad — recesión o resiliencia.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 35,
+            "prob_sorpresa_dovish":  40,
+        },
+    },
+    {
+        "evento":       "PCE Inflación (Marzo)",
+        "fecha":        "2026-04-30",
+        "hora_et":      "08:30",
+        "impacto":      "CRÍTICO",
+        "consenso":     "2.6% YoY | Core 2.7%",
+        "anterior":     "2.5% YoY | Core 2.6%",
+        "activos":      ["DXY", "UST10Y", "Gold", "SPX"],
+        "descripcion":  "Indicador de inflación preferido de la FED. Crítico para FOMC Mayo.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 45,
+            "prob_sorpresa_dovish":  30,
+        },
+    },
+
+    # ── MAYO 2026 ─────────────────────────────────────────────────
+    {
+        "evento":       "NFP Nóminas No Agrícolas (Abril)",
+        "fecha":        "2026-05-02",
+        "hora_et":      "08:30",
+        "impacto":      "CRÍTICO",
+        "consenso":     "138k empleos | Desempleo 4.3%",
+        "anterior":     "158.6k | 4.3%",
+        "activos":      ["DXY", "SPX", "Gold", "UST10Y", "VIX"],
+        "descripcion":  "Reporte de empleo de abril. Desaceleración esperada post-conflicto Irán.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 40,
+            "prob_sorpresa_dovish":  45,
+        },
+    },
+    {
+        "evento":       "FOMC — Decisión de tasas (Mayo)",
         "fecha":        "2026-05-07",
         "hora_et":      "14:00",
         "impacto":      "CRÍTICO",
-        "activos":      ["SPX", "NDX", "DXY", "Gold", "UST10Y", "VIX"],
-        "descripcion":  "Decisión de tasas FED + statement FOMC",
-        "consenso":     "SIN CAMBIO",
-        "prob_sorpresa": None,   # se calcula dinámicamente con priced_in.py
+        "consenso":     "SIN CAMBIO 78.4% | Recorte 19.8%",
+        "anterior":     "Pausa — tasa 3.64%",
+        "activos":      ["SPX", "NDX", "DXY", "Gold", "UST10Y", "VIX", "BTC"],
+        "descripcion":  "Reunión FOMC Mayo. FED atrapada entre inflación energética y desaceleración.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 25,
+            "prob_sorpresa_dovish":  15,
+        },
     },
     {
-        "evento":       "FOMC — Minutas",
-        "tipo":         "FOMC_MINUTAS",
+        "evento":       "CPI Inflación EEUU (Abril)",
+        "fecha":        "2026-05-13",
+        "hora_et":      "08:30",
+        "impacto":      "CRÍTICO",
+        "consenso":     "3.1% YoY | Core 2.6%",
+        "anterior":     "3.29% YoY | Core 3.17%",
+        "activos":      ["DXY", "UST10Y", "Gold", "SPX", "Silver"],
+        "descripcion":  "CPI Abril. Se espera moderación vs marzo. Clave para outlook FED junio.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 40,
+            "prob_sorpresa_dovish":  35,
+        },
+    },
+    {
+        "evento":       "Minutas FOMC (Mayo)",
         "fecha":        "2026-05-27",
         "hora_et":      "14:00",
         "impacto":      "ALTO",
-        "activos":      ["SPX", "DXY", "Gold", "UST10Y"],
-        "descripcion":  "Minutas de la reunión FOMC de mayo 2026",
-        "consenso":     None,
-        "prob_sorpresa": None,
+        "consenso":     "Tono hawkish leve esperado",
+        "anterior":     "Minutas marzo — hawkish por energía",
+        "activos":      ["DXY", "UST10Y", "SPX", "Gold"],
+        "descripcion":  "Minutas de la reunión de mayo. Revelan debate interno sobre próximos pasos.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 35,
+            "prob_sorpresa_dovish":  25,
+        },
+    },
+
+    # ── JUNIO 2026 ────────────────────────────────────────────────
+    {
+        "evento":       "NFP Nóminas No Agrícolas (Mayo)",
+        "fecha":        "2026-06-06",
+        "hora_et":      "08:30",
+        "impacto":      "CRÍTICO",
+        "consenso":     "Por confirmar — actualizar mayo",
+        "anterior":     "138k (estimado abril)",
+        "activos":      ["DXY", "SPX", "Gold", "UST10Y"],
+        "descripcion":  "Reporte de empleo de mayo. Precede al FOMC de junio.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 40,
+            "prob_sorpresa_dovish":  40,
+        },
     },
     {
-        "evento":       "FOMC — Decisión de tasas",
-        "tipo":         "FOMC",
+        "evento":       "BCE — Decisión de tasas (Junio)",
+        "fecha":        "2026-06-05",
+        "hora_et":      "08:15",
+        "impacto":      "CRÍTICO",
+        "consenso":     "Subida 25bps 60% | Pausa 40%",
+        "anterior":     "Pausa — tasa depósito 1.93%",
+        "activos":      ["EURUSD", "Gold", "SPX", "Bund", "Silver"],
+        "descripcion":  "Reunión BCE junio. Presión hawkish por inflación energética guerra Irán.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 40,
+            "prob_sorpresa_dovish":  20,
+        },
+    },
+    {
+        "evento":       "CPI Inflación EEUU (Mayo)",
+        "fecha":        "2026-06-11",
+        "hora_et":      "08:30",
+        "impacto":      "CRÍTICO",
+        "consenso":     "Por confirmar — actualizar junio",
+        "anterior":     "3.1% (estimado abril)",
+        "activos":      ["DXY", "UST10Y", "Gold", "SPX"],
+        "descripcion":  "CPI Mayo. Previo al FOMC de junio — máxima relevancia.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 40,
+            "prob_sorpresa_dovish":  35,
+        },
+    },
+    {
+        "evento":       "FOMC — Decisión de tasas (Junio)",
         "fecha":        "2026-06-17",
         "hora_et":      "14:00",
         "impacto":      "CRÍTICO",
-        "activos":      ["SPX", "NDX", "DXY", "Gold", "UST10Y", "VIX"],
-        "descripcion":  "Decisión de tasas FED + proyecciones económicas (dot plot)",
-        "consenso":     "RECORTE 25bps",
-        "prob_sorpresa": None,
-    },
-
-    # ── CPI (Inflación EEUU) ──────────────────────────────────────
-    {
-        "evento":       "CPI — Inflación EEUU (Abril)",
-        "tipo":         "CPI",
-        "fecha":        "2026-05-13",
-        "hora_et":      "08:30",
-        "impacto":      "ALTO",
-        "activos":      ["DXY", "SPX", "Gold", "UST10Y"],
-        "descripcion":  "Consumer Price Index — dato de abril 2026",
-        "consenso":     "2.4% YoY",   # ⚠️ actualizar con consenso real
-        "prev_anterior": "3.29%",
-        "prob_sorpresa": None,
-    },
-    {
-        "evento":       "CPI — Inflación EEUU (Mayo)",
-        "tipo":         "CPI",
-        "fecha":        "2026-06-11",
-        "hora_et":      "08:30",
-        "impacto":      "ALTO",
-        "activos":      ["DXY", "SPX", "Gold", "UST10Y"],
-        "descripcion":  "Consumer Price Index — dato de mayo 2026",
-        "consenso":     None,
-        "prev_anterior": None,
-        "prob_sorpresa": None,
-    },
-
-    # ── NFP (Nóminas no agrícolas) ────────────────────────────────
-    {
-        "evento":       "NFP — Nóminas No Agrícolas (Abril)",
-        "tipo":         "NFP",
-        "fecha":        "2026-05-01",
-        "hora_et":      "08:30",
-        "impacto":      "ALTO",
-        "activos":      ["DXY", "SPX", "Gold", "UST10Y"],
-        "descripcion":  "Nóminas no agrícolas + tasa de desempleo abril 2026",
-        "consenso":     "138k",       # ⚠️ actualizar con consenso real
-        "prev_anterior": "158.6k",
-        "prob_sorpresa": None,
-    },
-    {
-        "evento":       "NFP — Nóminas No Agrícolas (Mayo)",
-        "tipo":         "NFP",
-        "fecha":        "2026-06-05",
-        "hora_et":      "08:30",
-        "impacto":      "ALTO",
-        "activos":      ["DXY", "SPX", "Gold", "UST10Y"],
-        "descripcion":  "Nóminas no agrícolas + tasa de desempleo mayo 2026",
-        "consenso":     None,
-        "prev_anterior": None,
-        "prob_sorpresa": None,
-    },
-
-    # ── PCE (Inflación preferida de la FED) ───────────────────────
-    {
-        "evento":       "PCE — Inflación Core (Marzo)",
-        "tipo":         "PCE",
-        "fecha":        "2026-04-30",
-        "hora_et":      "08:30",
-        "impacto":      "ALTO",
-        "activos":      ["DXY", "SPX", "Gold"],
-        "descripcion":  "Core PCE — indicador preferido de inflación de la FED",
-        "consenso":     "2.6% YoY",
-        "prev_anterior": "2.97%",
-        "prob_sorpresa": None,
-    },
-
-    # ── GDP (PIB EEUU) ────────────────────────────────────────────
-    {
-        "evento":       "GDP — PIB EEUU Q1 2026 (preliminar)",
-        "tipo":         "GDP",
-        "fecha":        "2026-04-29",
-        "hora_et":      "08:30",
-        "impacto":      "ALTO",
-        "activos":      ["SPX", "DXY", "Gold"],
-        "descripcion":  "Primera estimación PIB Q1 2026",
-        "consenso":     "1.8% QoQ",
-        "prev_anterior": "2.4%",
-        "prob_sorpresa": None,
-    },
-
-    # ── BCE ───────────────────────────────────────────────────────
-    {
-        "evento":       "BCE — Decisión de tasas",
-        "tipo":         "BCE",
-        "fecha":        "2026-06-05",
-        "hora_et":      "08:15",
-        "impacto":      "ALTO",
-        "activos":      ["EURUSD", "SPX", "Gold"],
-        "descripcion":  "Decisión de tasas del Banco Central Europeo",
-        "consenso":     "RECORTE 25bps",
-        "prob_sorpresa": None,
+        "consenso":     "Recorte 25bps 48% | Pausa 45%",
+        "anterior":     "Pausa mayo — tasa 3.64%",
+        "activos":      ["SPX", "NDX", "DXY", "Gold", "UST10Y", "VIX", "BTC"],
+        "descripcion":  "FOMC Junio. Alta incertidumbre — depende de datos de mayo.",
+        "prob_sorpresa": {
+            "prob_sorpresa_hawkish": 30,
+            "prob_sorpresa_dovish":  30,
+        },
     },
 ]
 
-# ── Precedentes por tipo de evento ────────────────────────────────
-PRECEDENTES_POR_TIPO = {
-    "FOMC": {
-        "hawkish_sorpresa": {
-            "n": 10,
-            "SPX":    "-1.7% promedio 24h (75% de veces baja)",
-            "DXY":    "+0.7% promedio 24h (80% de veces sube)",
-            "Gold":   "-0.4% promedio 24h (65% de veces baja)",
-            "VIX":    "+15% promedio 24h (70% de veces sube)",
-        },
-        "dovish_sorpresa": {
-            "n": 8,
-            "SPX":    "+1.4% promedio 24h (72% de veces sube)",
-            "DXY":    "-0.6% promedio 24h (75% de veces baja)",
-            "Gold":   "+0.8% promedio 24h (68% de veces sube)",
-            "VIX":    "-12% promedio 24h (65% de veces baja)",
-        },
-    },
-    "CPI": {
-        "hawkish_sorpresa": {
-            "n": 8,
-            "DXY":    "+0.8% promedio 4h (72% de veces sube)",
-            "SPX":    "-1.2% promedio 4h (68% de veces baja)",
-            "Gold":   "-0.5% promedio 4h (60% de veces baja)",
-            "UST10Y": "+5bps promedio 4h (75% de veces sube)",
-        },
-        "dovish_sorpresa": {
-            "n": 6,
-            "DXY":    "-0.5% promedio 4h (65% de veces baja)",
-            "SPX":    "+0.9% promedio 4h (63% de veces sube)",
-            "Gold":   "+0.7% promedio 4h (62% de veces sube)",
-        },
-    },
-    "NFP": {
-        "hawkish_sorpresa": {
-            "n": 9,
-            "DXY":    "+0.5% promedio 2h (70% de veces sube)",
-            "SPX":    "-0.8% promedio 2h (60% de veces baja)",
-            "Gold":   "-0.3% promedio 2h (58% de veces baja)",
-        },
-        "dovish_sorpresa": {
-            "n": 7,
-            "DXY":    "-0.6% promedio 2h (68% de veces baja)",
-            "SPX":    "+0.5% promedio 2h (60% de veces sube)",
-            "Gold":   "+0.4% promedio 2h (62% de veces sube)",
-        },
-    },
-}
+# ── Estado de alertas enviadas ────────────────────────────────────
+def _cargar_alertas_enviadas(estado: dict) -> dict:
+    return estado.get("calendario_alertas", {})
 
 
-# ── Funciones principales ─────────────────────────────────────────
-def obtener_eventos_proximos(dias: int = 7) -> list:
-    """
-    Retorna eventos macro importantes en los próximos N días,
-    ordenados por fecha y criticidad.
-    """
-    ahora   = datetime.now(ET)
-    limite  = ahora + timedelta(days=dias)
-    eventos = []
-
-    for ev in CALENDARIO_2026:
-        try:
-            fecha_str = f"{ev['fecha']} {ev['hora_et']}"
-            fecha_ev  = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
-            fecha_ev  = fecha_ev.replace(tzinfo=ET)
-
-            if ahora <= fecha_ev <= limite:
-                horas_restantes = (fecha_ev - ahora).total_seconds() / 3600
-                dias_restantes  = horas_restantes / 24
-
-                evento = ev.copy()
-                evento["fecha_dt"]        = fecha_ev.isoformat()
-                evento["horas_restantes"] = round(horas_restantes, 1)
-                evento["dias_restantes"]  = round(dias_restantes, 1)
-                evento["hora_local_et"]   = fecha_ev.strftime("%d/%m/%Y %H:%M ET")
-
-                # Calcular probabilidad de sorpresa si hay consenso
-                if ev.get("consenso") and ev.get("prev_anterior"):
-                    evento["prob_sorpresa"] = estimar_prob_sorpresa(ev)
-
-                # Agregar precedentes relevantes
-                evento["precedentes"] = PRECEDENTES_POR_TIPO.get(ev["tipo"], {})
-
-                eventos.append(evento)
-
-        except Exception as e:
-            continue
-
-    # Ordenar: primero críticos, luego por fecha
-    prioridad = {"CRÍTICO": 0, "ALTO": 1, "MEDIO": 2}
-    eventos.sort(key=lambda x: (
-        prioridad.get(x["impacto"], 3),
-        x["horas_restantes"]
-    ))
-
-    return eventos
+def _guardar_alerta_enviada(estado: dict, clave: str):
+    if "calendario_alertas" not in estado:
+        estado["calendario_alertas"] = {}
+    estado["calendario_alertas"][clave] = datetime.now().isoformat()
 
 
-def estimar_prob_sorpresa(evento: dict) -> dict:
-    """
-    Estima la probabilidad de sorpresa basándose en:
-    - Tendencia reciente vs consenso
-    - Histórico de miss/beat del indicador
-    """
-    tipo = evento.get("tipo", "")
+# ── Calcular tiempo restante ──────────────────────────────────────
+def _calcular_tiempos(evento: dict) -> dict:
+    """Calcula horas y días restantes hasta el evento."""
+    ahora = datetime.now()
+    fecha_str = evento["fecha"] + " " + evento["hora_et"]
+    try:
+        fecha_ev = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
+    except Exception:
+        fecha_ev = datetime.strptime(evento["fecha"], "%Y-%m-%d")
 
-    # Probabilidades base por tipo de indicador
-    # (basadas en histórico de sorpresas de los últimos 2 años)
-    prob_base = {
-        "CPI":  {"hawkish": 45, "dovish": 35, "inline": 20},
-        "NFP":  {"hawkish": 40, "dovish": 40, "inline": 20},
-        "PCE":  {"hawkish": 42, "dovish": 38, "inline": 20},
-        "GDP":  {"hawkish": 35, "dovish": 45, "inline": 20},
-        "FOMC": {"hawkish": 15, "dovish": 10, "inline": 75},
-    }
+    diff          = fecha_ev - ahora
+    horas_rest    = diff.total_seconds() / 3600
+    dias_rest     = diff.days
 
-    probs = prob_base.get(tipo, {"hawkish": 33, "dovish": 33, "inline": 34})
+    # Formato amigable de hora ET
+    try:
+        hora_dt   = datetime.strptime(evento["hora_et"], "%H:%M")
+        hora_fmt  = hora_dt.strftime("%I:%M %p ET").lstrip("0")
+    except Exception:
+        hora_fmt  = evento.get("hora_et", "TBD")
 
     return {
-        "prob_sorpresa_hawkish": probs["hawkish"],
-        "prob_sorpresa_dovish":  probs["dovish"],
-        "prob_inline":           probs["inline"],
-        "nota": "Estimación basada en histórico 2024-2026",
+        "horas_restantes": round(horas_rest, 1),
+        "dias_restantes":  max(0, dias_rest),
+        "hora_local_et":   hora_fmt,
+        "es_futuro":       horas_rest > 0,
     }
 
 
-def generar_alerta_pre_evento(evento: dict) -> str:
+# ── Función principal ─────────────────────────────────────────────
+def obtener_eventos_proximos(dias: int = 30) -> list:
     """
-    Genera alerta de anticipación para Telegram.
-    Se envía X horas antes del evento para preparar al trader.
+    Retorna eventos próximos ordenados por fecha.
+    Solo incluye eventos futuros dentro de los próximos N días.
     """
-    horas     = evento["horas_restantes"]
-    tipo      = evento["tipo"]
-    nombre    = evento["evento"]
-    hora_et   = evento["hora_local_et"]
-    activos   = ", ".join(evento["activos"])
-    consenso  = evento.get("consenso", "N/D")
-    anterior  = evento.get("prev_anterior", "N/D")
-    impacto   = evento["impacto"]
+    ahora = datetime.now()
+    limite = ahora + timedelta(days=dias)
 
-    emojis = {"CRÍTICO": "🚨", "ALTO": "⚠️", "MEDIO": "📡"}
-    emoji  = emojis.get(impacto, "📡")
+    eventos_activos = []
+    for ev in EVENTOS_MACRO:
+        try:
+            fecha_ev = datetime.strptime(ev["fecha"], "%Y-%m-%d")
+        except Exception:
+            continue
 
-    if horas < 1:
-        tiempo_txt = f"en {int(horas*60)} minutos"
-    elif horas < 24:
-        tiempo_txt = f"en {round(horas,1)} horas"
-    else:
-        tiempo_txt = f"en {round(evento['dias_restantes'],1)} días"
+        if fecha_ev < ahora - timedelta(hours=4):
+            continue
+        if fecha_ev > limite:
+            continue
 
-    lineas = [
-        f"{emoji} KAIROS — EVENTO PRÓXIMO",
-        f"{'='*38}",
-        f"📅 {nombre}",
-        f"⏰ {hora_et} ({tiempo_txt})",
-        f"📊 Activos que se moverán: {activos}",
-        f"",
-        f"📈 Consenso analistas: {consenso}",
-        f"📋 Dato anterior: {anterior}",
-    ]
+        tiempos = _calcular_tiempos(ev)
+        if not tiempos["es_futuro"]:
+            continue
 
-    # Probabilidades de sorpresa
-    prob = evento.get("prob_sorpresa")
-    if prob:
-        lineas += [
-            f"",
-            f"🎲 PROBABILIDAD DE SORPRESA:",
-            f"  🔴 Hawkish (supera consenso): {prob['prob_sorpresa_hawkish']}%",
-            f"  🟢 Dovish (bajo consenso):    {prob['prob_sorpresa_dovish']}%",
-            f"  🟡 En línea con consenso:     {prob['prob_inline']}%",
-        ]
+        eventos_activos.append({
+            **ev,
+            **tiempos,
+        })
 
-    # Precedentes históricos
-    precs = evento.get("precedentes", {})
-    if precs:
-        lineas += ["", f"📚 SI HAY SORPRESA — HISTÓRICO:"]
-        if "hawkish_sorpresa" in precs:
-            h = precs["hawkish_sorpresa"]
-            lineas.append(f"  Si supera consenso ({h['n']} casos):")
-            for activo in evento["activos"][:3]:
-                if activo in h:
-                    lineas.append(f"    → {activo}: {h[activo]}")
-        if "dovish_sorpresa" in precs:
-            d = precs["dovish_sorpresa"]
-            lineas.append(f"  Si queda bajo consenso ({d['n']} casos):")
-            for activo in evento["activos"][:3]:
-                if activo in d:
-                    lineas.append(f"    → {activo}: {d[activo]}")
-
-    lineas += ["", "kairos-markets.streamlit.app"]
-    return "\n".join(lineas)
+    eventos_activos.sort(key=lambda x: x["horas_restantes"])
+    return eventos_activos
 
 
 def verificar_alertas_calendario(estado: dict) -> list:
     """
-    Revisa el calendario y genera alertas pre-evento cuando:
-    - Faltan 24 horas para un evento CRÍTICO
-    - Faltan 6 horas para un evento ALTO
-    - Faltan 1 hora para cualquier evento importante
-    Nunca alerta dos veces el mismo evento en la misma ventana.
+    Verifica si hay eventos próximos que requieren alerta.
+    Ventanas: CRÍTICO = 24h antes | ALTO = 6h antes | 1h antes siempre.
+    No reenvía si ya se envió una alerta para ese evento.
     """
-    alertas   = []
-    eventos   = obtener_eventos_proximos(dias=7)
-    alertadas = estado.get("calendario_alertas", {})
+    alertas_enviadas = _cargar_alertas_enviadas(estado)
+    eventos          = obtener_eventos_proximos(dias=2)
+    nuevas_alertas   = []
 
     for ev in eventos:
-        horas  = ev["horas_restantes"]
-        tipo   = ev["tipo"]
-        fecha  = ev["fecha"]
-        clave  = f"{tipo}_{fecha}"
+        horas = ev["horas_restantes"]
+        imp   = ev["impacto"]
 
-        # Definir cuándo alertar según impacto
-        alertar_en = {
-            "CRÍTICO": [24, 6, 1],
-            "ALTO":    [6, 1],
-            "MEDIO":   [2],
-        }.get(ev["impacto"], [2])
+        # Ventanas de alerta según importancia
+        ventanas = []
+        if imp == "CRÍTICO":
+            ventanas = [24, 6, 1]
+        elif imp == "ALTO":
+            ventanas = [6, 1]
+        else:
+            ventanas = [1]
 
-        for h_umbral in alertar_en:
-            clave_alerta = f"{clave}_{h_umbral}h"
-
-            # ¿Ya fue alertado en esta ventana?
-            if clave_alerta in alertadas:
+        for ventana in ventanas:
+            if horas > ventana or horas <= 0:
                 continue
 
-            # ¿Está en la ventana de alerta? (±30 min del umbral)
-            if abs(horas - h_umbral) <= 0.5:
-                alertas.append({
-                    "evento":       ev,
-                    "clave_alerta": clave_alerta,
-                    "mensaje":      generar_alerta_pre_evento(ev),
-                })
-                alertadas[clave_alerta] = datetime.now().isoformat()
+            clave = f"{ev['evento']}_{ventana}h"
+            if clave in alertas_enviadas:
+                continue
 
-    estado["calendario_alertas"] = alertadas
-    return alertas
+            emoji    = "🚨" if imp == "CRÍTICO" else "⚠️"
+            tiempo_t = f"{int(horas*60)} min" if horas < 1 else f"{round(horas,1)}h"
+
+            mensaje = (
+                f"{emoji} KAIROS — EVENTO MACRO EN {tiempo_t.upper()}\n"
+                f"{'='*38}\n"
+                f"📅 {ev['evento']}\n"
+                f"🕐 {ev['hora_local_et']}\n"
+                f"📊 Consenso: {ev['consenso']}\n"
+                f"📈 Anterior: {ev['anterior']}\n"
+                f"🎯 Activos: {', '.join(ev['activos'][:5])}\n\n"
+                f"📋 {ev['descripcion']}\n\n"
+                f"⚡ Event Brief llegará 30 min antes del dato\n\n"
+                f"kairos-markets.streamlit.app"
+            )
+
+            nuevas_alertas.append({
+                "tipo":         "CALENDARIO",
+                "clave_alerta": clave,
+                "evento":       ev["evento"],
+                "mensaje":      mensaje,
+                "horas":        horas,
+            })
+            _guardar_alerta_enviada(estado, clave)
+
+    return nuevas_alertas
 
 
 def resumen_semana() -> str:
-    """
-    Genera un resumen de todos los eventos importantes
-    de los próximos 7 días. Para el dashboard.
-    """
+    """Genera resumen de eventos de la semana para el mensaje de inicio."""
     eventos = obtener_eventos_proximos(dias=7)
-
     if not eventos:
-        return "Sin eventos macro importantes en los próximos 7 días."
+        return "Sin eventos críticos esta semana."
 
-    lineas = ["📅 EVENTOS MACRO PRÓXIMOS 7 DÍAS\n" + "="*38]
-
-    for ev in eventos:
-        emoji_impacto = {"CRÍTICO": "🚨", "ALTO": "⚠️", "MEDIO": "📡"}
-        emoji = emoji_impacto.get(ev["impacto"], "📡")
-        horas = ev["horas_restantes"]
-
-        if horas < 24:
-            tiempo = f"en {round(horas,1)}h"
-        else:
-            tiempo = f"en {round(ev['dias_restantes'],1)} días"
-
-        consenso = f" | Consenso: {ev['consenso']}" if ev.get("consenso") else ""
+    lineas = ["📅 EVENTOS ESTA SEMANA:"]
+    for ev in eventos[:5]:
+        emoji = {"CRÍTICO": "🚨", "ALTO": "⚠️"}.get(ev["impacto"], "📡")
         lineas.append(
-            f"\n{emoji} {ev['evento']}\n"
-            f"   📅 {ev['hora_local_et']} ({tiempo})\n"
-            f"   📊 Activos: {', '.join(ev['activos'][:4])}{consenso}"
+            f"{emoji} {ev['evento']} — {ev['dias_restantes']} días | {ev['hora_local_et']}"
         )
-
     return "\n".join(lineas)
 
 
-# ── Test directo ──────────────────────────────────────────────────
+# ── Test ──────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("\n📅 KAIROS CALENDARIO ECONÓMICO")
-    print("="*50)
+    print("\n📅 KAIROS — Calendario Económico 2026")
+    print("="*55)
 
-    eventos = obtener_eventos_proximos(dias=30)
+    eventos = obtener_eventos_proximos(dias=90)
+    print(f"\nEventos próximos (90 días): {len(eventos)}\n")
 
-    if not eventos:
-        print("Sin eventos en los próximos 30 días.")
-    else:
-        print(f"\n{len(eventos)} eventos próximos:\n")
-        for ev in eventos:
-            emoji = {"CRÍTICO":"🚨","ALTO":"⚠️","MEDIO":"📡"}.get(ev["impacto"],"📡")
-            print(f"{emoji} {ev['evento']}")
-            print(f"   Fecha: {ev['hora_local_et']}")
-            print(f"   Faltan: {ev['horas_restantes']}h ({ev['dias_restantes']} días)")
-            if ev.get("consenso"):
-                print(f"   Consenso: {ev['consenso']}")
-            if ev.get("prob_sorpresa"):
-                p = ev["prob_sorpresa"]
-                print(f"   Prob. sorpresa: 🔴{p['prob_sorpresa_hawkish']}% hawkish | "
-                      f"🟢{p['prob_sorpresa_dovish']}% dovish")
-            print()
-
-    print("\n" + "="*50)
-    print("RESUMEN SEMANA:")
-    print(resumen_semana())
-
-    print("\n" + "="*50)
-    print("ALERTA DE EJEMPLO (próximo evento):")
-    if eventos:
-        print(generar_alerta_pre_evento(eventos[0]))
+    for ev in eventos:
+        emoji = {"CRÍTICO":"🚨","ALTO":"⚠️","MEDIO":"📡"}.get(ev["impacto"],"📡")
+        dias  = ev["dias_restantes"]
+        print(f"{emoji} {ev['evento']}")
+        print(f"   📅 {ev['fecha']} {ev['hora_local_et']} | en {dias} días")
+        print(f"   Consenso: {ev['consenso']}")
+        if ev.get("prob_sorpresa"):
+            h = ev["prob_sorpresa"]["prob_sorpresa_hawkish"]
+            d = ev["prob_sorpresa"]["prob_sorpresa_dovish"]
+            print(f"   🔴 Hawkish {h}% | 🟢 Dovish {d}%")
+        print()

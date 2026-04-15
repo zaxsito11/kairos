@@ -164,6 +164,58 @@ else:
 
 st.divider()
 
+# ── CLOSING BRIEF + WEEKLY BRIEF ──────────────────────────────────
+col_cl, col_wk = st.columns(2)
+
+with col_cl:
+    st.subheader("📉 Closing Brief")
+    archivos_cl = sorted(glob.glob("outputs/closing_brief_*.txt"), reverse=True)
+    if archivos_cl:
+        nombre_cl = os.path.basename(archivos_cl[0]).replace("closing_brief_","").replace(".txt","")
+        with open(archivos_cl[0], "r", encoding="utf-8") as f:
+            texto_cl = f.read()
+        # Extraer puntuación
+        score_line = [l for l in texto_cl.split("\n") if "PUNTUACIÓN" in l or "PUNTUACION" in l]
+        score_txt  = score_line[0] if score_line else ""
+        st.caption(f"📅 {nombre_cl} {score_txt}")
+        with st.expander("Ver Closing Brief completo"):
+            st.markdown(texto_cl)
+    else:
+        st.caption("Se genera automáticamente a las 4:00 PM ET")
+        if st.button("📉 Generar Closing Brief ahora", use_container_width=True):
+            with st.spinner("Generando..."):
+                try:
+                    from closing_brief import generar_y_enviar_closing
+                    generar_y_enviar_closing(forzar=True)
+                    st.success("✅ Enviado al canal")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error: {e}")
+
+with col_wk:
+    st.subheader("📊 Weekly Brief")
+    archivos_wk = sorted(glob.glob("outputs/weekly_brief_*.txt"), reverse=True)
+    if archivos_wk:
+        nombre_wk = os.path.basename(archivos_wk[0]).replace("weekly_brief_","").replace(".txt","")
+        with open(archivos_wk[0], "r", encoding="utf-8") as f:
+            texto_wk = f.read()
+        st.caption(f"📅 Semana del {nombre_wk}")
+        with st.expander("Ver Weekly Brief completo"):
+            st.markdown(texto_wk)
+    else:
+        st.caption("Se genera automáticamente los viernes a las 6:00 PM ET")
+        if st.button("📊 Generar Weekly Brief ahora", use_container_width=True):
+            with st.spinner("Generando..."):
+                try:
+                    from weekly_brief import generar_y_enviar_weekly
+                    generar_y_enviar_weekly(forzar=True)
+                    st.success("✅ Enviado al canal")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error: {e}")
+
+st.divider()
+
 # ── PRECIOS EN TIEMPO REAL ─────────────────────────────────────────
 st.subheader("📈 Mercados en tiempo real")
 with st.spinner("Cargando precios..."):

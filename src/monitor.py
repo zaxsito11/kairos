@@ -22,6 +22,10 @@ sys.path.insert(0, os.path.dirname(__file__))
 from news_scanner   import escanear_noticias_kairos, formatear_alerta_noticia, SCORE_MINIMO_ALERTA
 from calendario_eco import verificar_alertas_calendario, resumen_semana
 from market_alert   import ejecutar_market_alert
+from event_brief    import verificar_y_enviar_event_briefs
+from weekly_brief   import generar_y_enviar_weekly
+from price_targets  import calcular_todos_los_targets, guardar_prediccion, formatear_targets_telegram
+from closing_brief  import generar_y_enviar_closing
 from alertas        import enviar_alerta_telegram
 
 # ── Configuración ─────────────────────────────────────────────────
@@ -240,12 +244,15 @@ def procesar_evento(evento: dict, datos_macro=None, regimen=None):
 # ── Loop principal ────────────────────────────────────────────────
 def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
     log.info("=" * 50)
-    log.info("🚀 KAIROS MONITOR ACTIVO — 5 módulos")
+    log.info("🚀 KAIROS MONITOR ACTIVO — 8 módulos")
     log.info(f"   [0] Morning Brief  — 8:00 AM diario")
     log.info(f"   [1] Noticias       — score≥{SCORE_MINIMO_ALERTA}, MAXIMA+ALTA")
     log.info(f"   [2] Calendario     — anticipa eventos macro")
     log.info(f"   [3] Mercados       — patrones macro causales")
     log.info(f"   [4] FED            — nuevo comunicado genuino")
+    log.info(f"   [5] Event Brief    — 30 min antes de eventos críticos")
+    log.info(f"   [6] Closing Brief  — 4:00 PM ET cierre de sesión")
+    log.info(f"   [7] Weekly Brief   — viernes 6:00 PM resumen semanal")
     log.info(f"   Intervalo: cada {intervalo//60} minutos")
     log.info("=" * 50)
 
@@ -278,6 +285,20 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                 regimen      = evaluar_regimen_macro(datos_macro)
                 ultima_macro = datetime.now()
                 log.info(f"Macro: {regimen.get('regimen','?')}")
+                # Calcular y guardar targets de precio
+                try:
+                    from news_scanner import SITUACIONES_ACTIVAS
+                    sits = [{"nombre":s["nombre"],"tipo":s["tipo"]}
+                            for s in SITUACIONES_ACTIVAS if not s["resuelto"]]
+                    targets = calcular_todos_los_targets(
+                        regimen_macro=regimen.get("regimen","NEUTRO"),
+                        tono_fed="HAWKISH LEVE",
+                        situaciones_activas=sits
+                    )
+                    guardar_prediccion(targets)
+                    log.info(f"  Targets calculados para {len(targets)} activos")
+                except Exception as te:
+                    log.warning(f"  Error targets: {te}")
             except Exception as e:
                 log.warning(f"Error macro: {e}")
 
@@ -327,6 +348,32 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                 estado["alertas_enviadas"] += 1
         except Exception as e:
             log.error(f"Error FED: {e}")
+
+        # [5] Event Brief — 30 min antes de eventos críticos
+        log.info("\n[5] EVENT BRIEF")
+        try:
+            n_briefs = verificar_y_enviar_event_briefs()
+            if n_briefs > 0:
+                estado["alertas_enviadas"] += n_briefs
+                log.info(f"  ✅ {n_briefs} Event Briefs enviados")
+            else:
+                log.info("  ✓ Sin eventos en ventana de alerta")
+        except Exception as e:
+            log.error(f"Error event_brief: {e}")
+
+        # [6] Closing Brief — 4:00 PM ET
+        log.info("\n[6] CLOSING BRIEF")
+        try:
+            generar_y_enviar_closing()
+        except Exception as e:
+            log.error(f"Error closing brief: {e}")
+
+        # [7] Weekly Brief — viernes 6:00 PM
+        log.info("\n[7] WEEKLY BRIEF")
+        try:
+            generar_y_enviar_weekly()
+        except Exception as e:
+            log.error(f"Error weekly brief: {e}")
 
         guardar_estado(estado)
         log.info(f"\n✅ Ciclo #{ciclo} — {estado['alertas_enviadas']} alertas totales")
