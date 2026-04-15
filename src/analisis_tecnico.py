@@ -152,6 +152,86 @@ def calcular_atr(highs: list, lows: list, closes: list, periodo: int = 14) -> fl
     return round(sum(tr_list[-periodo:]) / periodo, 4)
 
 
+def analizar_volumen(volumes: list, closes: list, periodo: int = 20) -> dict:
+    """
+    Análisis de volumen — confirma o invalida señales de precio.
+
+    CONCEPTOS CLAVE:
+    - Volumen creciente + precio sube = señal ALCISTA confirmada
+    - Volumen creciente + precio baja = señal BAJISTA confirmada
+    - Volumen decreciente + cualquier dirección = señal débil, no confiable
+    - OBV (On Balance Volume) — acumulación o distribución
+    """
+    if len(volumes) < periodo or len(closes) < 2:
+        return {"tendencia_volumen": "NEUTRAL", "confirmacion": False,
+                "obv_tendencia": "NEUTRAL", "volumen_relativo": 1.0}
+
+    # Volumen promedio del período
+    vol_promedio = sum(volumes[-periodo:]) / periodo
+    vol_actual   = volumes[-1]
+    vol_relativo = round(vol_actual / vol_promedio, 2) if vol_promedio > 0 else 1.0
+
+    # Tendencia de volumen (últimos 5 días vs período)
+    vol_reciente = sum(volumes[-5:]) / 5 if len(volumes) >= 5 else vol_actual
+    tendencia_vol = "CRECIENTE" if vol_reciente > vol_promedio * 1.1 else                    "DECRECIENTE" if vol_reciente < vol_promedio * 0.9 else "NORMAL"
+
+    # OBV — On Balance Volume
+    # Suma el volumen en días alcistas, resta en bajistas
+    obv = 0
+    obv_values = [0]
+    for i in range(1, len(closes)):
+        if closes[i] > closes[i-1]:
+            obv += volumes[i]
+        elif closes[i] < closes[i-1]:
+            obv -= volumes[i]
+        obv_values.append(obv)
+
+    # Tendencia OBV (últimos 10 días)
+    if len(obv_values) >= 10:
+        obv_reciente = obv_values[-1]
+        obv_anterior = obv_values[-10]
+        obv_tendencia = "ACUMULACION" if obv_reciente > obv_anterior else                        "DISTRIBUCION" if obv_reciente < obv_anterior else "NEUTRAL"
+    else:
+        obv_tendencia = "NEUTRAL"
+
+    # Confirmación de señal de precio con volumen
+    # Precio subiendo + volumen creciente = CONFIRMADO
+    precio_sube = closes[-1] > closes[-2]
+    confirmacion = (precio_sube and tendencia_vol == "CRECIENTE") or                   (not precio_sube and tendencia_vol == "CRECIENTE")
+
+    # Puntos de señal por volumen
+    score_volumen = 0
+    descripcion   = []
+
+    if vol_relativo > 1.5:
+        score_volumen += 15
+        descripcion.append(f"Volumen {vol_relativo}x el promedio — movimiento significativo")
+    elif vol_relativo > 1.2:
+        score_volumen += 8
+        descripcion.append(f"Volumen elevado ({vol_relativo}x) — señal moderada")
+    elif vol_relativo < 0.7:
+        score_volumen -= 10
+        descripcion.append(f"Volumen bajo ({vol_relativo}x) — señal débil, posible trampa")
+
+    if obv_tendencia == "ACUMULACION":
+        score_volumen += 10
+        descripcion.append("OBV en acumulación — institucionales comprando")
+    elif obv_tendencia == "DISTRIBUCION":
+        score_volumen -= 10
+        descripcion.append("OBV en distribución — institucionales vendiendo")
+
+    return {
+        "volumen_actual":    vol_actual,
+        "volumen_promedio":  round(vol_promedio, 0),
+        "volumen_relativo":  vol_relativo,
+        "tendencia_volumen": tendencia_vol,
+        "obv_tendencia":     obv_tendencia,
+        "confirmacion":      confirmacion,
+        "score_volumen":     score_volumen,
+        "descripcion":       descripcion,
+    }
+
+
 def detectar_soporte_resistencia(precios: list, ventana: int = 20) -> dict:
     """Detecta niveles de soporte y resistencia dinámicos."""
     if len(precios) < ventana:
@@ -201,9 +281,10 @@ def analizar_activo(nombre: str) -> dict:
         if hist.empty or len(hist) < 30:
             return {}
 
-        closes = [float(c) for c in hist["Close"].tolist()]
-        highs  = [float(h) for h in hist["High"].tolist()]
-        lows   = [float(l) for l in hist["Low"].tolist()]
+        closes  = [float(c) for c in hist["Close"].tolist()]
+        highs   = [float(h) for h in hist["High"].tolist()]
+        lows    = [float(l) for l in hist["Low"].tolist()]
+        volumes = [float(v) for v in hist["Volume"].tolist()] if "Volume" in hist else []
 
         precio = closes[-1]
 
@@ -216,6 +297,10 @@ def analizar_activo(nombre: str) -> dict:
         boll  = calcular_bollinger(closes, 20)
         atr   = calcular_atr(highs, lows, closes, 14)
         sr    = detectar_soporte_resistencia(closes, 60)
+        vol   = analizar_volumen(volumes, closes, 20) if volumes else {
+            "tendencia_volumen": "NEUTRAL", "obv_tendencia": "NEUTRAL",
+            "volumen_relativo": 1.0, "score_volumen": 0, "descripcion": []
+        }
 
         # ── Señales individuales ──────────────────────────────────
         señales = []
@@ -280,6 +365,29 @@ def analizar_activo(nombre: str) -> dict:
             señales.append(("S/R", "BAJISTA", f"Cerca de resistencia ({sr['resistencia']})"))
             score_bajista += 10
 
+        # Agregar score de volumen para confirmar/invalidar
+        vol_score = vol.get("score_volumen", 0)
+        if vol_score > 0:
+            # Volumen confirma al dominante
+            if score_alcista > score_bajista:
+                score_alcista += vol_score
+            else:
+                score_bajista += vol_score
+        elif vol_score < 0:
+            # Volumen bajo → reducir confianza del dominante
+            if score_alcista > score_bajista:
+                score_alcista = max(0, score_alcista + vol_score)
+            else:
+                score_bajista = max(0, score_bajista + vol_score)
+
+        # Agregar señal OBV
+        if vol.get("obv_tendencia") == "ACUMULACION":
+            señales.append(("OBV", "ALCISTA", "Acumulación institucional detectada"))
+            score_alcista += 10
+        elif vol.get("obv_tendencia") == "DISTRIBUCION":
+            señales.append(("OBV", "BAJISTA", "Distribución institucional detectada"))
+            score_bajista += 10
+
         # ── Señal consolidada ─────────────────────────────────────
         total = score_alcista + score_bajista
         if total == 0:
@@ -342,10 +450,17 @@ def analizar_activo(nombre: str) -> dict:
 
             # Señales individuales
             "señales":       señales,
-            "score_alcista": score_alcista,
-            "score_bajista": score_bajista,
+            "score_alcista":      score_alcista,
+            "score_bajista":      score_bajista,
 
-            "timestamp":     datetime.now().isoformat(),
+            # Volumen
+            "vol_relativo":       vol.get("volumen_relativo", 1.0),
+            "vol_tendencia":      vol.get("tendencia_volumen", "NEUTRAL"),
+            "obv_tendencia":      vol.get("obv_tendencia", "NEUTRAL"),
+            "vol_confirmacion":   vol.get("confirmacion", False),
+            "vol_descripcion":    vol.get("descripcion", []),
+
+            "timestamp":          datetime.now().isoformat(),
         }
 
     except Exception as e:
@@ -423,14 +538,16 @@ if __name__ == "__main__":
 
     print(f"\n{'─'*55}")
     print(f"{'Activo':8} {'Precio':>9} {'Señal':>8} {'Conf':>5} "
-          f"{'RSI':>6} {'MACD':>12} {'T-24h':>10}")
+          f"{'RSI':>6} {'MACD':>12} {'Vol':>8} {'OBV':>12} {'T-24h':>10}")
     print(f"{'─'*55}")
 
     for nombre, a in resultados.items():
         emoji = "▲" if a["señal"]=="ALCISTA" else "▼" if a["señal"]=="BAJISTA" else "↔"
+        vol_txt = f"{a.get('vol_relativo',1.0):.1f}x"
+        obv_txt = a.get("obv_tendencia","─")[:8]
         print(
             f"{nombre:8} {a['precio']:>9} {emoji:>8} {a['confianza']:>4}% "
-            f"{a['rsi']:>6} {a['macd_cruce']:>12} {a['target_24h']:>10}"
+            f"{a['rsi']:>6} {a['macd_cruce']:>12} {vol_txt:>8} {obv_txt:>12} {a['target_24h']:>10}"
         )
 
     print(f"\n{'─'*55}")
