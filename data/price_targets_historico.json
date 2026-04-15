@@ -1,0 +1,155 @@
+[
+  {
+    "fecha_prediccion": "2026-04-15",
+    "fecha_evaluacion_24h": "2026-04-16",
+    "fecha_evaluacion_7d": "2026-04-22",
+    "fecha_evaluacion_30d": "2026-05-15",
+    "predicciones": {
+      "SPX": {
+        "activo": "SPX",
+        "precio_actual": 7004.05,
+        "direccion": "BAJA",
+        "probabilidad": 60,
+        "target_24h": 6989.97,
+        "target_7d": 6961.33,
+        "target_30d": 6944.34,
+        "rango_24h_bajo": 6905.92,
+        "rango_24h_alto": 7074.02,
+        "rango_7d_bajo": 6776.42,
+        "rango_7d_alto": 7146.24,
+        "rango_30d_bajo": 6566.12,
+        "rango_30d_alto": 7322.56,
+        "soporte_1": 6800,
+        "resistencia_1": 7200,
+        "nivel_clave": {
+          "precio": 6800,
+          "tipo": "Soporte clave"
+        },
+        "regimen": "HAWKISH LEVE",
+        "geo_factores": [
+          "Risk-off",
+          "Impacto en earnings"
+        ],
+        "nota_tecnica": "Conflicto Irán presiona. Soporte $6800 clave.",
+        "cambio_pct_24h": -0.2,
+        "cambio_pct_7d": -0.61,
+        "cambio_pct_30d": -0.85,
+        "timestamp": "2026-04-15T13:06:06.835611"
+      },
+      "NDX": {
+        "activo": "NDX",
+        "precio_actual": 26045.49,
+        "direccion": "BAJA",
+        "probabilidad": 66,
+        "target_24h": 25921.77,
+        "target_7d": 25829.31,
+        "target_30d": 25744.01,
+        "rango_24h_bajo": 25452.95,
+        "rango_24h_alto": 26390.59,
+        "rango_7d_bajo": 24797.91,
+        "rango_7d_alto": 26860.71,
+        "rango_30d_bajo": 23634.33,
+        "rango_30d_alto": 27853.69,
+        "soporte_1": 25000,
+        "resistencia_1": 27000,
+        "nivel_clave": {
+          "precio": 25000,
+          "tipo": "Soporte clave"
+        },
+        "regimen": "HAWKISH LEVE",
+        "geo_factores": [
+          "Amplifica SPX",
+          "Tech más expuesto a China"
+        ],
+        "nota_tecnica": "Alta sensibilidad a tasas. Amplifica SPX x1.3.",
+        "cambio_pct_24h": -0.47,
+        "cambio_pct_7d": -0.83,
+        "cambio_pct_30d": -1.16,
+        "timestamp": "2026-04-15T13:06:06.835611"
+      },
+      "Gold": {
+        "activo": "Gold",
+        "precio_actual": 4817.2,
+        "direccion": "SUBE",
+        "probabilidad": 60,
+        "target_24h": 4828.16,
+        "target_7d": 4842.01,
+        "target_30d": 4855.44,
+        "rango_24h_bajo": 4779.99,
+        "rango_24h_alto": 4876.33,
+        "rango_7d_bajo": 4736.03,
+        "rango_7d_alto": 4947.99,
+        "rango_30d_bajo": 4638.67,
+        "rango_30d_alto": 5072.21,
+        "soporte_1": 4600,
+        "resistencia_1": 5000,
+        "nivel_clave": {
+          "precio": 5000,
+          "tipo": "Resistencia clave"
+        },
+        "regimen": "HAWKISH LEVE",
+        "geo_factores": [
+          "Demanda de refugio",
+          "Refugio ante incertidumbre"
+        ],
+        "nota_tecnica": "Refugio activo. Irán + FED hawkish = soporte fuerte.",
+        "cambio_pct_24h": 0.23,
+        "cambio_pct_7d": 0.52,
+        "cambio_pct_30d": 0.79,
+        "timestamp": "2026-04-15T13:06:06.835611"
+      },
+      "Silver": {
+        "activo": "Silver",
+        "precio_actual": 79.43,
+        "direccion": "SUBE",
+        "probabilidad": 60,
+        "target_24h": 79.52,
+        "target_7d": 79.79,
+        "target_30d": 80.01,
+        "rango_24h_bajo": 78.09,
+        "rango_24h_alto": 80.95,
+        "rango_7d_bajo": 76.64,
+        "rango_7d_alto": 82.94,
+        "rango_30d_bajo": 73.58,
+        "rango_30d_alto": 86.44,
+        "soporte_1": 31.0,
+        "resistencia_1": 36.0,
+        "nivel_clave": {
+          "precio": 36.0,
+          "tipo": "Resistencia clave"
+        },
+        "regimen": "HAWKISH LEVE",
+        "geo_factores": [
+          "Amplifica Gold"
+        ],
+        "nota_tecnica": "Amplifica Gold x1.5. Componente industrial sensible a guerra.",
+        "cambio_pct_24h": 0.12,
+        "cambio_pct_7d": 0.45,
+        "cambio_pct_30d": 0.73,
+        "timestamp": "2026-04-15T13:06:06.835611"
+      },
+      "WTI": {
+        "activo": "WTI",
+        "precio_actual": 92.27,
+        "direccion": "SUBE",
+        "probabilidad": 60,
+        "target_24h": 92.59,
+        "target_7d": 92.92,
+        "target_30d": 93.15,
+        "rango_24h_bajo": 90.28,
+        "rango_24h_alto": 94.9,
+        "rango_7d_bajo": 87.85,
+        "rango_7d_alto": 97.99,
+        "rango_30d_bajo": 82.77,
+        "rango_30d_alto": 103.53,
+        "soporte_1": 85.0,
+        "resistencia_1": 100.0,
+        "nivel_clave": {
+          "precio": 100.0,
+          "tipo": "Resistencia clave"
+        },
+        "regimen": "HAWKISH LEVE",
+        "geo_factores": [
+          "Prima de riesgo energético"
+        ],
+        "nota_tecnica": 

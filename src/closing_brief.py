@@ -77,39 +77,59 @@ def obtener_performance_dia() -> dict:
 
 # ── Cargar predicciones del Morning Brief ─────────────────────────
 def cargar_predicciones_morning() -> str:
-    """Carga las predicciones del Morning Brief de hoy para compararlas."""
+    """Carga predicciones del Morning Brief Y targets de price_targets."""
+    hoy       = datetime.now().strftime("%Y-%m-%d")
+    resultado = []
+
+    # 1. Cargar targets de price_targets.py
+    targets_file = "data/price_targets_historico.json"
+    if os.path.exists(targets_file):
+        try:
+            with open(targets_file) as f:
+                historico = json.load(f)
+            # Buscar predicción de hoy
+            pred_hoy = next(
+                (e for e in reversed(historico)
+                 if e.get("fecha_prediccion") == hoy), None
+            )
+            if pred_hoy:
+                resultado.append("TARGETS KAIROS DE HOY:")
+                for activo, t in pred_hoy.get("predicciones", {}).items():
+                    dir_ = t.get("direccion", "MIXTO")
+                    prob = t.get("probabilidad", 50)
+                    t24h = t.get("target_24h", t.get("precio_actual", 0))
+                    resultado.append(
+                        f"  {activo}: {dir_} ({prob}%) → target {t24h}"
+                    )
+        except Exception as e:
+            resultado.append(f"Error targets: {e}")
+
+    # 2. Cargar Morning Brief si existe
     brief_file = "data/ultimo_brief.json"
-    if not os.path.exists(brief_file):
-        return "Sin Morning Brief disponible hoy"
+    if os.path.exists(brief_file):
+        try:
+            with open(brief_file) as f:
+                data = json.load(f)
+            if data.get("fecha") == hoy:
+                brief = data.get("brief", "")
+                lineas = brief.split("\n")
+                pred_lineas = []
+                en_pred = False
+                for linea in lineas:
+                    if "SESIÓN DE HOY" in linea or "QUÉ ESPERAR" in linea:
+                        en_pred = True
+                    if en_pred and linea.strip().startswith("**"):
+                        if any(x in linea for x in ["NIVELES","EVENTOS","RIESGO","IDEA"]):
+                            break
+                    if en_pred:
+                        pred_lineas.append(linea)
+                if pred_lineas:
+                    resultado.append("\nMORNING BRIEF PREDICCIONES:")
+                    resultado.extend(pred_lineas[:15])
+        except Exception:
+            pass
 
-    try:
-        with open(brief_file) as f:
-            data = json.load(f)
-
-        hoy   = datetime.now().strftime("%Y-%m-%d")
-        fecha = data.get("fecha", "")
-
-        if fecha != hoy:
-            return "Morning Brief de ayer — sin predicciones del día actual"
-
-        brief = data.get("brief", "")
-        # Extraer solo la sección de predicciones
-        lineas = brief.split('\n')
-        pred_lineas = []
-        en_pred = False
-        for linea in lineas:
-            if "SESIÓN DE HOY" in linea or "QUÉ ESPERAR" in linea:
-                en_pred = True
-            if en_pred and linea.strip().startswith("**") and "SESIÓN" not in linea and "ESPERAR" not in linea:
-                if any(x in linea for x in ["NIVELES", "EVENTOS", "RIESGO", "IDEA"]):
-                    break
-            if en_pred:
-                pred_lineas.append(linea)
-
-        return "\n".join(pred_lineas[:25]) if pred_lineas else "Predicciones no disponibles"
-
-    except Exception as e:
-        return f"Error cargando predicciones: {e}"
+    return "\n".join(resultado) if resultado else "Sin predicciones disponibles hoy"
 
 
 # ── Generar Closing Brief ─────────────────────────────────────────

@@ -440,7 +440,7 @@ def guardar_prediccion(targets: dict):
     historico = historico[-90:]  # Máximo 90 días de historial
 
     with open(TARGETS_FILE, "w") as f:
-        json.dump(historico, f, ensure_ascii=False, indent=2)
+        json.dump(historico, f, ensure_ascii=True, indent=2)
 
 
 def formatear_targets_telegram(targets: dict) -> str:
@@ -544,7 +544,7 @@ def evaluar_aciertos() -> dict:
 
     # Guardar historial actualizado
     with open(TARGETS_FILE, "w") as f:
-        json.dump(historico, f, ensure_ascii=False, indent=2)
+        json.dump(historico, f, ensure_ascii=True, indent=2)
 
     # Calcular precisión promedio
     resultado = {}
@@ -558,6 +558,115 @@ def evaluar_aciertos() -> dict:
         )
 
     return resultado
+
+
+# ── Targets fusionados: técnico + macro ──────────────────────────
+def calcular_targets_fusionados(regimen_macro: str = "NEUTRO",
+                                  tono_fed: str = "HAWKISH LEVE",
+                                  situaciones_activas: list = None) -> dict:
+    """
+    Combina análisis técnico real + análisis macro para targets finales.
+    El técnico da la dirección del precio.
+    El macro da el contexto que amplifica o amortigua.
+
+    Ponderación final:
+      40% Análisis técnico (RSI, MACD, EMAs, Bollinger)
+      30% Régimen macro + FED/BCE
+      20% Geopolítica activa
+      10% Precedentes históricos
+    """
+    # Obtener análisis técnico real
+    tecnico = {}
+    try:
+        from analisis_tecnico import analizar_todos
+        print("  Calculando indicadores técnicos...")
+        tecnico = analizar_todos()
+    except Exception as e:
+        print(f"  Técnico no disponible: {e}")
+
+    # Obtener targets macro base
+    macro_targets = calcular_todos_los_targets(
+        regimen_macro, tono_fed, situaciones_activas
+    )
+
+    targets_finales = {}
+
+    for activo, macro_t in macro_targets.items():
+        tec = tecnico.get(activo, {})
+
+        if not tec:
+            targets_finales[activo] = macro_t
+            continue
+
+        precio = macro_t["precio_actual"]
+
+        # ── Fusión de señales ─────────────────────────────────────
+        # El técnico da target basado en ATR real
+        # El macro ajusta según régimen y geopolítica
+        tec_24h = tec.get("target_24h", precio)
+        mac_24h = macro_t["target_24h"]
+        tec_7d  = tec.get("target_7d",  precio)
+        mac_7d  = macro_t["target_7d"]
+        tec_30d = tec.get("target_30d", precio)
+        mac_30d = macro_t["target_30d"]
+
+        # Ponderación 40% técnico, 60% macro
+        target_24h = round(tec_24h * 0.40 + mac_24h * 0.60, 2)
+        target_7d  = round(tec_7d  * 0.40 + mac_7d  * 0.60, 2)
+        target_30d = round(tec_30d * 0.40 + mac_30d * 0.60, 2)
+
+        # Dirección consolidada
+        dir_tec   = tec.get("señal", "NEUTRAL")
+        dir_mac   = macro_t["direccion"]
+        conf_tec  = tec.get("confianza", 50)
+        conf_mac  = macro_t["probabilidad"]
+
+        # Si ambos coinciden — alta confianza
+        if dir_tec == "ALCISTA" and dir_mac == "SUBE":
+            dir_final  = "SUBE"
+            confianza  = min(round((conf_tec + conf_mac) / 2 + 10), 88)
+        elif dir_tec == "BAJISTA" and dir_mac == "BAJA":
+            dir_final  = "BAJA"
+            confianza  = min(round((conf_tec + conf_mac) / 2 + 10), 88)
+        elif dir_tec == "NEUTRAL" or dir_mac == "MIXTO":
+            dir_final  = "MIXTO"
+            confianza  = 50
+        else:
+            # Conflicto entre técnico y macro — usar el más fuerte
+            if conf_tec > conf_mac:
+                dir_final = "SUBE" if dir_tec == "ALCISTA" else "BAJA"
+                confianza = round(conf_tec * 0.7)
+            else:
+                dir_final = dir_mac
+                confianza = round(conf_mac * 0.7)
+
+        # Rangos usando ATR real
+        atr = tec.get("atr", abs(precio * 0.01))
+        targets_finales[activo] = {
+            **macro_t,
+            "target_24h":    target_24h,
+            "target_7d":     target_7d,
+            "target_30d":    target_30d,
+            "direccion":     dir_final,
+            "probabilidad":  confianza,
+
+            # Rangos con ATR real
+            "rango_24h_bajo": round(target_24h - atr, 2),
+            "rango_24h_alto": round(target_24h + atr, 2),
+            "rango_7d_bajo":  round(target_7d  - atr * 2, 2),
+            "rango_7d_alto":  round(target_7d  + atr * 2, 2),
+
+            # Indicadores técnicos para el dashboard
+            "rsi":           tec.get("rsi", 50),
+            "macd_cruce":    tec.get("macd_cruce", "NEUTRAL"),
+            "soporte_real":  tec.get("soporte", macro_t.get("soporte_1")),
+            "resist_real":   tec.get("resistencia", macro_t.get("resistencia_1")),
+            "señal_tecnica": tec.get("señal", "NEUTRAL"),
+            "confianza_tec": conf_tec,
+            "fuente":        "TÉCNICO + MACRO",
+        }
+
+    return targets_finales
 
 
 # ── Test ──────────────────────────────────────────────────────────
