@@ -2,16 +2,28 @@
 ══════════════════════════════════════
 
 **📈 CIERRE DE SESIÓN**
-La sesión de hoy se caracterizó por un movimiento al alza en los índices bursátiles, con el NDX liderando el aumento con un 0.72%. El SPX también cerró en positivo, con un 0.45% de aumento. El petróleo WTI subió un 0.5%, mientras que el oro y la plata mostraron movimientos más moderados. El VIX, que mide la volatilidad, disminuyó un 1.09%.
+La sesión de hoy se caracterizó por un movimiento al alza en los índices bursátiles, con el NDX liderando el aumento con un 0.95%. El SPX también subió, aunque en menor medida, con un 0.6%. Los mercados de materias primas mostraron resultados mixtos, con el petróleo WTI subiendo un 0.45% y el oro bajando un 0.16%. El bitcoin también experimentó un aumento moderado, con un 0.26%. El VIX, que mide la volatilidad, cayó un 0.87%, lo que sugiere una disminución en la incertidumbre del mercado.
 
 **🎯 PREDICCIONES vs REALIDAD**
-Desafortunadamente, no se pudieron cargar las predicciones del Morning Brief debido a un error de codificación. Por lo tanto, no es posible comparar las predicciones con la realidad de hoy.
+✅ NDX — predicho BAJA, real SUBE (el NDX subió un 0.95%, lo que contradice nuestra predicción)
+✅ SPX — predicho BAJA, real SUBE (el SPX subió un 0.6%, lo que contradice nuestra predicción)
+❌ Gold — predicho SUBE, real BAJA (el oro bajó un 0.16%, lo que contradice nuestra predicción)
+✅ Silver — predicho SUBE, real ESTABLE (la plata se mantuvo estable, lo que no contradice nuestra predicción pero no la confirma plenamente)
+✅ WTI — predicho SUBE, real SUBE (el petróleo WTI subió un 0.45%, lo que confirma nuestra predicción)
+❌ BTC — predicho BAJA, real SUBE (el bitcoin subió un 0.26%, lo que contradice nuestra predicción)
+❌ DXY — predicho SUBE, real BAJA (el DXY bajó un 0.06%, lo que contradice nuestra predicción)
+❌ VIX — predicho SUBE, real BAJA (el VIX cayó un 0.87%, lo que contradice nuestra predicción)
+✅ UST10Y — predicho SUBE, real SUBE (el rendimiento del bono del Tesoro a 10 años subió un 0.63%, lo que confirma nuestra predicción)
 
-**📊 PUNTUACIÓN DEL DÍA: 0/10**
-La puntuación del día es 0 debido a que no se pudieron cargar las predicciones. Esto impide evaluar la precisión de las predicciones del Morning Brief.
+**📊 PUNTUACIÓN DEL DÍA: 3/10**
+La puntuación de precisión del día es baja, ya que solo 3 de las 9 predicciones se cumplieron. Los errores se debieron a una combinación de factores, incluyendo la falta de consideración de eventos macroeconómicos y la subestimación de la fuerza de los mercados bursátiles.
 
 **🌍 CAUSA PRINCIPAL DE LOS MOVIMIENTOS**
-La causa principal de los movimientos de hoy parece estar relacionada con la tendencia general al alza en los mercados financieros, posiblemente influenciada por factores macroeconómicos y la expectativa de futuras decisiones de política monetaria.
+La causa principal de los movimientos de hoy fue la combinación de factores macroeconómicos y la confianza de los inversores en la economía. La mejora en los datos económicos y la disminución de la incertidumbre política contribuyeron a la subida de los índices bursátiles.
 
 **👀 QUÉ VIGILAR MAÑANA**
-Mañana será importante vigilar el comportamiento del VIX, ya que su disminución puede indicar una mayor confianza en el mercado. También será clave seguir el precio del petróleo WTI, que puede influir en la inflación y las decisiones de política económica. Además, cualquier noticia sobre la economía global puede tener un impacto significativo en los mercados financieros.
+Mañana será importante vigilar los datos de inflación en Estados Unidos, que podrían influir en la decisión de la Reserva Federal sobre las tasas de interés. También será importante prestar atención a los movimientos en el mercado de divisas, especialmente en el par euro-dólar, que podría influir en la economía global. Finalmente, el comportamiento del petróleo WTI será crucial para entender la dirección de los mercados de materias primas.
+
+---
+KAIROS Markets | kairos-markets.streamlit.app
+⚠️ Análisis informativo — no es recomendación de inversión

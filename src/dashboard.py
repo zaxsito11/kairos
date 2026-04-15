@@ -8,6 +8,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(__file__))
 
 from fed_scraper    import obtener_comunicado_fed
+from price_targets  import calcular_targets_fusionados
 from bce_scraper    import obtener_comunicado_bce
 from analizador     import analizar_comunicado
 from precios        import obtener_precios, detectar_correlaciones_activas
@@ -276,6 +277,65 @@ if precios:
                     f'<div class="corr-efecto">{efectos}</div>'
                     f'</div>', unsafe_allow_html=True
                 )
+
+st.divider()
+
+# ── TARGETS DE PRECIO ──────────────────────────────────────────────
+st.subheader("🎯 Targets de Precio")
+st.caption("Técnico (RSI/MACD/EMA/ATR) + macro + geopolítica — actualizado cada hora")
+
+col_t1, col_t2 = st.columns([3, 1])
+with col_t1:
+    if st.button("📊 Calcular Targets", use_container_width=True):
+        with st.spinner("Calculando análisis técnico + macro..."):
+            try:
+                from news_scanner import SITUACIONES_ACTIVAS
+                sits = [{"nombre":s["nombre"],"tipo":s["tipo"]}
+                        for s in SITUACIONES_ACTIVAS if not s["resuelto"]]
+                tgts = calcular_targets_fusionados(
+                    regimen_macro=regimen.get("regimen","NEUTRO"),
+                    tono_fed="HAWKISH LEVE",
+                    situaciones_activas=sits
+                )
+                st.session_state["targets"] = tgts
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+if "targets" in st.session_state:
+    tgts = st.session_state["targets"]
+    orden = ["SPX","NDX","Gold","Silver","WTI","BTC","DXY","VIX"]
+    cols_targets = st.columns(4)
+    for idx, nombre_t in enumerate([a for a in orden if a in tgts]):
+        t = tgts[nombre_t]
+        dir_  = t.get("direccion","MIXTO")
+        prob  = t.get("probabilidad",50)
+        rsi   = t.get("rsi",50)
+        t24h  = t.get("target_24h",0)
+        t7d   = t.get("target_7d",0)
+        sop   = t.get("soporte_real", t.get("soporte_1",0))
+        res   = t.get("resist_real",  t.get("resistencia_1",0))
+        color = "#00d4aa" if dir_=="SUBE" else "#ff4b4b" if dir_=="BAJA" else "#ffa500"
+        emoji = "📈" if dir_=="SUBE" else "📉" if dir_=="BAJA" else "↔️"
+        with cols_targets[idx % 4]:
+            st.markdown(
+                f'<div style="background:#1a1f2e;border-radius:8px;padding:0.8rem;'
+                f'border-left:3px solid {color};margin-bottom:8px">'
+                f'<div style="color:#8892a4;font-size:0.7rem;font-weight:700">{nombre_t}</div>'
+                f'<div style="color:{color};font-weight:700">{emoji} {dir_} ({prob}%)</div>'
+                f'<div style="color:#c9d1d9;font-size:0.75rem">RSI:{rsi}</div>'
+                f'<div style="color:#00d4aa;font-size:0.75rem">24h:{t24h}</div>'
+                f'<div style="color:#8892a4;font-size:0.72rem">7d:{t7d}</div>'
+                f'<div style="color:#8892a4;font-size:0.7rem">Sop:{sop}|Res:{res}</div>'
+                f'</div>', unsafe_allow_html=True
+            )
+
+with col_t2:
+    st.caption("Ponderacion:")
+    st.caption("40% Tecnico RSI/MACD/EMA")
+    st.caption("30% Macro FED/BCE")
+    st.caption("20% Geopolitica")
+    st.caption("10% Historicos")
+    st.caption("No es recomendacion de inversion")
 
 st.divider()
 
