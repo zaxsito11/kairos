@@ -2,51 +2,54 @@
 ════════════════════════════════════
 
 **⚡ RESUMEN EJECUTIVO**
-La sesión anterior mostró un mercado cauteloso con el SPX cerrando en 6982.88, un aumento de 0.23%. El VIX disminuyó un 3.7% a 17.68. El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo factores de incertidumbre.
+El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo los eventos de mayor impacto. La sorpresa dovish en Core CPI y Core PCE puede influir en la decisión de la FED.
 
 **🌍 CONTEXTO MACRO Y GEOPOLÍTICO**
-El régimen macro se mantiene en neutro, con un contexto macro equilibrado pero con presiones geopolíticas. El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo factores clave. La crisis energética con el WTI en $91.17 también es un factor a considerar. El tono del FED se mantiene ligeramente hawkish.
+El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China dominan el escenario geopolítico. El régimen macro es neutro, con la curva de rendimiento normal y el Core PCE por encima del objetivo de la FED. La situación energética sigue siendo tensa, con el WTI en $91.41.
 
 **📈 MERCADOS — SESIÓN ANTERIOR**
-El SPX aumentó 0.23% a 6982.88, mientras que el NDX subió 0.15% a 25880.88. El Gold disminuyó 0.2% a 4839.8, y el Silver cayó 0.49% a 79.53. El WTI aumentó 0.25% a 91.17, y el BTC subió 0.08% a 74270.34. El DXY disminuyó 0.02% a 98.15.
+SPX: 7015.07 (0.69% ▲) - La bolsa sigue en tendencia alcista.
+NDX: 26115.8 (1.06% ▲) - El sector tecnológico lidera el crecimiento.
+Gold: 4815.8 (-0.7% ▼) - El oro cae debido a la fortaleza del dólar.
+Silver: 79.4 (-0.65% ▼) - La plata sigue la tendencia del oro.
+WTI: 91.41 (0.52% ▲) - El petróleo sube por la tensión en el Medio Oriente.
+BTC: 74332.73 (0.16% ▲) - El bitcoin sigue en una tendencia lateral.
+DXY: 98.06 (-0.11% ▼) - El dólar cae ligeramente.
+VIX: 18.1 (-1.42% ▼) - La volatilidad disminuye.
 
 **🔮 SESIÓN DE HOY — QUÉ ESPERAR**
 ÍNDICES:
-SPX    → Baja (55%) — Debido a la incertidumbre geopolítica y la posible subida de tasas.
-NDX    → Baja (60%) — Más sensible a las tasas y la situación geopolítica.
-VIX    → Alta (58%) — Termómetro del miedo que puede aumentar con la incertidumbre.
+SPX    → Alta (60%) | Target: 7050 | S:6950 R:7100 — La tendencia alcista sigue.
+NDX    → Alta (65%) | Target: 26300 | Amplifica SPX — El sector tecnológico lidera.
+VIX    → Baja (55%) | Target: 17.5 | La calma en los mercados sigue.
 
 METALES:
-Gold   → Alta (52%) — Refugio seguro en tiempos de incertidumbre.
-Silver → Alta (55%) — Amplifica el movimiento del Gold.
+Gold   → Baja (58%) | Target: 4780 | OBV: negativo — La debilidad del oro continúa.
+Silver → Baja (60%) | Target: 78.5 | Amplifica Gold — La plata sigue la tendencia del oro.
 
 ENERGÍA:
-WTI    → Alta (50%) — Sensible al conflicto Irán/Ormuz y la crisis energética.
+WTI    → Alta (62%) | Target: 92.5 | La tensión en el Medio Oriente sigue.
 
 CRYPTO:
-BTC    → Baja (53%) — Correlación risk-on/risk-off y beta alto.
+BTC    → Alta (55%) | Target: 75000 | La tendencia lateral sigue.
 
 DIVISAS Y BONOS:
-DXY    → Alta (51%) — Puede subir con la incertidumbre y la posible subida de tasas.
-UST10Y → Baja (49%) — Termómetro de política monetaria que puede caer con la subida de tasas.
+DXY    → Baja (52%) | Target: 97.8 | La debilidad del dólar continúa.
+UST10Y → Alta (58%) | Target: 4.32 | La tendencia alcista de las tasas sigue.
 
 **🎯 NIVELES CLAVE A VIGILAR HOY**
-- SPX: Soporte en 6950, resistencia en 7050.
-- NDX: Nivel clave en 25700.
-- Gold: Nivel psicológico en $4850.
-- WTI: Nivel de crisis energética en $95.
-- VIX: Umbral de alerta en 20.
-- BTC: Nivel de correlación con risk assets en $73000.
+- SPX: 6950 (soporte) y 7100 (resistencia)
+- NDX: 26000 (soporte) y 26500 (resistencia)
+- Gold: $4800 (soporte) y $4900 (resistencia)
+- WTI: $90 (soporte) y $95 (resistencia)
+- VIX: 18 (precaución) y 20 (alerta)
+- BTC: $73000 (soporte) y $76000 (resistencia)
 
 **📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**
-No hay eventos programados para hoy, por lo que la sesión depende de noticias sorpresa.
+No hay eventos programados para hoy.
 
 **⚠️ RIESGO DEL DÍA: MEDIO**
-La incertidumbre geopolítica y la posible subida de tasas mantienen el riesgo en medio.
+La tensión geopolítica y la incertidumbre sobre la decisión de la FED mantienen el riesgo en nivel medio.
 
 **💡 IDEA DIRECCIONAL**
-La dirección que los datos sugieren con más fuerza es una posible baja en el SPX debido a la incertidumbre geopolítica y la posible subida de tasas, con el Gold como refugio seguro.
-
----
-KAIROS Markets | kairos-markets.streamlit.app
-⚠️ Análisis informativo — no es recomendación de inversión
+La tendencia alcista en el SPX y el NDX sugiere que los inversores siguen confiando en la economía, a pesar de la tensión geopolítica. El oro y la plata pueden seguir cayendo si el dólar se fortalece.

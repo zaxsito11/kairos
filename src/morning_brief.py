@@ -389,27 +389,31 @@ SPX | NDX | Gold | Silver | WTI | BTC | DXY | VIX
 Conecta los movimientos con el contexto macro y geopolítico.]
 
 **🔮 SESIÓN DE HOY — QUÉ ESPERAR**
-[Predicción por activo usando precedentes históricos + priced-in.
-Cubre TODOS estos activos con dirección y probabilidad:
+[Usa los targets calculados del bloque anterior como BASE.
+Para cada activo indica: dirección, target 24h, nivel clave y razón.
+Formato EXACTO:
 
 ÍNDICES:
-SPX    → Dirección (prob%) — Razón
-NDX    → Dirección (prob%) — Razón (amplifica SPX, más sensible a tasas)
-VIX    → Dirección (prob%) — Razón (termómetro del miedo)
+SPX    → [dir] ([prob%]) | Target: [t24h] | S:[sop] R:[res] — [razón macro+técnica]
+NDX    → [dir] ([prob%]) | Target: [t24h] | Amplifica SPX — [razón]
+VIX    → [dir] ([prob%]) | Target: [t24h] | [razón: miedo/calma]
 
 METALES:
-Gold   → Dirección (prob%) — Razón
-Silver → Dirección (prob%) — Razón (amplifica Gold x1.5, componente industrial)
+Gold   → [dir] ([prob%]) | Target: [t24h] | OBV:[obv] — [razón]
+Silver → [dir] ([prob%]) | Target: [t24h] | Amplifica Gold — [razón]
 
 ENERGÍA:
-WTI    → Dirección (prob%) — Razón (muy sensible al conflicto Irán/Ormuz)
+WTI    → [dir] ([prob%]) | Target: [t24h] | [razón Irán/OPEC]
 
 CRYPTO:
-BTC    → Dirección (prob%) — Razón (correlación risk-on/risk-off, beta alto)
+BTC    → [dir] ([prob%]) | Target: [t24h] | [razón risk-on/off]
 
 DIVISAS Y BONOS:
-DXY    → Dirección (prob%) — Razón
-UST10Y → Dirección (prob%) — Razón (yield 10Y — termómetro de política monetaria)]
+DXY    → [dir] ([prob%]) | Target: [t24h] | [razón FED/macro]
+UST10Y → [dir] ([prob%]) | Target: [t24h] | [razón tasas]
+
+IMPORTANTE: Si el RSI indica sobrecompra/sobreventa, mencionarlo.
+Si el volumen no confirma la señal, advertirlo con ⚠️]
 
 **🎯 NIVELES CLAVE A VIGILAR HOY**
 [5-6 niveles técnicos macro con su significado:
