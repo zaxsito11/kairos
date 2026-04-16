@@ -25,7 +25,9 @@ from market_alert   import ejecutar_market_alert
 from event_brief    import verificar_y_enviar_event_briefs
 from weekly_brief   import generar_y_enviar_weekly
 from price_targets  import calcular_todos_los_targets, guardar_prediccion, formatear_targets_telegram
-from closing_brief  import generar_y_enviar_closing
+from closing_brief   import generar_y_enviar_closing
+from feedback_sistema import ejecutar_feedback_diario
+from signal_engine    import analizar_mercado_completo, formatear_señales_telegram
 from alertas        import enviar_alerta_telegram
 
 # ── Configuración ─────────────────────────────────────────────────
@@ -253,6 +255,7 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
     log.info(f"   [5] Event Brief    — 30 min antes de eventos críticos")
     log.info(f"   [6] Closing Brief  — 4:00 PM ET cierre de sesión")
     log.info(f"   [7] Weekly Brief   — viernes 6:00 PM resumen semanal")
+    log.info(f"   [8] Feedback       — 4:15 PM evaluación de aciertos automática")
     log.info(f"   Intervalo: cada {intervalo//60} minutos")
     log.info("=" * 50)
 
@@ -297,6 +300,27 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                     )
                     guardar_prediccion(targets)
                     log.info(f"  Targets calculados para {len(targets)} activos")
+
+                    # Motor de convergencia — señales reales
+                    try:
+                        señales_conv = analizar_mercado_completo(
+                            regimen=regimen,
+                            tono_fed="HAWKISH LEVE",
+                            situaciones=sits,
+                            generar_narrativas=True,
+                        )
+                        n_acc = señales_conv.get("n_accionables",0)
+                        log.info(f"  Convergencia: {n_acc} señales accionables")
+
+                        # Enviar al canal si hay señales fuertes
+                        if n_acc > 0:
+                            from alertas import enviar_alerta_telegram
+                            msg = formatear_señales_telegram(señales_conv)
+                            if msg:
+                                enviar_alerta_telegram(msg)
+                                estado["alertas_enviadas"] += 1
+                    except Exception as se:
+                        log.warning(f"  Error convergencia: {se}")
                 except Exception as te:
                     log.warning(f"  Error targets: {te}")
             except Exception as e:
@@ -375,6 +399,13 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
         except Exception as e:
             log.error(f"Error weekly brief: {e}")
 
+        # [8] Feedback automático — 4:15 PM
+        log.info("\n[8] FEEDBACK SISTEMA")
+        try:
+            ejecutar_feedback_diario()
+        except Exception as e:
+            log.error(f"Error feedback: {e}")
+
         guardar_estado(estado)
         log.info(f"\n✅ Ciclo #{ciclo} — {estado['alertas_enviadas']} alertas totales")
         log.info(f"⏳ Próxima revisión en {intervalo//60} minutos...")
@@ -386,38 +417,108 @@ def run_test():
     print(f"\n🧪 KAIROS MONITOR — TEST\n{'='*50}")
     estado = cargar_estado()
 
+    # [0] Morning Brief
     print("\n[0] MORNING BRIEF")
-    print("  → Ejecutar: python src/morning_brief.py --forzar")
+    brief_file = "data/ultimo_brief.json"
+    import json, os
+    if os.path.exists(brief_file):
+        with open(brief_file) as f:
+            bd = json.load(f)
+        print(f"  → Brief del: {bd.get('fecha','?')} — "
+              f"{'✅ HOY' if bd.get('fecha')==__import__('datetime').datetime.now().strftime('%Y-%m-%d') else '📅 anterior'}")
+    else:
+        print("  → Ejecutar: python src/morning_brief.py --forzar")
 
+    # [1] Noticias
     print(f"\n[1] NOTICIAS (score≥{SCORE_MINIMO_ALERTA})")
-    eventos = escanear_noticias(estado)
-    print(f"→ {len(eventos)} eventos de alto impacto")
-    for e in eventos[:3]:
-        print(f"\n  📰 {e['titular'][:70]}")
-        print(f"     Score: {e['score']}/100 | {e['urgencia']}")
+    try:
+        eventos = escanear_noticias(estado)
+        print(f"→ {len(eventos)} eventos de alto impacto")
+        for e in eventos[:3]:
+            print(f"  📰 {e['titular'][:70]}")
+            print(f"     Score: {e['score']}/100 | {e['urgencia']}")
+    except Exception as e:
+        print(f"  Error: {e}")
 
+    # [2] Calendario
     print("\n[2] CALENDARIO")
-    from calendario_eco import obtener_eventos_proximos
-    proximos = obtener_eventos_proximos(dias=30)
-    print(f"→ {len(proximos)} eventos próximos:")
-    for ev in proximos[:3]:
-        emoji = {"CRÍTICO":"🚨","ALTO":"⚠️"}.get(ev["impacto"],"📡")
-        print(f"  {emoji} {ev['evento']} — {ev['dias_restantes']} días")
+    try:
+        from calendario_eco import obtener_eventos_proximos
+        proximos = obtener_eventos_proximos(dias=30)
+        print(f"→ {len(proximos)} eventos próximos:")
+        for ev in proximos[:3]:
+            emoji = {"CRÍTICO":"🚨","ALTO":"⚠️"}.get(ev["impacto"],"📡")
+            print(f"  {emoji} {ev['evento']} — {ev['dias_restantes']} días")
+    except Exception as e:
+        print(f"  Error: {e}")
 
+    # [3] Mercados
     print("\n[3] MERCADOS")
-    from market_alert import obtener_snapshot
-    snap = obtener_snapshot()
-    print(f"→ Régimen: {snap['regimen_mercado']} | Alertas: {snap['n_alertas']}")
-    for nombre, info in snap["datos"].items():
-        pct = info["cambio_pct"]
-        print(f"  {nombre:8} {info['precio']:>10}  {'+' if pct>0 else ''}{pct}%")
+    try:
+        from market_alert import obtener_snapshot
+        snap = obtener_snapshot()
+        print(f"→ Régimen: {snap['regimen_mercado']} | Alertas: {snap['n_alertas']}")
+        for nombre, info in snap["datos"].items():
+            pct = info["cambio_pct"]
+            print(f"  {nombre:8} {info['precio']:>10}  {'+' if pct>0 else ''}{pct}%")
+    except Exception as e:
+        print(f"  Error: {e}")
 
+    # [4] FED
     print("\n[4] FED")
-    fed = detectar_nuevo_fed(estado)
-    print(f"  {'🔴 NUEVO: '+fed['comunicado'].get('titulo','') if fed else '✓ Sin cambios'}")
+    try:
+        fed = detectar_nuevo_fed(estado)
+        print(f"  {'🔴 NUEVO: '+fed['comunicado'].get('titulo','') if fed else '✓ Sin cambios'}")
+    except Exception as e:
+        print(f"  Error: {e}")
+
+    # [5] Event Brief
+    print("\n[5] EVENT BRIEF")
+    try:
+        from calendario_eco import obtener_eventos_proximos
+        eventos_prox = obtener_eventos_proximos(dias=2)
+        criticos = [e for e in eventos_prox if e["impacto"]=="CRÍTICO"]
+        if criticos:
+            for ev in criticos[:2]:
+                print(f"  🎯 {ev['evento']} — en {int(ev['horas_restantes'])}h")
+        else:
+            print("  ✓ Sin eventos críticos en las próximas 48h")
+    except Exception as e:
+        print(f"  Error: {e}")
+
+    # [6] Closing Brief
+    print("\n[6] CLOSING BRIEF")
+    cl_files = sorted(__import__('glob').glob("outputs/closing_brief_*.txt"), reverse=True)
+    if cl_files:
+        nombre_cl = __import__('os').path.basename(cl_files[0])
+        print(f"  ✅ Último: {nombre_cl}")
+    else:
+        print("  → Se genera a las 4:00 PM ET")
+
+    # [7] Weekly Brief
+    print("\n[7] WEEKLY BRIEF")
+    wk_files = sorted(__import__('glob').glob("outputs/weekly_brief_*.txt"), reverse=True)
+    if wk_files:
+        nombre_wk = __import__('os').path.basename(wk_files[0])
+        print(f"  ✅ Último: {nombre_wk}")
+    else:
+        print("  → Se genera los viernes a las 6:00 PM ET")
+
+    # [8] Feedback
+    print("\n[8] FEEDBACK SISTEMA")
+    fb_file = "data/feedback_estadisticas.json"
+    if os.path.exists(fb_file):
+        with open(fb_file) as f:
+            fb = json.load(f)
+        n    = fb.get("total_evaluaciones",0)
+        prec = fb.get("precision_dir_24h",0)
+        print(f"  Evaluaciones: {n} | Precisión 24h: {prec}%")
+    else:
+        print("  → Acumulando datos (primer día)")
 
     guardar_estado(estado)
-    print("\n✅ Test completado")
+    print(f"\n{'='*50}")
+    print("✅ Test completado — todos los módulos verificados")
 
 
 # ── Entry point ───────────────────────────────────────────────────

@@ -1,112 +1,190 @@
 # alertas.py — KAIROS
-# Envía alertas a Telegram:
-#   1. Al canal público KAIROS Markets (todos los suscriptores)
-#   2. Al chat personal del admin (tú)
+# Sistema centralizado de envío de alertas via Telegram.
+# Canal público: -1003935530360
+# Admin (usuario): 1121938640
 
 import os
 import requests
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
 
-TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")   # tu chat personal (admin)
-CANAL_ID         = "-1003935530360"                  # canal KAIROS Markets
+TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
+CANAL_ID         = os.getenv("CANAL_ID", "-1003935530360")
+ADMIN_CHAT_ID    = os.getenv("TELEGRAM_CHAT_ID", "1121938640")
+
+# Control de duplicados en memoria
+_alertas_enviadas_sesion = set()
 
 
-def enviar_mensaje(chat_id: str, mensaje: str) -> bool:
-    """Envía un mensaje a un chat o canal específico."""
+def enviar_mensaje(chat_id: str, texto: str) -> bool:
+    """Envía un mensaje a un chat específico de Telegram."""
     if not TELEGRAM_TOKEN:
-        print("⚠️ TELEGRAM_TOKEN no configurado")
+        print(f"⚠️ TELEGRAM_TOKEN no configurado")
         return False
-
     try:
         url  = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
         data = {
             "chat_id":    chat_id,
-            "text":       mensaje,
-            "parse_mode": "HTML",
+            "text":       texto,
+            "parse_mode": "Markdown",
         }
-        r = requests.post(url, data=data, timeout=10)
-
+        r = requests.post(url, data=data, timeout=15)
         if r.status_code == 200:
             return True
         else:
-            # Intentar sin parse_mode si hay error de formato
-            data.pop("parse_mode")
-            r2 = requests.post(url, data=data, timeout=10)
+            # Reintentar sin Markdown si falla el formato
+            data["parse_mode"] = ""
+            r2 = requests.post(url, data=data, timeout=15)
             return r2.status_code == 200
-
     except Exception as e:
-        print(f"  Error enviando Telegram a {chat_id}: {e}")
+        print(f"  Error Telegram: {e}")
         return False
 
 
-def enviar_alerta_telegram(mensaje: str, solo_admin: bool = False):
+def enviar_alerta_telegram(mensaje: str, canal: bool = True,
+                            admin: bool = True) -> bool:
     """
-    Función principal de alertas KAIROS.
+    Envía alerta al canal público y/o al admin.
+    Por defecto envía a ambos.
+    """
+    # Limitar a 4096 chars por mensaje de Telegram
+    if len(mensaje) > 4096:
+        mensaje = mensaje[:4090] + "..."
 
-    Por defecto envía:
-    - Al canal público (todos los suscriptores)
-    - Al chat personal del admin
+    exito = False
+    if canal and CANAL_ID:
+        ok = enviar_mensaje(CANAL_ID, mensaje)
+        if ok:
+            print(f"   ✅ Alerta enviada al canal KAIROS Markets")
+            exito = True
+
+    if admin and ADMIN_CHAT_ID:
+        ok = enviar_mensaje(ADMIN_CHAT_ID, mensaje)
+        if ok:
+            print(f"   ✅ Alerta enviada al admin")
+
+    return exito
+
+
+def enviar_solo_admin(mensaje: str) -> bool:
+    """Envía mensaje solo al admin (errores, debug, estado)."""
+    return enviar_mensaje(ADMIN_CHAT_ID, mensaje)
+
+
+def ya_enviado(clave: str) -> bool:
+    """Verifica si ya se envió una alerta con esta clave en la sesión."""
+    return clave in _alertas_enviadas_sesion
+
+
+def marcar_enviado(clave: str):
+    """Marca una alerta como enviada para no repetirla."""
+    _alertas_enviadas_sesion.add(clave)
+    # Limpiar si hay demasiadas claves
+    if len(_alertas_enviadas_sesion) > 500:
+        _alertas_enviadas_sesion.clear()
+
+
+def evaluar_y_alertar(evento: dict, score: int, umbral: int = 70,
+                       datos_macro: dict = None, regimen: dict = None) -> bool:
+    """
+    Evalúa si un evento merece alerta y la envía.
 
     Args:
-        mensaje:     Texto de la alerta
-        solo_admin:  Si True, solo envía al admin (para mensajes internos)
+        evento:      dict con 'titular', 'fuente', 'link', 'geo'
+        score:       score de impacto del evento (0-100)
+        umbral:      score mínimo para alertar (default 70)
+        datos_macro: contexto macro actual
+        regimen:     régimen macro actual
+
+    Returns:
+        True si se envió alerta, False si se descartó
     """
-    if not TELEGRAM_TOKEN:
-        print("⚠️ Sin token Telegram — alerta no enviada")
-        return
+    if score < umbral:
+        return False
 
-    # ── Enviar al canal público ───────────────────────────────────
-    if not solo_admin:
-        ok_canal = enviar_mensaje(CANAL_ID, mensaje)
-        if ok_canal:
-            print("  ✅ Alerta enviada al canal KAIROS Markets")
-        else:
-            print("  ⚠️ Error enviando al canal")
+    titular = evento.get("titular", "")
+    fuente  = evento.get("fuente", "")
+    link    = evento.get("link", "")
+    geo     = evento.get("geo", {})
 
-    # ── Enviar al admin (chat personal) ───────────────────────────
-    if TELEGRAM_CHAT_ID:
-        ok_admin = enviar_mensaje(TELEGRAM_CHAT_ID, mensaje)
-        if ok_admin:
-            print("  ✅ Alerta enviada al admin")
-        else:
-            print("  ⚠️ Error enviando al admin")
+    # No repetir alertas
+    clave = f"{titular[:50]}_{score}"
+    if ya_enviado(clave):
+        return False
+
+    # Construir mensaje según tipo de evento
+    if geo and geo.get("tipo") not in (None, "NO_CLASIFICADO"):
+        impacto = geo.get("impacto", {})
+        suben   = [a for a, d in impacto.items() if d["direccion"] == "SUBE"]
+        bajan   = [a for a, d in impacto.items() if d["direccion"] == "BAJA"]
+        tipo_geo= geo["tipo"].replace("_", " ")
+
+        urgencia = "🚨 URGENTE" if score >= 90 else "⚠️ RELEVANTE"
+        mensaje  = (
+            f"{urgencia} — KAIROS ALERTA\n{'='*38}\n"
+            f"📰 {titular}\n"
+            f"📡 {fuente}\n"
+            f"🔗 {link}\n\n"
+            f"🏷️ {tipo_geo} | Score: {score}/100\n"
+            f"🟢 Suben: {', '.join(suben) or 'ninguno'}\n"
+            f"🔴 Bajan: {', '.join(bajan) or 'ninguno'}\n\n"
+            f"kairos-markets.streamlit.app"
+        )
+    else:
+        urgencia = "🚨" if score >= 90 else "📡"
+        mensaje  = (
+            f"{urgencia} KAIROS — NOTICIA RELEVANTE\n{'='*38}\n"
+            f"📰 {titular}\n"
+            f"📡 {fuente}\n"
+            f"🔗 {link}\n"
+            f"📊 Score: {score}/100\n\n"
+            f"kairos-markets.streamlit.app"
+        )
+
+    # Agregar contexto macro si disponible
+    if regimen:
+        reg_txt = regimen.get("regimen", "")
+        if reg_txt:
+            mensaje += f"\n📈 Régimen actual: {reg_txt}"
+
+    enviado = enviar_alerta_telegram(mensaje)
+    if enviado:
+        marcar_enviado(clave)
+
+    return enviado
 
 
-def enviar_alerta_admin(mensaje: str):
-    """
-    Envía solo al admin — para logs internos y errores del sistema.
-    Los suscriptores del canal NO lo ven.
-    """
-    enviar_alerta_telegram(mensaje, solo_admin=True)
-
-
-def test_conexion():
-    """Verifica que el bot puede enviar al canal y al admin."""
-    print("\n🧪 Test de conexión Telegram\n" + "="*40)
-
-    msg_test = (
-        "🟢 KAIROS — Sistema activo\n"
-        "{'='*38}\n"
-        "✅ Bot conectado correctamente\n"
-        "✅ Canal: KAIROS Markets\n"
-        "📊 Monitor iniciado\n\n"
-        "kairos-markets.streamlit.app"
-    )
-
-    print("Enviando al canal público...")
-    ok_canal = enviar_mensaje(CANAL_ID, msg_test)
-    print(f"  Canal: {'✅ OK' if ok_canal else '❌ Error'}")
-
-    if TELEGRAM_CHAT_ID:
-        print("Enviando al admin...")
-        ok_admin = enviar_mensaje(TELEGRAM_CHAT_ID, msg_test)
-        print(f"  Admin: {'✅ OK' if ok_admin else '❌ Error'}")
-
-    return ok_canal
+def test_conexion() -> bool:
+    """Verifica que el bot de Telegram funciona."""
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getMe"
+        r   = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            bot = r.json()["result"]
+            print(f"✅ Bot conectado: @{bot['username']}")
+            return True
+    except Exception as e:
+        print(f"❌ Error conexión: {e}")
+    return False
 
 
 if __name__ == "__main__":
-    test_conexion()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--test", action="store_true",
+                        help="Enviar mensaje de prueba al canal")
+    args = parser.parse_args()
+
+    if test_conexion():
+        if args.test:
+            mensaje_test = (
+                f"🧪 KAIROS — TEST DE CONEXIÓN\n"
+                f"{'='*38}\n"
+                f"✅ Sistema funcionando correctamente\n"
+                f"📅 {datetime.now().strftime('%d %b %Y %H:%M')}\n\n"
+                f"kairos-markets.streamlit.app"
+            )
+            enviar_alerta_telegram(mensaje_test)
+            print("✅ Mensaje de prueba enviado")

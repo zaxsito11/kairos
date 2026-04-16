@@ -1,3 +1,5 @@
 2026-04-14 12:36:56,789 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2026-04-15 12:56:31,337 [INFO]     Eventos alto impacto (score≥70): 9
 2026-04-15 12:56:33,102 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-15 20:54:55,095 [INFO]     Eventos alto impacto (score≥70): 8
+2026-04-15 20:54:59,971 [INFO]   FED: mismo comunicado — sin cambios
