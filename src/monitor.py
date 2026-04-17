@@ -27,7 +27,9 @@ from weekly_brief   import generar_y_enviar_weekly
 from price_targets  import calcular_todos_los_targets, guardar_prediccion, formatear_targets_telegram
 from closing_brief   import generar_y_enviar_closing
 from feedback_sistema import ejecutar_feedback_diario
-from signal_engine    import analizar_mercado_completo, formatear_señales_telegram
+from signal_engine             import analizar_mercado_completo, formatear_señales_telegram
+from predicciones_adaptativas  import procesar_evento_adaptativo
+from analizador_noticias       import procesar_noticia
 from alertas        import enviar_alerta_telegram
 
 # ── Configuración ─────────────────────────────────────────────────
@@ -181,15 +183,33 @@ def detectar_nuevo_fed(estado: dict):
 def procesar_evento(evento: dict, datos_macro=None, regimen=None):
     tipo = evento.get("tipo", "")
 
-    # ── Noticia de alto impacto
+    # ── Noticia de alto impacto — analizada con IA
     if "titular" in evento:
         score = evento.get("score", 0)
         if score < SCORE_MINIMO_ALERTA:
             log.info(f"  DESCARTADO score:{score} — {evento['titular'][:50]}")
             return
-        mensaje = formatear_alerta_noticia(evento)
-        enviar_alerta_telegram(mensaje)
-        log.info(f"  ✅ score:{score} — {evento['titular'][:50]}")
+
+        # La IA analiza la noticia, determina impacto y envía alerta específica
+        try:
+            procesada = procesar_noticia(evento, {
+                "regimen":    regimen,
+                "situaciones":situaciones_activas if "situaciones_activas" in dir() else [],
+            })
+            if procesada:
+                log.info(f"  ✅ Noticia analizada y enviada con IA")
+            else:
+                # Fallback: enviar alerta simple si IA dice que no mueve mercado
+                # pero el score es muy alto
+                if score >= 90:
+                    mensaje = formatear_alerta_noticia(evento)
+                    enviar_alerta_telegram(mensaje)
+                    log.info(f"  ✅ Alerta simple (score muy alto)")
+        except Exception as ne:
+            # Fallback robusto si falla la IA
+            log.warning(f"  Error IA noticia: {ne} — usando alerta simple")
+            mensaje = formatear_alerta_noticia(evento)
+            enviar_alerta_telegram(mensaje)
 
     # ── Alerta de calendario
     elif tipo == "CALENDARIO":

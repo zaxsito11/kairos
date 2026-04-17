@@ -1,2 +1,30 @@
 2026-04-15 21:31:00,708 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2026-04-15 21:31:30,678 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 20:38:25,567 [INFO] 
+==================================================
+2026-04-16 20:38:25,568 [INFO] 📊 KAIROS FEEDBACK DIARIO — EVALUANDO ACIERTOS
+2026-04-16 20:38:25,568 [INFO] ==================================================
+2026-04-16 20:38:25,578 [INFO] 
+  Evaluando predicción del 2026-04-15...
+2026-04-16 20:38:25,893 [INFO]     SPX: ❌ INCORRECTO — predicho BAJA, real SUBE (+0.47%)
+2026-04-16 20:38:26,187 [INFO]     NDX: ❌ INCORRECTO — predicho BAJA, real SUBE (+0.95%)
+2026-04-16 20:38:26,459 [INFO]     Gold: ❌ INCORRECTO — predicho SUBE, real BAJA (-0.59%)
+2026-04-16 20:38:26,721 [INFO]     Silver: ❌ INCORRECTO — predicho SUBE, real BAJA (-1.83%)
+2026-04-16 20:38:26,974 [INFO]     WTI: ❌ INCORRECTO — predicho SUBE, real BAJA (-1.46%)
+2026-04-16 20:38:27,236 [INFO]     BTC: ❌ INCORRECTO — predicho BAJA, real SUBE (+0.64%)
+2026-04-16 20:38:27,483 [INFO]     DXY: ✅ CORRECTO — predicho SUBE, real SUBE (+0.21%)
+2026-04-16 20:38:27,743 [INFO]     VIX: ❌ INCORRECTO — predicho SUBE, real BAJA (-1.81%)
+2026-04-16 20:38:27,989 [INFO]     UST10Y: ✅ CORRECTO — predicho SUBE, real SUBE (+0.44%)
+2026-04-16 20:38:27,989 [INFO] 
+  Evaluando predicción del 2026-04-15...
+2026-04-16 20:38:28,042 [INFO]     SPX: ❌ INCORRECTO — predicho BAJA, real SUBE (+0.26%)
+2026-04-16 20:38:28,120 [INFO]     NDX: ❌ INCORRECTO — predicho BAJA, real SUBE (+0.49%)
+2026-04-16 20:38:28,188 [INFO]     Gold: ❌ INCORRECTO — predicho SUBE, real BAJA (-1.09%)
+2026-04-16 20:38:28,253 [INFO]     Silver: ❌ INCORRECTO — predicho SUBE, real BAJA (-3.02%)
+2026-04-16 20:38:28,320 [INFO]     WTI: ❌ INCORRECTO — predicho SUBE, real BAJA (-1.53%)
+2026-04-16 20:38:28,385 [INFO]     BTC: ✅ CORRECTO — predicho BAJA, real BAJA (-0.00%)
+2026-04-16 20:38:28,450 [INFO]     DXY: ❌ INCORRECTO — predicho BAJA, real SUBE (+0.26%)
+2026-04-16 20:38:28,512 [INFO]     VIX: ❌ INCORRECTO — predicho SUBE, real BAJA (-1.27%)
+2026-04-16 20:38:28,560 [INFO]     UST10Y: ✅ CORRECTO — predicho SUBE, real SUBE (+0.68%)
+2026-04-16 20:38:30,034 [INFO]   ✅ Reporte enviado al canal
+2026-04-16 20:38:30,035 [INFO]   Precisión 24h: 22.2%

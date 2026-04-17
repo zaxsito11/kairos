@@ -1,0 +1,73 @@
+{
+  "total_evaluaciones": 18,
+  "aciertos_dir_24h": 4,
+  "precision_dir_24h": 22.2,
+  "aciertos_rango_24h": 15,
+  "precision_rango_24h": 83.3,
+  "error_target_avg": 0.77,
+  "por_activo": {
+    "SPX": {
+      "total": 2,
+      "aciertos_dir": 0,
+      "aciertos_rango": 2,
+      "error_avg": 0.34
+    },
+    "NDX": {
+      "total": 2,
+      "aciertos_dir": 0,
+      "aciertos_rango": 2,
+      "error_avg": 0.81
+    },
+    "Gold": {
+      "total": 2,
+      "aciertos_dir": 0,
+      "aciertos_rango": 2,
+      "error_avg": 1.42
+    },
+    "Silver": {
+      "total": 2,
+      "aciertos_dir": 0,
+      "aciertos_rango": 0,
+      "error_avg": 3.16
+    },
+    "WTI": {
+      "total": 2,
+      "aciertos_dir": 0,
+      "aciertos_rango": 2,
+      "error_avg": 3.27
+    },
+    "BTC": {
+      "total": 2,
+      "aciertos_dir": 1,
+      "aciertos_rango": 2,
+      "error_avg": 1.03
+    },
+    "DXY": {
+      "total": 2,
+      "aciertos_dir": 1,
+      "aciertos_rango": 2,
+      "error_avg": 0.25
+    },
+    "VIX": {
+      "total": 2,
+      "aciertos_dir": 0,
+      "aciertos_rango": 2,
+      "error_avg": 3.26
+    },
+    "UST10Y": {
+      "total": 2,
+      "aciertos_dir": 2,
+      "aciertos_rango": 1,
+      "error_avg": 0.33
+    }
+  },
+  "historial": [
+    {
+      "fecha": "2026-04-15",
+      "precision_dir": 22.2,
+      "precision_rango": 83.3,
+      "total": 18
+    }
+  ],
+  "ultima_evaluacion": "2026-04-16"
+}

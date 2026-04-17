@@ -57,7 +57,7 @@ with st.sidebar:
         "📊 Resumen":           "resumen",
         "🌍 Análisis Fundamental": "fundamental",
         "📈 Análisis Técnico":  "tecnico",
-        "🎯 Señales y Targets": "señales",
+        "🎯 Señales y Targets": "senales",
         "📋 Historial":         "historial",
     }
 
@@ -101,15 +101,17 @@ with st.sidebar:
 # ── Routing de páginas ────────────────────────────────────────────
 pagina_actual = st.session_state.get("pagina", "resumen")
 
+import sys, pathlib
+_base = pathlib.Path(__file__).parent
+
 if pagina_actual == "resumen":
-    import sys
-    sys.path.insert(0, os.path.dirname(__file__))
-    exec(open("src/pages/p1_resumen.py").read())
+    sys.path.insert(0, str(_base))
+    exec(open(_base/"pages/p1_resumen.py", encoding="utf-8", errors="ignore").read())
 elif pagina_actual == "fundamental":
-    exec(open("src/pages/p2_fundamental.py").read())
+    exec(open(_base/"pages/p2_fundamental.py", encoding="utf-8", errors="ignore").read())
 elif pagina_actual == "tecnico":
-    exec(open("src/pages/p3_tecnico.py").read())
-elif pagina_actual == "señales":
-    exec(open("src/pages/p4_señales.py").read())
+    exec(open(_base/"pages/p3_tecnico.py", encoding="utf-8", errors="ignore").read())
+elif pagina_actual == "senales":
+    exec(open(_base/"pages/p4_senales.py", encoding="utf-8", errors="ignore").read())
 elif pagina_actual == "historial":
-    exec(open("src/pages/p5_historial.py").read())
+    exec(open(_base/"pages/p5_historial.py", encoding="utf-8", errors="ignore").read())

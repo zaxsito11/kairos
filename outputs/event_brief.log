@@ -3,3 +3,86 @@
 2026-04-15 12:56:33,102 [INFO]   FED: mismo comunicado — sin cambios
 2026-04-15 20:54:55,095 [INFO]     Eventos alto impacto (score≥70): 8
 2026-04-15 20:54:59,971 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-16 20:56:24,516 [INFO] ==================================================
+2026-04-16 20:56:24,516 [INFO] 🚀 KAIROS MONITOR ACTIVO — 8 módulos
+2026-04-16 20:56:24,517 [INFO]    [0] Morning Brief  — 8:00 AM diario
+2026-04-16 20:56:24,517 [INFO]    [1] Noticias       — score≥70, MAXIMA+ALTA
+2026-04-16 20:56:24,517 [INFO]    [2] Calendario     — anticipa eventos macro
+2026-04-16 20:56:24,517 [INFO]    [3] Mercados       — patrones macro causales
+2026-04-16 20:56:24,518 [INFO]    [4] FED            — nuevo comunicado genuino
+2026-04-16 20:56:24,518 [INFO]    [5] Event Brief    — 30 min antes de eventos críticos
+2026-04-16 20:56:24,518 [INFO]    [6] Closing Brief  — 4:00 PM ET cierre de sesión
+2026-04-16 20:56:24,518 [INFO]    [7] Weekly Brief   — viernes 6:00 PM resumen semanal
+2026-04-16 20:56:24,518 [INFO]    [8] Feedback       — 4:15 PM evaluación de aciertos automática
+2026-04-16 20:56:24,518 [INFO]    Intervalo: cada 5 minutos
+2026-04-16 20:56:24,518 [INFO] ==================================================
+2026-04-16 20:56:24,519 [WARNING] Error resumen inicial: local variable 'enviar_alerta_telegram' referenced before assignment
+2026-04-16 20:56:24,533 [INFO] 
+──────────────────────────────────────────────────
+2026-04-16 20:56:24,533 [INFO] CICLO #1 — 16/04/2026 20:56:24
+2026-04-16 20:56:24,533 [INFO] ──────────────────────────────────────────────────
+2026-04-16 20:56:27,694 [INFO] Macro: HAWKISH LEVE
+2026-04-16 20:56:27,695 [WARNING]   Error targets: name 'ctx_kairos' is not defined
+2026-04-16 20:56:27,696 [INFO] 
+[0] MORNING BRIEF
+2026-04-16 20:56:27,696 [INFO] 
+[1] NOTICIAS — score≥70
+2026-04-16 20:56:30,984 [INFO]     Eventos alto impacto (score≥70): 4
+2026-04-16 20:56:30,985 [INFO] 
+  Analizando con IA: [95] Trump Says Iran Deal ‘Looking Very Good’ Amid Ceasefire...
+2026-04-16 20:56:32,269 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 20:56:32,292 [INFO]   → MUEVE MERCADO | ALTA | WTI
+2026-04-16 20:56:33,761 [INFO]   ✅ Alerta enviada
+2026-04-16 20:56:33,763 [INFO]   ✅ Noticia analizada y enviada con IA
+2026-04-16 20:56:33,772 [INFO] 
+  Analizando con IA: [91] Gold Heads for Fourth Weekly Gain on Optimism for US-Iran Tr...
+2026-04-16 20:56:35,277 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 20:56:35,281 [INFO]   → MUEVE MERCADO | MEDIA | Gold
+2026-04-16 20:56:36,776 [INFO]   ✅ Alerta enviada
+2026-04-16 20:56:36,777 [INFO]   ✅ Noticia analizada y enviada con IA
+2026-04-16 20:56:36,784 [INFO] 
+  Analizando con IA: [91] Iran War Pushes Asia to Think Twice Before Doubling Down on ...
+2026-04-16 20:56:38,058 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 20:56:38,061 [INFO]   → MUEVE MERCADO | ALTA | WTI
+2026-04-16 20:56:39,519 [INFO]   ✅ Alerta enviada
+2026-04-16 20:56:39,521 [INFO] 
+⚡ REGENERANDO PREDICCIONES
+2026-04-16 20:56:39,522 [INFO]    Contexto: Régimen macro: HAWKISH ALTO, Situaciones activas: Tensión geopolítica en Medio Oriente
+2026-04-16 20:56:39,522 [INFO]    Evento:   Iran War Pushes Asia to Think Twice Before Doubling Down on 
+2026-04-16 20:56:40,217 [INFO]    Gold: 4798.10009765625 → SUBE
+2026-04-16 20:56:40,491 [INFO]    Silver: 78.29000091552734 → SUBE
+2026-04-16 20:56:40,756 [INFO]    WTI: 89.83999633789062 → SUBE
+2026-04-16 20:56:41,036 [INFO]    DXY: 98.23899841308594 → SUBE
+2026-04-16 20:56:41,322 [INFO]    VIX: 17.940000534057617 → SUBE
+2026-04-16 20:56:41,331 [INFO]    ✅ Predicciones actualizadas en historial
+2026-04-16 20:56:41,331 [INFO]   ⚡ Predicciones actualizadas
+2026-04-16 20:56:41,332 [INFO]   ✅ Noticia analizada y enviada con IA
+2026-04-16 20:56:41,341 [INFO] 
+  Analizando con IA: [83] Trump Says Deal With Iran ‘Looking Very Good’ Amid Ceasefire...
+2026-04-16 20:56:42,570 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 20:56:42,572 [INFO]   → MUEVE MERCADO | ALTA | WTI
+2026-04-16 20:56:44,117 [INFO]   ✅ Alerta enviada
+2026-04-16 20:56:44,121 [INFO]   ✅ Noticia analizada y enviada con IA
+2026-04-16 20:56:44,122 [INFO] 
+[2] CALENDARIO
+2026-04-16 20:56:44,122 [INFO]     Alertas calendario: 0
+2026-04-16 20:56:44,123 [INFO] 
+[3] MERCADOS
+2026-04-16 20:56:44,971 [INFO]     Alertas mercado: 1
+2026-04-16 20:56:46,489 [INFO] 
+[4] FED
+2026-04-16 20:56:46,692 [INFO]   FED: mismo comunicado — sin cambios
+2026-04-16 20:56:46,692 [INFO] 
+[5] EVENT BRIEF
+2026-04-16 20:56:51,804 [INFO]   ✓ Sin eventos en ventana de alerta
+2026-04-16 20:56:51,806 [INFO] 
+[6] CLOSING BRIEF
+2026-04-16 20:56:51,807 [INFO]   Closing Brief: fuera de ventana (hora 20:56)
+2026-04-16 20:56:51,807 [INFO] 
+[7] WEEKLY BRIEF
+2026-04-16 20:56:51,810 [INFO]   Weekly Brief: no es viernes (día 3)
+2026-04-16 20:56:51,811 [INFO] 
+[8] FEEDBACK SISTEMA
+2026-04-16 20:56:51,815 [INFO] 
+✅ Ciclo #1 — 104 alertas totales
+2026-04-16 20:56:51,815 [INFO] ⏳ Próxima revisión en 5 minutos...
