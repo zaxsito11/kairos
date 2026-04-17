@@ -128,8 +128,8 @@ def status(api_key: Optional[str] = Header(None, alias="X-API-Key")):
     }
 
 
-@app.get("/señales", tags=["Análisis"])
-def señales(api_key: Optional[str] = Header(None, alias="X-API-Key")):
+@app.get("/senales", tags=["Análisis"])
+def senales(api_key: Optional[str] = Header(None, alias="X-API-Key")):
     """Señales accionables del momento — técnico + fundamental contrastados."""
     if not check_rate_limit(api_key, "señales"):
         raise HTTPException(429, "Rate limit alcanzado")
@@ -157,7 +157,7 @@ def señales(api_key: Optional[str] = Header(None, alias="X-API-Key")):
         return {
             "timestamp":     datetime.now().isoformat(),
             "n_accionables": resultado.get("n_accionables",0),
-            "señales":       res_filtrado,
+            "senales":       res_filtrado,
             "tono_fed":      ctx.get("tono_fed","N/A"),
             "regimen":       ctx.get("regimen",{}).get("regimen","N/A"),
         }

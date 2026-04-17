@@ -4,7 +4,7 @@ import os, json, glob
 from datetime import datetime
 
 st.markdown("## 📊 Resumen Ejecutivo")
-st.caption("Estado del mercado y señales del día")
+st.caption("Estado del mercado y senales del día")
 
 # ── Fila top: métricas clave ──────────────────────────────────────
 col1, col2, col3, col4 = st.columns(4)
@@ -24,19 +24,19 @@ with col1:
     else:
         st.metric("Morning Brief", "Sin datos")
 
-# Señales accionables
+# Senales accionables
 with col2:
-    sf = "data/señales_cache.json"
+    sf = "data/senales_cache.json"
     if os.path.exists(sf):
         try:
             with open(sf) as f:
                 sd = json.load(f)
             n = sd.get("n_accionables",0)
-            st.metric("Señales accionables", f"{n} activos")
+            st.metric("Senales accionables", f"{n} activos")
         except Exception:
-            st.metric("Señales accionables", "—")
+            st.metric("Senales accionables", "—")
     else:
-        st.metric("Señales accionables", "Calcular →")
+        st.metric("Senales accionables", "Calcular →")
 
 # Precisión
 with col3:
@@ -61,6 +61,59 @@ with col4:
         st.metric("Situaciones activas", f"{n} eventos", delta="en monitoreo")
     except Exception:
         st.metric("Situaciones activas","—")
+
+st.divider()
+
+# ── Senales accionables del momento ──────────────────────────────
+st.markdown("### 🎯 Senales del Momento")
+col_s1, col_s2 = st.columns([3,1])
+with col_s2:
+    if st.button("🔄 Actualizar senales", use_container_width=True):
+        if "contraste_resultado" in st.session_state:
+            del st.session_state["contraste_resultado"]
+        st.rerun()
+
+# Cargar senales si existen en session_state
+if "contraste_resultado" in st.session_state:
+    res = st.session_state["contraste_resultado"]
+    accionables = res.get("accionables",[])
+    resultados  = res.get("resultados",{})
+
+    if accionables:
+        cols_sen = st.columns(min(len(accionables),4))
+        for i, activo in enumerate(accionables[:4]):
+            r     = resultados.get(activo,{})
+            dir_  = r.get("direccion","NEUTRO")
+            conf  = r.get("confianza",0)
+            emoji = r.get("emoji","")
+            conv  = r.get("convergencia",False)
+            color = "#00d4aa" if dir_=="ALCISTA" else "#ff4b4b"
+            tipo  = "CONVERGENCIA" if conv else "CONFLICTO"
+            t24h  = r.get("target_24h",0)
+            precio= r.get("precio",0)
+            with cols_sen[i]:
+                st.markdown(
+                    f'<div style="background:#1a1f2e;border-radius:8px;padding:0.8rem;'
+                    f'border-left:3px solid {color};margin-bottom:6px">'
+                    f'<div style="color:{color};font-weight:700">{emoji} {activo} {dir_}</div>'
+                    f'<div style="color:#ffffff;font-size:0.82rem">{conf}% confianza</div>'
+                    f'<div style="color:#8892a4;font-size:0.72rem">[{tipo}]</div>'
+                    f'<div style="color:#00d4aa;font-size:0.75rem">{precio} → {t24h}</div>'
+                    f'</div>', unsafe_allow_html=True)
+    else:
+        st.caption("Sin senales accionables en este momento — ve a Senales y Targets para calcular")
+else:
+    with col_s1:
+        if st.button("🔬 Calcular senales ahora", use_container_width=True, type="primary"):
+            with st.spinner("Analizando tecnico + fundamental..."):
+                try:
+                    from motor_contraste import analisis_completo_mercado
+                    resultado = analisis_completo_mercado()
+                    st.session_state["contraste_resultado"] = resultado
+                    st.success(f"✅ {resultado['n_accionables']} senales detectadas")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error: {e}")
 
 st.divider()
 
