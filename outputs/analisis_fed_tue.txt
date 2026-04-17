@@ -1,0 +1,62 @@
+KAIROS — KAIROS — ANÁLISIS COMUNICADO FED
+============================================================
+Documento: Minutes of the Board’s discount rate meetings on February 9 and March 18, 2026
+Fecha:     Tue, 14 Apr 2026 18:00:00 GMT
+Banco:     FED
+============================================================
+
+CONTEXTO MACRO:
+CONTEXTO MACRO EEUU (datos reales FRED):
+- Régimen macro: HAWKISH LEVE
+- Core PCE: 2.87% YoY (objetivo FED: 2%)
+- Desempleo: 4.3%
+- NFP último mes: 158.6 miles
+- Tasa FED actual: 3.64%
+- Bono 10Y EEUU: 4.26%
+- Spread curva 10Y-2Y: 0.5%
+- Señales macro: Core PCE 2.87% — sobre objetivo 2% | Core CPI 2.6% — sobre objetivo
+
+
+**1. TONO GENERAL**
+- Clasificación: NEUTRO
+- Score: 0
+- Señales hawkish encontradas: No se mencionan señales específicas de política monetaria en el texto.
+- Señales dovish encontradas: No se mencionan señales específicas de política monetaria en el texto.
+- Justificación: El comunicado se centra en la publicación de las actas de las reuniones sobre la tasa de descuento y no proporciona información sobre la política monetaria actual o futura.
+
+**2. MENSAJES CLAVE**
+- Los 3 mensajes más importantes para los mercados:
+ 1. La Reserva Federal publicó las actas de las reuniones sobre la tasa de descuento.
+ 2. El proceso de fijación de la tasa de descuento es distinto al proceso del Comité Federal de Mercado Abierto (FOMC) para fijar el rango objetivo para la tasa de fondos federales.
+ 3. No se proporcionan señales claras sobre la política monetaria futura.
+
+**3. CAMBIOS RESPECTO AL COMUNICADO ANTERIOR**
+- No se mencionan cambios específicos en el lenguaje o la política monetaria.
+- El comunicado se centra en la publicación de actas y no en la política monetaria.
+
+**4. IMPACTO ESPERADO POR ACTIVO**
+- USD (Dólar): No se espera un impacto significativo.
+- Bonos del Tesoro UST 10Y: No se espera un impacto significativo.
+- S&P 500 (SPX): No se espera un impacto significativo.
+- Nasdaq (NDX): No se espera un impacto significativo.
+- Oro (Gold): No se espera un impacto significativo.
+- EUR/USD: No se espera un impacto significativo.
+- VIX (Volatilidad): No se espera un impacto significativo.
+
+**5. ESCENARIOS DE MERCADO**
+ESCENARIO A (probabilidad: 40%): Continuación de la política monetaria actual.
+El FOMC mantiene su postura actual y no realiza cambios significativos en la política monetaria.
+
+ESCENARIO B (probabilidad: 30%): Ajustes menores en la política monetaria.
+El FOMC realiza ajustes menores en la política monetaria para abordar la inflación y el mercado laboral.
+
+ESCENARIO C (probabilidad: 30%): Cambios significativos en la política monetaria.
+El FOMC realiza cambios significativos en la política monetaria para abordar la inflación y el mercado laboral.
+
+**6. VARIABLES CLAVE A MONITOREAR**
+- Datos próximos relevantes: Core PCE, desempleo, NFP.
+- Declaraciones de miembros del FOMC a seguir: Declaraciones de los miembros del FOMC sobre la política monetaria futura.
+
+**7. CONFIDENCE SCORE**
+- Score: 60/100
+- Factores que reducen la confianza: La falta de información sobre la política monetaria futura y la dependencia de los datos económicos próximos.

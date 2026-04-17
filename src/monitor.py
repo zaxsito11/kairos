@@ -295,7 +295,7 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                             for s in SITUACIONES_ACTIVAS if not s["resuelto"]]
                     targets = calcular_todos_los_targets(
                         regimen_macro=regimen.get("regimen","NEUTRO"),
-                        tono_fed="HAWKISH LEVE",
+                        tono_fed=ctx_kairos.get("tono_fed","HAWKISH LEVE"),
                         situaciones_activas=sits
                     )
                     guardar_prediccion(targets)
@@ -305,7 +305,7 @@ def run_monitor(intervalo: int = INTERVALO_SEGUNDOS):
                     try:
                         señales_conv = analizar_mercado_completo(
                             regimen=regimen,
-                            tono_fed="HAWKISH LEVE",
+                            tono_fed=ctx_kairos.get("tono_fed","HAWKISH LEVE"),
                             situaciones=sits,
                             generar_narrativas=True,
                         )

@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-04-16T19:01:42.152456",
+  "tono_fed": "HAWKISH LEVE",
+  "tono_bce": "HAWKISH LEVE",
+  "regimen": {
+    "regimen": "HAWKISH LEVE",
+    "descripcion": "Inflaci\u00f3n sobre objetivo, FED cauteloso pero restrictivo",
+    "se\u00f1ales": [
+      "Core PCE 2.87% \u2014 sobre objetivo 2%",
+      "Core CPI 2.6% \u2014 sobre objetivo",
+      "Curva normal (0.53%) \u2014 r\u00e9gimen saludable"
+    ],
+    "hawkish_score": 2,
+    "dovish_score": 0,
+    "delta": 2
+  },
+  "situaciones": [
+    {
+      "nombre": "Conflicto EEUU-Israel-Ir\u00e1n",
+      "tipo": "CONFLICTO_ARMADO",
+      "score": 88,
+      "nota": "Operaci\u00f3n Furia \u00c9pica \u2014 semana 6. WTI $100."
+    },
+    {
+      "nombre": "Guerra comercial EEUU-China",
+      "tipo": "TENSION_COMERCIAL",
+      "score": 78,
+      "nota": "Aranceles Trump activos \u2014 escalada en curso."
+    },
+    {
+      "nombre": "Crisis energ\u00e9tica \u2014 WTI $100",
+      "tipo": "CRISIS_ENERGETICA",
+      "score": 75,
+      "nota": "WTI en $100 por bloqueo Ormuz."
+    }
+  ],
+  "relevancia": [
+    {
+      "factor": "geopolitica",
+      "relevancia": 95,
+      "descripcion": "Conflicto armado activo \u2014 domina la narrativa del mercado"
+    },
+    {
+      "factor": "fed",
+      "relevancia": 70,
+      "descripcion": "FED HAWKISH LEVE \u2014 impacto activo"
+    },
+    {
+      "factor": "macro",
+      "relevancia": 70,
+      "descripcion": "R\u00e9gimen HAWKISH LEVE \u2014 score hawkish:2 dovish:0"
+    },
+    {
+      "factor": "tecnico",
+      "relevancia": 70,
+      "descripcion": "An\u00e1lisis t\u00e9cnico \u2014 confirma timing y niveles de entrada/salida"
+    }
+  ],
+  "n_situaciones": 3,
+  "factor_dominante": "geopolitica"
+}

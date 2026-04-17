@@ -1,0 +1,52 @@
+**📊 KAIROS MORNING BRIEF — THURSDAY 16 APRIL 2026**
+════════════════════════════════════
+
+**⚡ RESUMEN EJECUTIVO**
+El conflicto EEUU-Israel-Irán y la guerra comercial EEUU-China siguen siendo los eventos de mayor impacto en los mercados. La sesión anterior mostró un SPX con una ligera subida del 0.14%.
+
+**🌍 CONTEXTO MACRO Y GEOPOLÍTICO**
+El conflicto EEUU-Israel-Irán en su sexta semana y la guerra comercial EEUU-China con aranceles activos y en escalada, dominan el panorama geopolítico. La crisis energética con el WTI en $89.06 también es un factor clave. El tono del FED es hawkish leve, con una probabilidad de recorte de 25bps del 65% en la próxima reunión.
+
+**📈 MERCADOS — SESIÓN ANTERIOR**
+SPX subió 0.14% a 7031.92, NDX subió 0.03% a 26212.07, Gold bajó 0.17% a 4839.5, Silver bajó 1.18% a 79.65, WTI bajó 2.91% a 89.06, BTC subió 0.01% a 74831.83, DXY subió 0.24% a 98.17, y VIX subió 0.39% a 18.24. Los movimientos reflejan la incertidumbre geopolítica y la expectativa de la próxima reunión del FED.
+
+**🔮 SESIÓN DE HOY — QUÉ ESPERAR**
+ÍNDICES:
+SPX    → Baja (55%) | Target: 6980 | S:7000 R:7050 — Debilidad en tecnología
+NDX    → Baja (60%) | Target: 25900 | Amplifica SPX — Debilidad en tecnología
+VIX    → Sube (58%) | Target: 20 | Miedo a la incertidumbre geopolítica
+
+METALES:
+Gold   → Sube (52%) | Target: 4900 | OBV: positivo — Refugio seguro
+Silver → Sube (50%) | Target: 82 | Amplifica Gold — Refugio seguro
+
+ENERGÍA:
+WTI    → Sube (55%) | Target: 92 | Tensión en Oriente Medio
+
+CRYPTO:
+BTC    → Baja (58%) | Target: 74000 | Risk-off
+
+DIVISAS Y BONOS:
+DXY    → Sube (53%) | Target: 99 | Fortaleza del dólar
+UST10Y → Baja (52%) | Target: 4.20 | Expectativa de recorte del FED
+
+**🎯 NIVELES CLAVE A VIGILAR HOY**
+- SPX: 7000 (soporte)
+- NDX: 26000 (nivel clave para tecnología)
+- Gold: 4900 (nivel psicológico)
+- WTI: 90 (nivel de crisis energética)
+- VIX: 20 (umbral de alerta)
+- BTC: 75000 (nivel de correlación con risk assets)
+
+**📅 EVENTOS QUE PUEDEN MOVER EL MERCADO HOY**
+No hay eventos programados para hoy, la sesión depende de noticias sorpresa.
+
+**⚠️ RIESGO DEL DÍA: MEDIO**
+El riesgo principal del día es la incertidumbre geopolítica y la expectativa de la próxima reunión del FED.
+
+**💡 IDEA DIRECCIONAL**
+La dirección que los datos sugieren con más fuerza es una ligera baja en el SPX, debido a la debilidad en tecnología y la incertidumbre geopolítica. El activo más claro es el SPX, con un target de 6980.
+
+---
+KAIROS Markets | kairos-markets.streamlit.app
+⚠️ Análisis informativo — no es recomendación de inversión
